@@ -217,16 +217,14 @@
             text-shadow: 0 2px 3px rgba(0,0,0,0.1);
         }
 
-        /* স্ক্রলেবল কন্টেন্ট (টেলিগ্রামের মতো) */
+        /* স্ক্রলেবল কন্টেন্ট - এখন নিচের নেভিগেশনের জন্য জায়গা রাখা হয়েছে */
         .main-scroll {
             flex: 1;
             overflow-y: auto;
-            padding: 16px 18px 12px;
+            padding: 16px 18px 80px; /* নিচে নেভিগেশনের জন্য বাড়তি প্যাডিং */
             scroll-behavior: smooth;
             background: rgba(247, 249, 252, 0.6);
             scrollbar-width: none; /* Firefox */
-            position: relative;
-            padding-bottom: 90px; /* ফিক্সড বাটনের জন্য জায়গা */
         }
         .main-scroll::-webkit-scrollbar { display: none; }
 
@@ -307,23 +305,6 @@
             border-radius: 24px;
             position: relative;
             box-shadow: 0 0 12px #9B6DFF;
-        }
-
-        /* ফিক্সড বাটন কন্টেইনার - হোম পেজের জন্য */
-        .fixed-btn-container {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(to top, rgba(247, 249, 252, 0.95), rgba(247, 249, 252, 0.8));
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            padding: 16px 18px 20px;
-            border-top: 1px solid rgba(255,255,255,0.8);
-            z-index: 30;
-            margin: 0 18px 12px;
-            border-radius: 30px 30px 0 0;
-            box-shadow: 0 -8px 20px rgba(0,0,0,0.05);
         }
 
         /* বাটন প্রো */
@@ -486,7 +467,7 @@
             box-shadow: 0 25px 35px -16px #1e293b;
         }
 
-        /* বটম নেভ (টেলিগ্রাম লুক) */
+        /* বটম নেভ (FIXED - টেলিগ্রাম লুক) */
         .bottom-nav-pro {
             background: white;
             display: flex;
@@ -497,8 +478,22 @@
             backdrop-filter: blur(10px);
             margin: 0 2px 2px;
             box-shadow: 0 -4px 10px rgba(0,0,0,0.02);
-            z-index: 40;
+            position: relative; /* relative রাখা হয়েছে কারণ tg-mobile-frame ইতিমধ্যে container */
+            width: calc(100% - 4px);
+            bottom: 0;
+            z-index: 100;
         }
+        
+        /* নিশ্চিত করা যে nav সব সময় নিচে থাকে */
+        .tg-mobile-frame {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .bottom-nav-pro {
+            margin-top: auto;
+        }
+
         .nav-item-pro {
             flex: 1;
             background: transparent;
@@ -577,7 +572,7 @@
             </div>
         </div>
 
-        <!-- স্ক্রলেবল কন্টেন্ট (মেইন) -->
+        <!-- স্ক্রলেবল কন্টেন্ট (মেইন) - নিচে নেভিগেশনের জন্য প্যাডিং দেওয়া আছে -->
         <div class="main-scroll" id="mainScroll">
             <!-- হোম পেইজ -->
             <div id="homePage" class="page active">
@@ -620,7 +615,11 @@
                     </div>
                 </div>
 
-                <!-- কুইজ শেষে এই ডিভ দেখাবে না, হোম পেজে সবসময় ফিক্সড বাটন থাকবে -->
+                <div class="bottom-btn" id="homeBottomBtn">
+                    <button class="btn-pro" onclick="startQuiz()" id="startQuizBtn">
+                        <i class="fas fa-play"></i> কুইজ শুরু করুন
+                    </button>
+                </div>
             </div>
 
             <!-- টাস্ক পেইজ -->
@@ -684,14 +683,7 @@
             </div>
         </div>
 
-        <!-- ফিক্সড বাটন কন্টেইনার - শুধুমাত্র হোম পেজের জন্য -->
-        <div class="fixed-btn-container" id="homeFixedBtn">
-            <button class="btn-pro" onclick="startQuiz()" id="startQuizBtn">
-                <i class="fas fa-play"></i> কুইজ শুরু করুন
-            </button>
-        </div>
-
-        <!-- বটম নেভ (টেলিগ্রাম প্রো) -->
+        <!-- বটম নেভ (FIXED - টেলিগ্রাম প্রো) - এখন সবসময় দৃশ্যমান -->
         <div class="bottom-nav-pro">
             <button class="nav-item-pro active" onclick="switchPage('home', event)"><i class="fas fa-home"></i><span>হোম</span></button>
             <button class="nav-item-pro" onclick="switchPage('task', event)"><i class="fas fa-tasks"></i><span>টাস্ক</span></button>
@@ -778,14 +770,6 @@
             document.getElementById(page + 'Page').classList.add('active');
             document.querySelectorAll('.nav-item-pro').forEach(item => item.classList.remove('active'));
             event.target.closest('.nav-item-pro').classList.add('active');
-            
-            // ফিক্সড বাটন শুধু হোম পেজে দেখাবে
-            const fixedBtn = document.getElementById('homeFixedBtn');
-            if (page === 'home') {
-                fixedBtn.classList.remove('hidden');
-            } else {
-                fixedBtn.classList.add('hidden');
-            }
         }
 
         // ---------- কুইজ ফাংশন ----------
@@ -798,7 +782,7 @@
             if (!available.length) { showToast('সব কুইজ শেষ!'); return; }
             currentQuestion = available[Math.floor(Math.random() * available.length)];
             document.getElementById('quizSection').classList.remove('hidden');
-            document.getElementById('homeFixedBtn').classList.add('hidden'); // কুইজ চলাকালে বাটন লুকাও
+            document.getElementById('homeBottomBtn').classList.add('hidden');
             displayQuestion(); startTimer(); quizActive = true;
         }
         function displayQuestion() {
@@ -836,7 +820,7 @@
             quizActive = false;
             setTimeout(() => {
                 document.getElementById('quizSection').classList.add('hidden');
-                document.getElementById('homeFixedBtn').classList.remove('hidden'); // কুইজ শেষে আবার বাটন দেখাও
+                document.getElementById('homeBottomBtn').classList.remove('hidden');
                 updateUI();
             }, 2000);
         }
