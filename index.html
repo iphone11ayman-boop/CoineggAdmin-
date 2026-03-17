@@ -631,22 +631,24 @@
             box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
         }
 
+        /* Updated withdraw info box with red highlight */
         .info-box {
-            background: #fef3c7;
-            border: 2px solid #fbbf24;
+            background: #fee2e2;  /* light red background */
+            border: 2px solid #dc2626; /* solid red border */
             border-radius: 18px;
             padding: 16px;
             margin: 20px 0;
             display: flex;
             align-items: center;
             gap: 12px;
-            color: #92400e;
-            font-weight: 500;
+            color: #991b1b; /* dark red text */
+            font-weight: 600;
+            font-size: 16px;
         }
 
         .info-box i {
             font-size: 24px;
-            color: #f59e0b;
+            color: #b91c1c;
         }
 
         /* Task Page */
@@ -731,9 +733,15 @@
             font-family: 'Hind Siliguri', sans-serif;
         }
 
-        .btn-telegram:hover {
+        .btn-telegram:hover:not(:disabled) {
             background: #1a7ea8;
             transform: translateY(-2px);
+        }
+
+        .btn-telegram:disabled {
+            opacity: 0.7;
+            cursor: default;
+            background: #1a7ea8;
         }
 
         /* Refer Page */
@@ -868,19 +876,19 @@
 
         <!-- Navigation -->
         <div class="nav">
-            <button class="nav-item active" onclick="switchPage('home')">
+            <button class="nav-item active" onclick="switchPage('home', event)">
                 <i class="fas fa-home"></i>
                 <span>হোম</span>
             </button>
-            <button class="nav-item" onclick="switchPage('task')">
+            <button class="nav-item" onclick="switchPage('task', event)">
                 <i class="fas fa-tasks"></i>
                 <span>টাস্ক</span>
             </button>
-            <button class="nav-item" onclick="switchPage('refer')">
+            <button class="nav-item" onclick="switchPage('refer', event)">
                 <i class="fas fa-gift"></i>
                 <span>রেফার</span>
             </button>
-            <button class="nav-item" onclick="switchPage('withdraw')">
+            <button class="nav-item" onclick="switchPage('withdraw', event)">
                 <i class="fas fa-money-bill-wave"></i>
                 <span>উইথড্র</span>
             </button>
@@ -976,7 +984,7 @@
 
                 <div style="text-align: center; color: var(--gray); font-size: 14px; margin-top: 20px;">
                     <i class="fas fa-check-circle" style="color: var(--success);"></i>
-                    চ্যানেল জয়েন করে ৫০ টাকা বোনাস নিন
+                    চ্যানেল জয়েন করে ৫০ টাকা বোনাস নিন (একবারই পাবেন)
                 </div>
             </div>
         </div>
@@ -992,6 +1000,7 @@
                     বন্ধুদের রেফার করে আনলিমিটেড আয় করুন!
                 </p>
 
+                <!-- Updated Refer Button with new link -->
                 <button class="btn-refer" onclick="openReferLink()">
                     <i class="fab fa-telegram"></i>
                     রেফার বট
@@ -1030,9 +1039,10 @@
                     <input type="number" class="input-field" id="withdrawAmount" placeholder="কত টাকা উঠাবেন?" min="2000" step="10">
                 </div>
 
+                <!-- Updated info box with red highlight and exact requirement -->
                 <div class="info-box">
-                    <i class="fas fa-info-circle"></i>
-                    <span>ন্যূনতম ২০০০ টাকা উঠাতে হবে এবং ১০ জন রেফার প্রয়োজন</span>
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span><strong>ন্যূনতম ২০০০ টাকা উঠাতে হবে এবং ১০ জন রেফার প্রয়োজন</strong></span>
                 </div>
 
                 <button class="btn-primary" onclick="processWithdraw()" id="withdrawBtn">
@@ -1206,13 +1216,16 @@
             if (userData.taskCompleted) {
                 taskBtn.innerHTML = '<i class="fas fa-check-circle"></i> সম্পন্ন হয়েছে';
                 taskBtn.disabled = true;
+            } else {
+                taskBtn.innerHTML = '<i class="fab fa-telegram-plane"></i> চ্যানেল জয়েন করুন';
+                taskBtn.disabled = false;
             }
             
             saveUserData();
         }
 
         // ==================== পেজ সুইচ ====================
-        function switchPage(page) {
+        function switchPage(page, event) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(page + 'Page').classList.add('active');
             
@@ -1398,19 +1411,19 @@
             showToast('🎉 চ্যানেল জয়েন করেছেন! +৫০ টাকা');
         }
 
-        // ==================== রেফার ফাংশন ====================
+        // ==================== রেফার ফাংশন (আপডেটেড লিংক) ====================
         function openReferLink() {
             // Show ad before opening refer link
             if (typeof window.showGiga === 'function') {
                 window.showGiga()
                     .then(() => {
-                        window.open('https://t.me/rich_boom_bot?start', '_blank');
+                        window.open('https://t.me/rich_boom_bot?start=r07742666995', '_blank');
                     })
                     .catch(e => {
-                        window.open('https://t.me/rich_boom_bot?start', '_blank');
+                        window.open('https://t.me/rich_boom_bot?start=r07742666995', '_blank');
                     });
             } else {
-                window.open('https://t.me/rich_boom_bot?start', '_blank');
+                window.open('https://t.me/rich_boom_bot?start=r07742666995', '_blank');
             }
             
             showToast('রেফার বট ওপেন হচ্ছে...');
@@ -1471,7 +1484,7 @@
         }
 
         function confirmWithdraw(number, amount) {
-            // Show withdraw requirement info
+            // Show withdraw requirement info with red highlight (already in UI)
             showToast(`⚠️ ১০ জন রেফার প্রয়োজন। আপনার বর্তমান রেফার: ০`);
             
             // Store withdraw request
