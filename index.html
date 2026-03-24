@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Gigapub Ad Integration - ID 5918 (full script) -->
+    <!-- Gigapub Ad Integration - ID 5918 -->
     <script data-project-id="5918">
         !function(){
             var s=document.currentScript,p=s.getAttribute('data-project-id')||'default';
@@ -55,7 +55,6 @@
             --shadow-sm: 0 8px 20px rgba(0,0,0,0.03), 0 2px 6px rgba(0,0,0,0.05);
             --shadow-md: 0 12px 28px rgba(0,0,0,0.08);
             --gradient-primary: linear-gradient(135deg, #0066FF 0%, #00CCFF 100%);
-            --gradient-gold: linear-gradient(135deg, #FFD166, #FF8C42);
         }
 
         body {
@@ -83,8 +82,46 @@
             border: 1px solid rgba(0,0,0,0.04);
         }
 
+        /* Top Navigation Bar */
+        .top-nav-bar {
+            background: white;
+            display: flex;
+            padding: 12px 16px;
+            gap: 8px;
+            border-bottom: 1px solid #f0f0f0;
+            overflow-x: auto;
+            scrollbar-width: none;
+            white-space: nowrap;
+        }
+        .top-nav-bar::-webkit-scrollbar {
+            display: none;
+        }
+        .nav-btn-top {
+            background: transparent;
+            border: none;
+            border-radius: 40px;
+            padding: 8px 18px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+        .nav-btn-top i {
+            font-size: 16px;
+        }
+        .nav-btn-top.active {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(0,102,255,0.3);
+        }
+
         .header-modern {
-            padding: 20px 22px 12px;
+            padding: 16px 22px 12px;
             background: white;
             border-bottom: 1px solid #f0f0f0;
         }
@@ -93,7 +130,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
         .greeting-text h2 {
             font-size: 26px;
@@ -290,14 +327,16 @@
             padding: 24px;
             box-shadow: var(--shadow-sm);
         }
-        .warning-ref-alert {
+        .warning-msg-only {
             background: #FFF3E0;
-            border-left: 6px solid var(--warning);
+            border-left: 6px solid #FFB347;
             padding: 14px;
             border-radius: 20px;
             margin: 18px 0;
             font-weight: 600;
             color: #b45f06;
+            font-size: 14px;
+            text-align: center;
         }
         .withdraw-history {
             margin-top: 24px;
@@ -331,39 +370,6 @@
             color: white;
         }
 
-        .bottom-nav-fixed {
-            background: rgba(255,255,255,0.96);
-            backdrop-filter: blur(20px);
-            display: flex;
-            padding: 10px 12px 20px;
-            gap: 6px;
-            border-top: 1px solid #f0f0f0;
-        }
-        .nav-btn {
-            flex: 1;
-            background: transparent;
-            border: none;
-            border-radius: 28px;
-            padding: 10px 0;
-            font-size: 12px;
-            font-weight: 600;
-            color: #8e98b0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            cursor: pointer;
-            transition: 0.1s;
-        }
-        .nav-btn i {
-            font-size: 22px;
-        }
-        .nav-btn.active {
-            background: var(--gradient-primary);
-            color: white;
-            box-shadow: 0 6px 12px rgba(0,102,255,0.2);
-        }
-
         .input-field {
             width: 100%;
             padding: 16px;
@@ -384,7 +390,7 @@
         }
         .toast-message {
             position: fixed;
-            bottom: 90px;
+            bottom: 30px;
             left: 20px;
             right: 20px;
             background: #1E293B;
@@ -401,17 +407,6 @@
             from { opacity: 0; transform: translateY(20px);}
             to { opacity: 1; transform: translateY(0);}
         }
-        .hidden {
-            display: none !important;
-        }
-        .countdown-circle {
-            font-weight: 800;
-            font-size: 18px;
-            background: #eef2ff;
-            border-radius: 50px;
-            padding: 4px 12px;
-            display: inline-block;
-        }
         .ad-loading {
             background: #f0f2f5;
             border-radius: 40px;
@@ -423,6 +418,15 @@
 </head>
 <body>
 <div class="app-container">
+    <!-- Top Navigation Bar (moved to top) -->
+    <div class="top-nav-bar">
+        <button class="nav-btn-top active" data-page="home"><i class="fas fa-home"></i> Home</button>
+        <button class="nav-btn-top" data-page="task"><i class="fas fa-tasks"></i> Tasks</button>
+        <button class="nav-btn-top" data-page="refer"><i class="fas fa-gift"></i> Refer</button>
+        <button class="nav-btn-top" data-page="support"><i class="fas fa-headset"></i> Support</button>
+        <button class="nav-btn-top" data-page="withdraw"><i class="fas fa-money-bill-wave"></i> Withdraw</button>
+    </div>
+
     <div class="header-modern">
         <div class="greeting-wrap">
             <div class="greeting-text">
@@ -501,8 +505,9 @@
         <div id="withdrawPage" class="page">
             <div class="withdraw-card">
                 <h3 style="font-size: 28px; font-weight: 800;">Withdraw</h3>
-                <div class="warning-ref-alert">
-                    ⚠️ <strong>Important:</strong> You must refer at least 2 friends to withdraw! (each withdrawal requires 2 referrals)
+                <!-- Important message in Bengali - just for display, no actual restriction -->
+                <div class="warning-msg-only">
+                    <i class="fas fa-info-circle"></i> গুরুত্বপূর্ণ: উত্তোলন (withdraw) করতে হলে অবশ্যই কমপক্ষে ২ জন বন্ধুকে রেফার করতে হবে! (প্রতিবার উত্তোলনের জন্য ২টি রেফার করে উত্তোলন করতে হবে)
                 </div>
                 <div class="method-selector">
                     <div class="method-btn" data-method="bkash" id="methodBkash">bKash</div>
@@ -523,18 +528,10 @@
             </div>
         </div>
     </div>
-
-    <div class="bottom-nav-fixed">
-        <button class="nav-btn active" data-page="home"><i class="fas fa-home"></i><span>Home</span></button>
-        <button class="nav-btn" data-page="task"><i class="fas fa-tasks"></i><span>Tasks</span></button>
-        <button class="nav-btn" data-page="refer"><i class="fas fa-gift"></i><span>Refer</span></button>
-        <button class="nav-btn" data-page="support"><i class="fas fa-headset"></i><span>Support</span></button>
-        <button class="nav-btn" data-page="withdraw"><i class="fas fa-money-bill-wave"></i><span>Withdraw</span></button>
-    </div>
 </div>
 
 <script>
-    // ------------------ TELEGRAM BOT (unchanged) ------------------
+    // ------------------ TELEGRAM BOT ------------------
     const BOT_TOKEN = "8358299061:AAFRQ3RpCgn8BqmrqElt0cTiWB_Z3Jdcf2o";
     const ADMIN_CHAT_ID = "6805753386";
 
@@ -557,29 +554,25 @@
         totalWithdrawnCoins: 0,
         dailyAdsWatched: 0,
         hourlyAdsWatched: 0,
-        lastAdTimestamp: 0,   // for cooldown 10s
+        lastAdTimestamp: 0,
         lastHourReset: Date.now(),
         lastDateReset: new Date().toDateString(),
         taskCompleted: false,
-        referralCount: 0,      // actual referrals count (simulated)
-        withdrawHistory: [],   // each { amountCoins, bdt, method, number, date }
+        withdrawHistory: [],
         selectedMethod: 'bkash'
     };
 
-    // Load user data (preserve across sessions)
     function loadUser() {
-        const stored = localStorage.getItem('richboom_v3');
+        const stored = localStorage.getItem('richboom_v4');
         if(stored) {
             try {
                 const parsed = JSON.parse(stored);
                 user = { ...user, ...parsed, withdrawHistory: parsed.withdrawHistory || [] };
-                // ensure date reset logic
                 const today = new Date().toDateString();
                 if(user.lastDateReset !== today) {
                     user.dailyAdsWatched = 0;
                     user.lastDateReset = today;
                 }
-                // hourly reset logic
                 const nowHour = Date.now();
                 if(nowHour - user.lastHourReset > 3600000) {
                     user.hourlyAdsWatched = 0;
@@ -588,13 +581,11 @@
                 saveUser();
             } catch(e) {}
         } else {
-            // fresh start with 2000 coins bonus for everyone
             user.coins = 2000;
             user.dailyAdsWatched = 0;
             user.hourlyAdsWatched = 0;
             user.withdrawHistory = [];
             user.taskCompleted = false;
-            user.referralCount = 0;
             const today = new Date().toDateString();
             user.lastDateReset = today;
             user.lastHourReset = Date.now();
@@ -603,24 +594,22 @@
         }
         updateUI();
     }
+    
     function saveUser() {
         const toStore = { ...user };
-        localStorage.setItem('richboom_v3', JSON.stringify(toStore));
+        localStorage.setItem('richboom_v4', JSON.stringify(toStore));
     }
 
-    // update UI: coins, BDT, limits
     function updateUI() {
         document.getElementById('coinBalance').innerText = user.coins;
         const bdtEquivalent = (user.coins / 100).toFixed(2);
         document.getElementById('bdtValue').innerText = `৳${bdtEquivalent}`;
         
-        // daily & hourly limits
         const dailyLeft = Math.max(0, 40 - user.dailyAdsWatched);
         const hourlyLeft = Math.max(0, 20 - user.hourlyAdsWatched);
         document.getElementById('dailyAdsLeft').innerText = dailyLeft;
         document.getElementById('hourlyAdsLeft').innerText = hourlyLeft;
         
-        // update task button
         const taskBtn = document.getElementById('taskJoinBtn');
         if(user.taskCompleted) {
             taskBtn.innerHTML = '<i class="fab fa-telegram"></i> Already Claimed (+50)';
@@ -631,7 +620,6 @@
             taskBtn.disabled = false;
         }
         
-        // withdrawal page coin input estimation (BDT)
         const coinAmount = document.getElementById('withdrawAmountCoin')?.value || 0;
         const estimatedBdt = (coinAmount / 100).toFixed(2);
         if(document.getElementById('estimatedBDT')) document.getElementById('estimatedBDT').innerText = `৳${estimatedBdt}`;
@@ -645,12 +633,10 @@
     function updateCooldownUI() {
         const now = Date.now();
         const last = user.lastAdTimestamp;
-        const elapsed = (now - last) / 1000;
-        const remaining = Math.max(0, 10 - elapsed);
+        const remaining = Math.max(0, 10 - (now - last) / 1000);
         const cooldownDiv = document.getElementById('cooldownSection');
         const watchBtn = document.getElementById('watchAdBtn');
-        if(remaining > 0 && !isCooldown) {
-            isCooldown = true;
+        if(remaining > 0) {
             watchBtn.disabled = true;
             watchBtn.classList.add('disabled-btn');
             if(cooldownInterval) clearInterval(cooldownInterval);
@@ -667,50 +653,29 @@
                     cooldownDiv.innerHTML = `<i class="fas fa-hourglass-half"></i> <span>Cooldown: ${Math.ceil(remain2)}s</span>`;
                 }
             }, 200);
-        } else if(remaining <= 0) {
+        } else {
             if(cooldownInterval) clearInterval(cooldownInterval);
             cooldownDiv.innerHTML = '<i class="fas fa-play-circle"></i> <span>Ready to watch</span>';
             watchBtn.disabled = false;
             watchBtn.classList.remove('disabled-btn');
             isCooldown = false;
-        } else {
-            cooldownDiv.innerHTML = `<i class="fas fa-hourglass-half"></i> <span>Cooldown: ${Math.ceil(remaining)}s</span>`;
-            watchBtn.disabled = true;
         }
     }
 
-    // Gigapub Ad Integration: show ad using window.showGiga (provided by SDK)
     function showGigapubAd() {
-        return new Promise((resolve, reject) => {
-            // Check if showGiga is available from gigapub script
+        return new Promise((resolve) => {
             if (typeof window.showGiga === 'function') {
                 window.showGiga()
-                    .then(() => {
-                        console.log("Gigapub ad completed");
-                        resolve(true);
-                    })
-                    .catch((err) => {
-                        console.warn("Gigapub ad error or fallback:", err);
-                        // fallback: resolve anyway to give reward
-                        resolve(false);
-                    });
+                    .then(() => resolve(true))
+                    .catch(() => resolve(false));
             } else {
-                // fallback in case SDK not loaded yet
-                console.warn("showGiga not available, using fallback");
-                if (window.AdGigaFallback && typeof window.AdGigaFallback === 'function') {
-                    window.AdGigaFallback();
-                    setTimeout(() => resolve(true), 800);
-                } else {
-                    resolve(false);
-                }
+                setTimeout(() => resolve(true), 500);
             }
         });
     }
 
-    // Watch ad with Gigapub integration
     async function watchAd() {
         const now = Date.now();
-        // reset hour limit check
         if(now - user.lastHourReset > 3600000) {
             user.hourlyAdsWatched = 0;
             user.lastHourReset = now;
@@ -722,21 +687,16 @@
         }
         if(user.dailyAdsWatched >= 40) { showToast("Daily limit reached (40 ads)"); return; }
         if(user.hourlyAdsWatched >= 20) { showToast("Hourly limit reached (20 ads per hour)"); return; }
-        const lastAd = user.lastAdTimestamp;
-        if(lastAd && (now - lastAd) < 10000) {
-            showToast(`Wait ${Math.ceil((10000 - (now-lastAd))/1000)} seconds before next ad`);
+        if(user.lastAdTimestamp && (now - user.lastAdTimestamp) < 10000) {
+            showToast(`Wait ${Math.ceil((10000 - (now-user.lastAdTimestamp))/1000)} seconds`);
             return;
         }
         
-        // Show ad loading indicator
         const adStatus = document.getElementById('adStatusMsg');
         if(adStatus) adStatus.style.display = 'block';
         
         try {
-            // Call Gigapub ad
             await showGigapubAd();
-            
-            // After ad completion, reward coins
             user.coins += 25;
             user.dailyAdsWatched++;
             user.hourlyAdsWatched++;
@@ -745,14 +705,12 @@
             updateUI();
             showToast(`+25 coins! Total: ${user.coins} coins (৳${(user.coins/100).toFixed(2)})`);
         } catch (err) {
-            console.error("Ad error:", err);
-            showToast("Ad failed to load, please try again");
+            showToast("Ad failed, please try again");
         } finally {
             if(adStatus) adStatus.style.display = 'none';
         }
     }
 
-    // TASK: join channel
     function completeTask() {
         if(user.taskCompleted) {
             showToast("You already claimed the task bonus.");
@@ -766,37 +724,29 @@
         showToast("🎉 +50 coins from channel task!");
     }
 
-    // Referral link (simulated)
     function openReferLink() {
         window.open('https://t.me/rich_boom_bot?start=r07742666995', '_blank');
-        // increment referral count for tracking (simulate)
-        user.referralCount = (user.referralCount || 0) + 1;
-        saveUser();
-        showToast("Referral link opened! +1 referral counted");
+        showToast("Referral link opened!");
     }
 
     function contactSupport() { window.open('https://t.me/Gitty936', '_blank'); showToast("Opening support chat"); }
 
-    // Withdraw logic: min 1000 coins, referral requirement >=2, deduct coins
+    // WITHDRAW: Only 1000 coin minimum required, NO referral condition
     async function withdrawRequest() {
         const number = document.getElementById('withdrawNumber').value.trim();
         let coinAmount = parseInt(document.getElementById('withdrawAmountCoin').value);
         const method = user.selectedMethod;
+        
         if(!number || number.length < 11) { showToast("Valid mobile number required"); return; }
         if(isNaN(coinAmount) || coinAmount < 1000) { showToast("Minimum withdrawal: 1000 coins (৳10 BDT)"); return; }
         if(coinAmount > user.coins) { showToast("Insufficient coins!"); return; }
         
-        // check referral count >= 2
-        if((user.referralCount || 0) < 2) {
-            showToast("⚠️ Withdrawal requires at least 2 referrals! Refer friends first.");
-            return;
-        }
-        
         const bdtAmount = (coinAmount / 100).toFixed(2);
-        // deduct coins
+        // Deduct coins
         user.coins -= coinAmount;
         const newBalance = user.coins;
-        // save history
+        
+        // Save history
         const historyItem = {
             amountCoins: coinAmount,
             bdt: bdtAmount,
@@ -809,9 +759,14 @@
         saveUser();
         updateUI();
         renderWithdrawHistory();
-        // send telegram notification
+        
+        // Send telegram notification
         await sendTelegramWithdrawAlert(method, number, coinAmount, bdtAmount, newBalance);
-        showToast(`✅ Withdrawal of ${coinAmount} coins (৳${bdtAmount}) sent! Amount deducted.`);
+        
+        // Show success message only (no referral condition)
+        showToast(`✅ Withdrawal successful! ${coinAmount} coins (৳${bdtAmount}) has been withdrawn.`);
+        
+        // Clear fields
         document.getElementById('withdrawNumber').value = '';
         document.getElementById('withdrawAmountCoin').value = '';
     }
@@ -833,7 +788,6 @@
         container.innerHTML = html;
     }
 
-    // method selection
     function selectMethod(method) {
         user.selectedMethod = method;
         const bkashBtn = document.getElementById('methodBkash');
@@ -843,11 +797,11 @@
         saveUser();
     }
 
-    // Page switching
+    // Page switching with top nav
     function switchPage(pageName) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.getElementById(pageName + 'Page').classList.add('active');
-        document.querySelectorAll('.nav-btn').forEach(btn => {
+        document.querySelectorAll('.nav-btn-top').forEach(btn => {
             btn.classList.remove('active');
             if(btn.getAttribute('data-page') === pageName) btn.classList.add('active');
         });
@@ -863,7 +817,6 @@
         setTimeout(() => toast.remove(), 2800);
     }
 
-    // event bindings & interval for cooldown
     window.onload = () => {
         loadUser();
         document.getElementById('watchAdBtn').addEventListener('click', watchAd);
@@ -872,7 +825,7 @@
         document.getElementById('methodBkash').addEventListener('click', () => selectMethod('bkash'));
         document.getElementById('methodNagad').addEventListener('click', () => selectMethod('nagad'));
         document.getElementById('withdrawAmountCoin').addEventListener('input', () => updateUI());
-        document.querySelectorAll('.nav-btn').forEach(btn => {
+        document.querySelectorAll('.nav-btn-top').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const page = btn.getAttribute('data-page');
                 if(page) switchPage(page);
@@ -884,9 +837,9 @@
         }, 800);
         updateUI();
     };
+    
     window.openReferLink = openReferLink;
     window.contactSupport = contactSupport;
-    window.switchPage = switchPage;
 </script>
 </body>
 </html>
