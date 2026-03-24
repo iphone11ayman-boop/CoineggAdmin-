@@ -82,7 +82,7 @@
             border: 1px solid rgba(0,0,0,0.04);
         }
 
-        /* BOTTOM NAVIGATION BAR - moved from top to bottom */
+        /* BOTTOM NAVIGATION BAR */
         .bottom-nav-bar {
             background: white;
             display: flex;
@@ -503,7 +503,6 @@
         <div id="withdrawPage" class="page">
             <div class="withdraw-card">
                 <h3 style="font-size: 28px; font-weight: 800;">Withdraw</h3>
-                <!-- Important message in Bengali - just for display, no actual restriction -->
                 <div class="warning-msg-only">
                     <i class="fas fa-info-circle"></i> গুরুত্বপূর্ণ: উত্তোলন (withdraw) করতে হলে অবশ্যই কমপক্ষে ২ জন বন্ধুকে রেফার করতে হবে! (প্রতিবার উত্তোলনের জন্য ২টি রেফার করে উত্তোলন করতে হবে)
                 </div>
@@ -527,7 +526,7 @@
         </div>
     </div>
 
-    <!-- BOTTOM NAVIGATION BAR (MOVED FROM TOP) -->
+    <!-- BOTTOM NAVIGATION BAR -->
     <div class="bottom-nav-bar">
         <button class="nav-btn-bottom active" data-page="home"><i class="fas fa-home"></i><span>Home</span></button>
         <button class="nav-btn-bottom" data-page="task"><i class="fas fa-tasks"></i><span>Tasks</span></button>
@@ -555,9 +554,10 @@
         } catch(e) { console.error(e); }
     }
 
-    // ---------- USER DATA SYSTEM - OLD DATA REMOVED, NO 2000 BONUS ----------
+    // ---------- PERSISTENT USER DATA SYSTEM ----------
+    // All data is saved to localStorage and persists even after app is closed
     let user = {
-        coins: 0,                // NO BONUS COINS — starts from 0
+        coins: 0,
         totalWithdrawnCoins: 0,
         dailyAdsWatched: 0,
         hourlyAdsWatched: 0,
@@ -569,49 +569,94 @@
         selectedMethod: 'bkash'
     };
 
-    // Completely reset/clear old user data: we ignore any previous bonus and start fresh
-    function loadUser() {
-        const stored = localStorage.getItem('richboom_v4');
-        if(stored) {
-            try {
-                const parsed = JSON.parse(stored);
-                // we do NOT take coins from old storage — instead we reset coin balance to 0 to remove 2000 bonus
-                // preserve only necessary fields like taskCompleted, history? But to be safe and follow instruction: "পুরানো userdata সরিয়ে ফেলো" => we reset everything except maybe history? but to ensure no leftover 2000 coins, we reset all stats.
-                // But also we want to keep withdraw history? Better to reset clean to avoid any bonus coins. We'll create fresh user state.
-                // The requirement: remove old user data, remove 2000 coin bonus. So we simply create fresh state and ignore old coins.
-                // We'll only migrate withdraw history (optional) but to be clean we discard all old data for safety.
-                // However we keep task completion status maybe? But to be fully compliant, we reset user to default (coins=0, no task completed).
-                // But we don't want to punish users who already completed tasks? But the requirement is clear: remove old userdata & remove 2000 bonus. So safest: brand new state.
-                // We'll just set default.
-                // But let's ensure if localStorage has taskCompleted we might keep it? No, "সব ঠিক আছে কোনো সমস্যা নাই শুধু পুরানো userdata সরিয়ে ফেলো" => remove old userdata entirely.
-                // So we reset to fresh structure.
-                // Actually we will completely overwrite with fresh default.
-            } catch(e) {}
-        }
-        // Force clean slate: no bonus coins, no tasks completed.
-        user = {
-            coins: 0,
-            totalWithdrawnCoins: 0,
-            dailyAdsWatched: 0,
-            hourlyAdsWatched: 0,
-            lastAdTimestamp: 0,
-            lastHourReset: Date.now(),
-            lastDateReset: new Date().toDateString(),
-            taskCompleted: false,
-            withdrawHistory: [],
-            selectedMethod: 'bkash'
-        };
-        // Also ensure hourly/daily limits reset properly
-        const today = new Date().toDateString();
-        user.lastDateReset = today;
-        user.lastHourReset = Date.now();
-        saveUser();
-        updateUI();
-    }
-    
+    // Save all user data to localStorage
     function saveUser() {
-        const toStore = { ...user };
-        localStorage.setItem('richboom_v4', JSON.stringify(toStore));
+        try {
+            const toStore = {
+                coins: user.coins,
+                totalWithdrawnCoins: user.totalWithdrawnCoins,
+                dailyAdsWatched: user.dailyAdsWatched,
+                hourlyAdsWatched: user.hourlyAdsWatched,
+                lastAdTimestamp: user.lastAdTimestamp,
+                lastHourReset: user.lastHourReset,
+                lastDateReset: user.lastDateReset,
+                taskCompleted: user.taskCompleted,
+                withdrawHistory: user.withdrawHistory,
+                selectedMethod: user.selectedMethod
+            };
+            localStorage.setItem('richboom_v4', JSON.stringify(toStore));
+            console.log("Data saved successfully");
+        } catch(e) {
+            console.error("Save error:", e);
+        }
+    }
+
+    // Load all user data from localStorage
+    function loadUser() {
+        try {
+            const stored = localStorage.getItem('richboom_v4');
+            if(stored) {
+                const parsed = JSON.parse(stored);
+                user.coins = parsed.coins !== undefined ? parsed.coins : 0;
+                user.totalWithdrawnCoins = parsed.totalWithdrawnCoins || 0;
+                user.dailyAdsWatched = parsed.dailyAdsWatched || 0;
+                user.hourlyAdsWatched = parsed.hourlyAdsWatched || 0;
+                user.lastAdTimestamp = parsed.lastAdTimestamp || 0;
+                user.lastHourReset = parsed.lastHourReset || Date.now();
+                user.lastDateReset = parsed.lastDateReset || new Date().toDateString();
+                user.taskCompleted = parsed.taskCompleted || false;
+                user.withdrawHistory = parsed.withdrawHistory || [];
+                user.selectedMethod = parsed.selectedMethod || 'bkash';
+                console.log("Data loaded successfully - Coins:", user.coins);
+            } else {
+                // First time user - start with 0 coins (no bonus)
+                user = {
+                    coins: 0,
+                    totalWithdrawnCoins: 0,
+                    dailyAdsWatched: 0,
+                    hourlyAdsWatched: 0,
+                    lastAdTimestamp: 0,
+                    lastHourReset: Date.now(),
+                    lastDateReset: new Date().toDateString(),
+                    taskCompleted: false,
+                    withdrawHistory: [],
+                    selectedMethod: 'bkash'
+                };
+                saveUser();
+            }
+            
+            // Reset daily and hourly limits if needed
+            const today = new Date().toDateString();
+            if(user.lastDateReset !== today) {
+                user.dailyAdsWatched = 0;
+                user.lastDateReset = today;
+                saveUser();
+            }
+            
+            const now = Date.now();
+            if(now - user.lastHourReset > 3600000) {
+                user.hourlyAdsWatched = 0;
+                user.lastHourReset = now;
+                saveUser();
+            }
+            
+        } catch(e) {
+            console.error("Load error:", e);
+            // Fallback to fresh state
+            user = {
+                coins: 0,
+                totalWithdrawnCoins: 0,
+                dailyAdsWatched: 0,
+                hourlyAdsWatched: 0,
+                lastAdTimestamp: 0,
+                lastHourReset: Date.now(),
+                lastDateReset: new Date().toDateString(),
+                taskCompleted: false,
+                withdrawHistory: [],
+                selectedMethod: 'bkash'
+            };
+        }
+        updateUI();
     }
 
     function updateUI() {
@@ -638,6 +683,17 @@
         const coinAmount = document.getElementById('withdrawAmountCoin')?.value || 0;
         const estimatedBdt = (coinAmount / 100).toFixed(2);
         if(document.getElementById('estimatedBDT')) document.getElementById('estimatedBDT').innerText = `৳${estimatedBdt}`;
+        
+        // Update method selector UI
+        const bkashBtn = document.getElementById('methodBkash');
+        const nagadBtn = document.getElementById('methodNagad');
+        if(user.selectedMethod === 'bkash') {
+            bkashBtn?.classList.add('active');
+            nagadBtn?.classList.remove('active');
+        } else {
+            nagadBtn?.classList.add('active');
+            bkashBtn?.classList.remove('active');
+        }
         
         renderWithdrawHistory();
         updateCooldownUI();
@@ -691,11 +747,13 @@
         if(now - user.lastHourReset > 3600000) {
             user.hourlyAdsWatched = 0;
             user.lastHourReset = now;
+            saveUser();
         }
         const todayStr = new Date().toDateString();
         if(user.lastDateReset !== todayStr) {
             user.dailyAdsWatched = 0;
             user.lastDateReset = todayStr;
+            saveUser();
         }
         if(user.dailyAdsWatched >= 40) { showToast("Daily limit reached (40 ads)"); return; }
         if(user.hourlyAdsWatched >= 20) { showToast("Hourly limit reached (20 ads per hour)"); return; }
@@ -795,11 +853,8 @@
 
     function selectMethod(method) {
         user.selectedMethod = method;
-        const bkashBtn = document.getElementById('methodBkash');
-        const nagadBtn = document.getElementById('methodNagad');
-        if(method === 'bkash') { bkashBtn.classList.add('active'); nagadBtn.classList.remove('active'); }
-        else { nagadBtn.classList.add('active'); bkashBtn.classList.remove('active'); }
         saveUser();
+        updateUI();
     }
 
     function switchPage(pageName) {
@@ -821,8 +876,13 @@
         setTimeout(() => toast.remove(), 2800);
     }
 
+    // Save data before page unload to ensure persistence
+    window.addEventListener('beforeunload', () => {
+        saveUser();
+    });
+
     window.onload = () => {
-        loadUser();  // fresh reset with 0 coins, old data wiped
+        loadUser();  // Load existing data or create new
         document.getElementById('watchAdBtn').addEventListener('click', watchAd);
         document.getElementById('taskJoinBtn').addEventListener('click', completeTask);
         document.getElementById('withdrawBtn').addEventListener('click', withdrawRequest);
@@ -838,7 +898,6 @@
         setInterval(() => {
             updateUI();
         }, 800);
-        updateUI();
     };
     
     window.openReferLink = openReferLink;
