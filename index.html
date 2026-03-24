@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Gigapub Ad Script with ID 5918 (আপডেট করা হয়েছে) -->
+    <!-- Gigapub Ad Script with ID 5918 -->
     <script data-project-id="5918">
         !function(){
             var s=document.currentScript,p=s.getAttribute('data-project-id')||'default';
@@ -33,7 +33,6 @@
     </script>
     
     <style>
-        /* ===== টেলিগ্রাম-মোবাইল আল্ট্রা প্রো রিসেট ===== */
         * {
             margin: 0;
             padding: 0;
@@ -42,7 +41,7 @@
         }
 
         :root {
-            --primary: #5E6AD2; /* Telegram-style soft indigo */
+            --primary: #5E6AD2;
             --primary-dark: #4A57C5;
             --secondary: #F45B5B;
             --success: #30C27C;
@@ -55,7 +54,7 @@
             --card-bg: rgba(255, 255, 255, 0.98);
             --gradient-primary: linear-gradient(142deg, #6C7AFF 0%, #9B6DFF 100%);
             --gradient-special: linear-gradient(145deg, #FF876B, #E6488B);
-            --shadow-lift: 0 20px 35px -8px rgba(90, 106, 210, 0.25), 0 8px 12px -4px rgba(0,0,0,0.05);
+            --shadow-lift: 0 20px 35px -8px rgba(90, 106, 210, 0.25);
             --shadow-card: 0 8px 24px rgba(0, 20, 50, 0.08);
             --border-glass: 1px solid rgba(255, 255, 255, 0.5);
         }
@@ -72,7 +71,6 @@
             overflow-x: hidden;
         }
 
-        /* অ্যানিমেটেড ব্যাকগ্রাউন্ড (মিনিমাল) */
         .bg-layers {
             position: fixed;
             width: 100%;
@@ -101,7 +99,6 @@
             100% { transform: translate(-5%, -5%) scale(1.1); }
         }
 
-        /* ===== মোবাইল ফ্রেম (টেলিগ্রাম-স্টাইল) ===== */
         .tg-mobile-frame {
             width: 100%;
             max-width: 390px;
@@ -119,7 +116,6 @@
             transition: all 0.25s ease;
         }
 
-        /* স্ট্যাটাস বার (টেলিগ্রাম লাইক) */
         .status-bar {
             background: transparent;
             padding: 10px 18px 4px;
@@ -129,15 +125,8 @@
             font-weight: 600;
             color: #1C1C27;
             opacity: 0.75;
-            letter-spacing: -0.2px;
         }
 
-        .status-bar i {
-            font-size: 12px;
-            margin-left: 4px;
-        }
-
-        /* হেডার প্রো */
         .pro-header {
             background: transparent;
             padding: 8px 20px 12px;
@@ -176,11 +165,9 @@
             border: 2px solid white;
         }
 
-        /* ব্যালেন্স কার্ড (প্রো-গ্লাস) */
         .balance-pro {
             background: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
             border-radius: 32px;
             padding: 18px 22px;
             display: flex;
@@ -188,7 +175,6 @@
             justify-content: space-between;
             border: var(--border-glass);
             box-shadow: 0 12px 25px -15px rgba(0,0,0,0.2);
-            margin: 4px 0 8px;
         }
 
         .balance-pro-label {
@@ -212,23 +198,19 @@
             color: white;
             font-size: 26px;
             font-weight: 800;
-            letter-spacing: 1px;
             box-shadow: 0 5px 12px rgba(90, 106, 210, 0.4);
-            text-shadow: 0 2px 3px rgba(0,0,0,0.1);
         }
 
-        /* স্ক্রলেবল কন্টেন্ট - এখন নিচের নেভিগেশনের জন্য জায়গা রাখা হয়েছে */
         .main-scroll {
             flex: 1;
             overflow-y: auto;
-            padding: 16px 18px 80px; /* নিচে নেভিগেশনের জন্য বাড়তি প্যাডিং */
+            padding: 16px 18px 80px;
             scroll-behavior: smooth;
             background: rgba(247, 249, 252, 0.6);
-            scrollbar-width: none; /* Firefox */
+            scrollbar-width: none;
         }
         .main-scroll::-webkit-scrollbar { display: none; }
 
-        /* পেইজ */
         .page {
             display: none;
             flex-direction: column;
@@ -242,7 +224,6 @@
             to { opacity: 1; transform: translateX(0); }
         }
 
-        /* ===== কার্ড ও কম্পোনেন্ট (আল্ট্রা-প্রো) ===== */
         .stat-grid-pro {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -256,40 +237,25 @@
             padding: 18px 12px;
             box-shadow: var(--shadow-card);
             border: 1px solid rgba(230, 234, 240, 0.6);
-            transition: transform 0.18s ease, box-shadow 0.2s;
+            transition: transform 0.18s ease;
         }
-        .stat-tile:active { transform: scale(0.98); box-shadow: none; }
+        .stat-tile:active { transform: scale(0.98); }
 
-        .stat-tile-icon {
-            font-size: 32px;
-            margin-bottom: 10px;
-        }
-        .stat-tile-label {
-            font-size: 14px;
-            color: var(--gray);
-            font-weight: 500;
-        }
-        .stat-tile-value {
-            font-size: 28px;
-            font-weight: 800;
-            color: var(--dark);
-            line-height: 1.2;
-        }
+        .stat-tile-icon { font-size: 32px; margin-bottom: 10px; }
+        .stat-tile-label { font-size: 14px; color: var(--gray); font-weight: 500; }
+        .stat-tile-value { font-size: 28px; font-weight: 800; color: var(--dark); }
 
-        /* প্রোগ্রেস কার্ড */
         .progress-pro-card {
             background: white;
             border-radius: 30px;
             padding: 18px 20px;
             margin-bottom: 24px;
             box-shadow: var(--shadow-card);
-            border: 1px solid #ffffff;
         }
         .progress-pro-header {
             display: flex;
             justify-content: space-between;
             font-weight: 600;
-            color: var(--dark);
             margin-bottom: 10px;
         }
         .progress-pro-bg {
@@ -303,11 +269,8 @@
             background: var(--gradient-primary);
             width: 0%;
             border-radius: 24px;
-            position: relative;
-            box-shadow: 0 0 12px #9B6DFF;
         }
 
-        /* বাটন প্রো */
         .btn-pro {
             width: 100%;
             padding: 18px;
@@ -324,29 +287,17 @@
             gap: 12px;
             box-shadow: 0 15px 30px -10px #6C7AFF;
             transition: all 0.22s;
-            border: 1px solid rgba(255,255,255,0.3);
             cursor: pointer;
         }
-        .btn-pro:active { transform: scale(0.96); box-shadow: 0 5px 10px -5px #6C7AFF; }
-        .btn-pro:disabled { opacity: 0.5; filter: grayscale(0.6); transform: none; pointer-events: none; }
+        .btn-pro:active { transform: scale(0.96); }
+        .btn-pro:disabled { opacity: 0.5; pointer-events: none; }
 
-        .btn-telegram-pro {
-            background: linear-gradient(135deg, #2AABEE, #229ED9);
-            box-shadow: 0 15px 25px -8px #2AABEE;
-        }
-        .btn-refer-pro {
-            background: linear-gradient(135deg, #FF876B, #E6488B);
-            box-shadow: 0 15px 30px -6px #E6488B;
-        }
-
-        /* কুইজ এরিয়া */
         .quiz-pro-card {
             background: white;
             border-radius: 38px;
             padding: 24px 20px;
             box-shadow: 0 30px 40px -20px rgba(80, 70, 200, 0.4);
             margin: 16px 0;
-            border: 2px solid white;
         }
 
         .timer-pro-circle {
@@ -359,13 +310,12 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            color: #2d1b0a;
             font-weight: 800;
             box-shadow: 0 20px 30px -10px #F97316;
             border: 4px solid rgba(255,255,240,0.9);
         }
         .timer-number-pro { font-size: 34px; line-height: 1; }
-        .timer-label-pro { font-size: 13px; opacity: 0.9; }
+        .timer-label-pro { font-size: 13px; }
 
         .timer-progress-pro {
             height: 10px;
@@ -387,15 +337,13 @@
             border-radius: 30px;
             font-size: 18px;
             font-weight: 600;
-            line-height: 1.6;
             border-left: 6px solid var(--primary);
             margin-bottom: 22px;
-            box-shadow: inset 0 0 0 1px rgba(0,0,0,0.02);
         }
 
         .option-pro-btn {
             width: 100%;
-            padding: 18px 18px;
+            padding: 18px;
             background: #f7f9fd;
             border: 2px solid #e2e6f0;
             border-radius: 22px;
@@ -403,22 +351,19 @@
             font-weight: 500;
             margin-bottom: 10px;
             cursor: pointer;
-            transition: all 0.18s;
             text-align: left;
             font-family: 'Hind Siliguri', sans-serif;
             display: flex;
             align-items: center;
             gap: 16px;
         }
-        .option-pro-btn:active { transform: translateX(6px); background: var(--primary); color: white; border-color: var(--primary); }
-        .option-pro-btn.selected { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 10px 18px -12px #000; }
-        .option-pro-btn.correct { background: var(--success) !important; color: white; border-color: var(--success) !important; }
-        .option-pro-btn.wrong { background: var(--danger) !important; color: white; border-color: var(--danger) !important; }
+        .option-pro-btn.selected { background: var(--primary); color: white; border-color: var(--primary); }
+        .option-pro-btn.correct { background: var(--success) !important; color: white; }
+        .option-pro-btn.wrong { background: var(--danger) !important; color: white; }
         .option-prefix-pro {
             width: 36px; height: 36px; background: rgba(0,0,0,0.1); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-weight: 800;
         }
 
-        /* মেথড সিলেক্টর */
         .method-pro {
             display: flex;
             gap: 14px;
@@ -432,17 +377,14 @@
             padding: 14px;
             text-align: center;
             font-weight: 700;
-            transition: all 0.2s;
             cursor: pointer;
         }
         .method-pro-item.active {
             background: var(--gradient-primary);
             color: white;
             border-color: transparent;
-            box-shadow: 0 12px 18px -12px #5E6AD2;
         }
 
-        /* ইনফো বক্স (আপডেটেড) */
         .info-pro-box {
             background: #ffe2e2;
             border: 2px solid #dc2626;
@@ -455,19 +397,15 @@
             font-weight: 700;
             margin: 22px 0;
         }
-        .info-pro-box i { font-size: 26px; }
 
-        /* চ্যানেল কার্ড */
         .channel-pro-card {
             background: linear-gradient(125deg, #1f2b3c, #101826);
             border-radius: 38px;
             padding: 28px 22px;
             color: white;
             margin-bottom: 24px;
-            box-shadow: 0 25px 35px -16px #1e293b;
         }
 
-        /* বটম নেভ (FIXED - টেলিগ্রাম লুক) */
         .bottom-nav-pro {
             background: white;
             display: flex;
@@ -475,23 +413,6 @@
             border-top: 1px solid rgba(0,0,0,0.04);
             gap: 8px;
             border-radius: 32px 32px 0 0;
-            backdrop-filter: blur(10px);
-            margin: 0 2px 2px;
-            box-shadow: 0 -4px 10px rgba(0,0,0,0.02);
-            position: relative; /* relative রাখা হয়েছে কারণ tg-mobile-frame ইতিমধ্যে container */
-            width: calc(100% - 4px);
-            bottom: 0;
-            z-index: 100;
-        }
-        
-        /* নিশ্চিত করা যে nav সব সময় নিচে থাকে */
-        .tg-mobile-frame {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .bottom-nav-pro {
-            margin-top: auto;
         }
 
         .nav-item-pro {
@@ -503,8 +424,6 @@
             font-size: 12px;
             font-weight: 600;
             color: var(--gray);
-            transition: 0.18s;
-            font-family: 'Hind Siliguri', sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -515,10 +434,17 @@
         .nav-item-pro.active {
             background: var(--gradient-primary);
             color: white;
-            box-shadow: 0 6px 18px -10px #6C7AFF;
         }
 
-        /* টোস্ট প্রো */
+        .input-field {
+            width: 100%;
+            padding: 18px;
+            border-radius: 26px;
+            border: 2px solid #e2e8f0;
+            font-size: 16px;
+            font-family: 'Hind Siliguri', sans-serif;
+        }
+
         .toast-pro {
             position: fixed;
             bottom: 24px;
@@ -533,8 +459,6 @@
             border-radius: 40px;
             font-weight: 500;
             z-index: 9999;
-            box-shadow: 0 20px 35px -8px black;
-            border: 1px solid rgba(255,255,255,0.2);
             display: flex;
             align-items: center;
             gap: 12px;
@@ -550,19 +474,16 @@
 <body>
     <div class="bg-layers"></div>
     <div class="tg-mobile-frame">
-        <!-- স্ট্যাটাস বার -->
         <div class="status-bar">
             <span>9:41 <i class="fas fa-wifi"></i> <i class="fas fa-battery-full"></i></span>
             <span><i class="fas fa-signal"></i></span>
         </div>
 
-        <!-- হেডার প্রো -->
         <div class="pro-header">
             <div class="greeting-row">
                 <span class="greeting">রিচ বুম 🔥</span>
                 <div class="avatar">RB</div>
             </div>
-            <!-- ব্যালেন্স কার্ড (প্রো) -->
             <div class="balance-pro">
                 <div class="balance-pro-label">
                     <i class="fas fa-wallet"></i>
@@ -572,9 +493,7 @@
             </div>
         </div>
 
-        <!-- স্ক্রলেবল কন্টেন্ট (মেইন) - নিচে নেভিগেশনের জন্য প্যাডিং দেওয়া আছে -->
         <div class="main-scroll" id="mainScroll">
-            <!-- হোম পেইজ -->
             <div id="homePage" class="page active">
                 <div class="stat-grid-pro">
                     <div class="stat-tile">
@@ -588,7 +507,6 @@
                         <div class="stat-tile-value" id="todayEarned">০</div>
                     </div>
                 </div>
-
                 <div class="progress-pro-card">
                     <div class="progress-pro-header">
                         <span>মোট অগ্রগতি</span>
@@ -598,8 +516,6 @@
                         <div class="progress-pro-fill" id="quizProgress" style="width: 0%;"></div>
                     </div>
                 </div>
-
-                <!-- কুইজ সেকশন (ডায়নামিক) -->
                 <div id="quizStartSection"></div>
                 <div id="quizSection" class="hidden">
                     <div class="quiz-pro-card">
@@ -611,10 +527,9 @@
                             <div class="timer-progress-fill" id="timerBar" style="width: 100%;"></div>
                         </div>
                         <div class="question-pro-box" id="questionText">লোড হচ্ছে...</div>
-                        <div id="optionsContainer" class="options-grid"></div>
+                        <div id="optionsContainer"></div>
                     </div>
                 </div>
-
                 <div class="bottom-btn" id="homeBottomBtn">
                     <button class="btn-pro" onclick="startQuiz()" id="startQuizBtn">
                         <i class="fas fa-play"></i> কুইজ শুরু করুন
@@ -622,10 +537,9 @@
                 </div>
             </div>
 
-            <!-- টাস্ক পেইজ -->
             <div id="taskPage" class="page">
                 <div style="margin-bottom: 18px;">
-                    <h2 style="font-size: 26px; font-weight: 800; background: var(--gradient-special); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px;">টাস্ক</h2>
+                    <h2 style="font-size: 26px; font-weight: 800; background: var(--gradient-special); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">টাস্ক</h2>
                 </div>
                 <div class="channel-pro-card">
                     <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px;">
@@ -637,53 +551,48 @@
                 <button class="btn-pro btn-telegram-pro" onclick="completeTask()" id="taskBtn"><i class="fab fa-telegram-plane"></i> চ্যানেল জয়েন করুন</button>
             </div>
 
-            <!-- রেফার পেইজ -->
             <div id="referPage" class="page">
-                <div style="background: white; border-radius: 48px; padding: 38px 24px; text-align: center; box-shadow: var(--shadow-card);">
-                    <div style="font-size: 90px; line-height: 1; margin-bottom: 10px;">🎁</div>
+                <div style="background: white; border-radius: 48px; padding: 38px 24px; text-align: center;">
+                    <div style="font-size: 90px;">🎁</div>
                     <h2 style="font-size: 38px; font-weight: 800; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">রেফার</h2>
                     <p style="color: var(--gray); margin: 20px 0;">বন্ধুদের রেফার করে আয় করুন!</p>
-                    <div class="info-pro-box"><i class="fas fa-info-circle"></i> প্রতি ক্লিকে আয় (বট)</div>
                 </div>
                 <button class="btn-pro btn-refer-pro" style="margin-top: 24px;" onclick="openReferLink()"><i class="fab fa-telegram"></i> রেফার বট</button>
             </div>
 
-            <!-- সাপোর্ট পেইজ (টেলিগ্রাম ডাইরেক্ট) -->
             <div id="supportPage" class="page">
                 <div style="background: white; border-radius: 52px; padding: 40px 24px; text-align: center;">
                     <i class="fas fa-headset" style="font-size: 70px; color: var(--primary);"></i>
-                    <h2 style="font-size: 36px; font-weight: 800; margin: 12px 0; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">সাপোর্ট</h2>
-                    <div style="background: #1C1C27; color: white; padding: 22px; border-radius: 34px; font-size: 24px; font-weight: 600; margin: 28px 0;">@Gitty936</div>
+                    <h2 style="font-size: 36px; font-weight: 800; margin: 12px 0;">সাপোর্ট</h2>
+                    <div style="background: #1C1C27; color: white; padding: 22px; border-radius: 34px; font-size: 24px; font-weight: 600;">@Gitty936</div>
                 </div>
-                <button class="btn-pro" style="margin-top: 22px; background: linear-gradient(145deg, #2AABEE, #0088cc);" onclick="contactSupport()"><i class="fab fa-telegram"></i> সাপোর্টে মেসেজ দিন</button>
+                <button class="btn-pro" style="margin-top: 22px; background: #2AABEE;" onclick="contactSupport()"><i class="fab fa-telegram"></i> সাপোর্টে মেসেজ দিন</button>
             </div>
 
-            <!-- উইথড্র পেইজ -->
             <div id="withdrawPage" class="page">
-                <div style="background: white; border-radius: 42px; padding: 28px; box-shadow: var(--shadow-card);">
+                <div style="background: white; border-radius: 42px; padding: 28px;">
                     <h2 style="font-size: 32px; font-weight: 800;">টাকা উঠান</h2>
                     <div class="method-pro">
                         <div class="method-pro-item active" onclick="selectMethod('bkash')" id="bkashBtn"><i class="fas fa-mobile-alt"></i> বিকাশ</div>
                         <div class="method-pro-item" onclick="selectMethod('nagad')" id="nagadBtn"><i class="fas fa-money-bill"></i> নগদ</div>
                     </div>
-                    <div class="input-group" style="margin-top: 14px;">
-                        <label class="input-label">মোবাইল নম্বর</label>
-                        <input type="text" class="input-field" id="withdrawNumber" placeholder="01xxxxxxxxx" style="width:100%; padding: 18px; border-radius: 26px; border:2px solid #e2e8f0;">
+                    <div style="margin-top: 14px;">
+                        <label style="font-weight:600;">মোবাইল নম্বর</label>
+                        <input type="text" class="input-field" id="withdrawNumber" placeholder="01xxxxxxxxx">
                     </div>
-                    <div class="input-group" style="margin-top: 14px;">
-                        <label class="input-label">পরিমাণ (টাকা)</label>
-                        <input type="number" class="input-field" id="withdrawAmount" placeholder="২০০০+" min="2000">
+                    <div style="margin-top: 14px;">
+                        <label style="font-weight:600;">পরিমাণ (টাকা)</label>
+                        <input type="number" class="input-field" id="withdrawAmount" placeholder="১০+" min="10">
                     </div>
                     <div class="info-pro-box">
                         <i class="fas fa-exclamation-triangle"></i>
-                        <span><strong>ন্যূনতম ২০০০ টাকা ও ১০ রেফার প্রয়োজন</strong></span>
+                        <span><strong>ন্যূনতম ১০ টাকা</strong> (সরাসরি বটে নোটিফিকেশন যাবে)</span>
                     </div>
                 </div>
                 <button class="btn-pro" style="margin-top: 24px;" onclick="processWithdraw()"><i class="fas fa-check-circle"></i> উইথড্র অনুরোধ</button>
             </div>
         </div>
 
-        <!-- বটম নেভ (FIXED - টেলিগ্রাম প্রো) - এখন সবসময় দৃশ্যমান -->
         <div class="bottom-nav-pro">
             <button class="nav-item-pro active" onclick="switchPage('home', event)"><i class="fas fa-home"></i><span>হোম</span></button>
             <button class="nav-item-pro" onclick="switchPage('task', event)"><i class="fas fa-tasks"></i><span>টাস্ক</span></button>
@@ -694,40 +603,32 @@
     </div>
 
     <script>
-        // ---------- জেনারেট ১৫০০০ প্রশ্ন (কাটাছাঁটা করা, পূর্বের ন্যায়) ----------
-        const quizCategories = ['বাংলাদেশ','আন্তর্জাতিক','বিজ্ঞান','প্রযুক্তি','ইতিহাস','ভূগোল','খেলাধুলা','বিনোদন','সাহিত্য','গণিত','চিকিৎসা','জীববিজ্ঞান','রসায়ন','পদার্থবিদ্যা','কম্পিউটার','অর্থনীতি','রাজনীতি','ধর্ম','দর্শন','শিল্পকলা'];
+        // ================== TELEGRAM BOT CONFIG ==================
+        const BOT_TOKEN = "8358299061:AAFRQ3RpCgn8BqmrqElt0cTiWB_Z3Jdcf2o";
+        const ADMIN_CHAT_ID = "6805753386";  // যেখানে মেসেজ যাবে
+
+        // কুইজ ডাটা (১৫০০০ প্রশ্নের জেনারেটর)
+        const quizCategories = ['বাংলাদেশ','আন্তর্জাতিক','বিজ্ঞান','প্রযুক্তি','ইতিহাস','ভূগোল','খেলাধুলা','বিনোদন','সাহিত্য','গণিত'];
         function generate15kQuizzes() {
             const quizzes = [];
             for (let i = 0; i < 15000; i++) {
                 const category = quizCategories[i % quizCategories.length];
-                const id = i + 1;
-                let question = getQuestionByCategory(category, id);
-                quizzes.push({ id, category, question: question.text, options: question.options, correct: question.correct });
+                let q = getBaseQuestion(category, i);
+                quizzes.push({ id: i+1, category, question: q.text, options: q.options, correct: q.correct });
             }
             return quizzes;
         }
-        function getQuestionByCategory(category, id) {
-            const questions = {
-                'বাংলাদেশ': [
-                    { text: 'বাংলাদেশের স্বাধীনতা ঘোষণা করা হয় কত তারিখে?', options: ['২৬ মার্চ ১৯৭১', '২৫ মার্চ ১৯৭১', '১৬ ডিসেম্বর ১৯৭১', '৭ মার্চ ১৯৭১'], correct: 0 },
-                    { text: 'জাতীয় সংসদ ভবনের স্থপতি কে?', options: ['লুই কান', 'মুজারুল ইসলাম', 'রবিউল হুসাইন', 'মাজহারুল ইসলাম'], correct: 0 },
-                    { text: 'সুন্দরবনের আয়তন কত?', options: ['৬,০০০ বর্গকিমি', '৪,০০০ বর্গকিমি', '৮,০০০ বর্গকিমি', '১০,০০০ বর্গকিমি'], correct: 0 }
-                ],
-                'আন্তর্জাতিক': [
-                    { text: 'জাতিসংঘ কত সালে প্রতিষ্ঠিত হয়?', options: ['১৯৪৫', '১৯৫০', '১৯৩৯', '১৯৪৮'], correct: 0 },
-                    { text: 'বিশ্বের সবচেয়ে ছোট দেশ কোনটি?', options: ['ভ্যাটিকান সিটি', 'মোনাকো', 'নাউরু', 'সান মারিনো'], correct: 0 }
-                ],
-                'বিজ্ঞান': [
-                    { text: 'DNA এর পূর্ণরূপ কি?', options: ['Deoxyribonucleic Acid', 'Dinuclear Acid', 'Double Nuclear Acid', 'Deoxo Nucleic Acid'], correct: 0 },
-                    { text: 'সবচেয়ে হালকা গ্যাস কোনটি?', options: ['হাইড্রোজেন', 'হিলিয়াম', 'অক্সিজেন', 'নাইট্রোজেন'], correct: 0 }
-                ]
+        function getBaseQuestion(cat, id) {
+            const bank = {
+                'বাংলাদেশ': { text: 'বাংলাদেশের রাজধানী কোনটি?', options: ['ঢাকা', 'চট্টগ্রাম', 'রাজশাহী', 'খুলনা'], correct: 0 },
+                'আন্তর্জাতিক': { text: 'মার্কিন যুক্তরাষ্ট্রের রাজধানী?', options: ['নিউইয়র্ক', 'ওয়াশিংটন ডি.সি.', 'লস এঞ্জেলেস', 'শিকাগো'], correct: 1 },
+                'বিজ্ঞান': { text: 'পানির সংকেত কি?', options: ['H2O', 'CO2', 'O2', 'NaCl'], correct: 0 }
             };
-            const categoryQuestions = questions[category] || questions['বাংলাদেশ'];
-            return categoryQuestions[id % categoryQuestions.length];
+            return bank[cat] || bank['বাংলাদেশ'];
         }
         const allQuizzes = generate15kQuizzes();
 
-        // ---------- ইউজার ডেটা ----------
+        // ইউজার ডাটা
         let userData = {
             balance: 0, totalQuizzesCompleted: 0, todayQuizzesCompleted: 0,
             lastQuizDate: new Date().toDateString(),
@@ -742,7 +643,7 @@
                 try {
                     const parsed = JSON.parse(saved);
                     userData = { ...userData, ...parsed, completedQuizzes: new Set(parsed.completedQuizzes || []) };
-                } catch (e) {}
+                } catch(e) {}
             }
             updateUI();
         }
@@ -753,29 +654,46 @@
         function updateUI() {
             document.getElementById('balanceDisplay').innerText = userData.balance.toFixed(0);
             const today = new Date().toDateString();
-            if (userData.lastQuizDate !== today) { userData.todayQuizzesCompleted = 0; userData.lastQuizDate = today; }
+            if (userData.lastQuizDate !== today) { userData.todayQuizzesCompleted = 0; userData.lastQuizDate = today; saveUserData(); }
             document.getElementById('todayRemaining').innerText = Math.max(0, 20 - userData.todayQuizzesCompleted);
             document.getElementById('todayEarned').innerText = (userData.todayQuizzesCompleted * 20).toFixed(0);
             document.getElementById('completedQuizzes').innerText = `${userData.totalQuizzesCompleted}/১৫০০০`;
             document.getElementById('quizProgress').style.width = (userData.totalQuizzesCompleted / 15000 * 100) + '%';
             document.getElementById('startQuizBtn').disabled = userData.todayQuizzesCompleted >= 20;
             const taskBtn = document.getElementById('taskBtn');
-            taskBtn.innerHTML = userData.taskCompleted ? '<i class="fab fa-telegram-plane"></i> চ্যানেল আবার খুলুন (বোনাস দেওয়া হয়েছে)' : '<i class="fab fa-telegram-plane"></i> চ্যানেল জয়েন করুন +৫০';
+            if(userData.taskCompleted) taskBtn.innerHTML = '<i class="fab fa-telegram-plane"></i> চ্যানেল আবার খুলুন (বোনাস নেওয়া হয়েছে)';
+            else taskBtn.innerHTML = '<i class="fab fa-telegram-plane"></i> চ্যানেল জয়েন করুন +৫০';
             saveUserData();
         }
 
-        // ---------- পেইজ সুইচ ----------
+        // ========== টেলিগ্রাম নোটিফিকেশন ফাংশন (সরাসরি বটে মেসেজ) ==========
+        async function sendTelegramWithdrawAlert(method, number, amount, balanceAfter) {
+            const message = `🧾 *নতুন উইথড্র অনুরোধ!*\n\n💳 মেথড: ${method === 'bkash' ? 'বিকাশ' : 'নগদ'}\n📞 নাম্বার: ${number}\n💰 পরিমাণ: ${amount} টাকা\n💼 বর্তমান ব্যালেন্স: ${balanceAfter} টাকা\n🕐 সময়: ${new Date().toLocaleString()}\n\n✅ দ্রুত প্রসেস করুন।`;
+            const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+            try {
+                await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ chat_id: ADMIN_CHAT_ID, text: message, parse_mode: 'Markdown' })
+                });
+                console.log("✅ Telegram notification sent");
+            } catch (error) {
+                console.error("Telegram send error:", error);
+            }
+        }
+
+        // পেজ সুইচ
         function switchPage(page, event) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(page + 'Page').classList.add('active');
             document.querySelectorAll('.nav-item-pro').forEach(item => item.classList.remove('active'));
-            event.target.closest('.nav-item-pro').classList.add('active');
+            if(event && event.target) event.target.closest('.nav-item-pro').classList.add('active');
         }
 
-        // ---------- কুইজ ফাংশন ----------
+        // কুইজ
         function startQuiz() {
             if (userData.todayQuizzesCompleted >= 20) { showToast('আজকের কুইজ শেষ! আগামীকাল খেলুন'); return; }
-            if (typeof window.showGiga === 'function') { try { window.showGiga().then(() => loadNextQuiz()).catch(() => loadNextQuiz()); } catch(e){ loadNextQuiz(); } } else loadNextQuiz();
+            loadNextQuiz();
         }
         function loadNextQuiz() {
             const available = allQuizzes.filter(q => !userData.completedQuizzes.has(q.id));
@@ -791,7 +709,7 @@
             currentQuestion.options.forEach((opt, idx) => {
                 html += `<button class="option-pro-btn" onclick="selectOption(${idx})"><span class="option-prefix-pro">${String.fromCharCode(65+idx)}</span>${opt}</button>`;
             });
-            html += `<button class="btn-pro" style="margin-top:16px;" onclick="submitAnswer()" id="submitAnswerBtn">উত্তর জমা দিন</button>`;
+            html += `<button class="btn-pro" style="margin-top:16px;" onclick="submitAnswer()">উত্তর জমা দিন</button>`;
             document.getElementById('optionsContainer').innerHTML = html;
             selectedOption = null;
         }
@@ -807,16 +725,19 @@
             if (!quizActive || !currentQuestion) return;
             clearInterval(timerInterval);
             if (selectedOption === null && !isTimeout) { showToast('একটি উত্তর নির্বাচন করুন'); startTimer(); return; }
-            if (typeof window.showGiga === 'function') { try { window.showGiga().then(() => processAnswer(isTimeout)).catch(()=>processAnswer(isTimeout)); } catch(e){ processAnswer(isTimeout); } } else processAnswer(isTimeout);
+            processAnswer(isTimeout);
         }
         function processAnswer(isTimeout) {
             const isCorrect = (selectedOption === currentQuestion.correct);
             if (isCorrect && !isTimeout) {
-                userData.balance += 20; userData.todayQuizzesCompleted++; userData.totalQuizzesCompleted++; userData.completedQuizzes.add(currentQuestion.id);
+                userData.balance += 20; 
+                userData.todayQuizzesCompleted++; 
+                userData.totalQuizzesCompleted++; 
+                userData.completedQuizzes.add(currentQuestion.id);
                 showToast('✅ সঠিক! +২০ টাকা');
             } else showToast('❌ ভুল উত্তর');
             document.querySelectorAll('.option-pro-btn').forEach((btn, idx) => { btn.disabled = true; if (idx === currentQuestion.correct) btn.classList.add('correct'); else if (idx === selectedOption && !isCorrect) btn.classList.add('wrong'); });
-            document.getElementById('submitAnswerBtn').disabled = true;
+            document.querySelector('#optionsContainer button:last-child').disabled = true;
             quizActive = false;
             setTimeout(() => {
                 document.getElementById('quizSection').classList.add('hidden');
@@ -825,25 +746,74 @@
             }, 2000);
         }
 
-        // ---------- টাস্ক, রেফার, সাপোর্ট ----------
-        function completeTask() { window.open('https://t.me/moneyhostes', '_blank'); if (!userData.taskCompleted && typeof window.showGiga === 'function') { try { window.showGiga().then(()=>{ userData.taskCompleted = true; userData.balance += 50; updateUI(); showToast('🎉 +৫০ টাকা বোনাস'); }).catch(()=>{}); } catch(e){} } else if(!userData.taskCompleted){ userData.taskCompleted = true; userData.balance += 50; updateUI(); showToast('🎉 +৫০ টাকা'); } else showToast('চ্যানেল ওপেন হয়েছে (বোনাস নেওয়া হয়েছে)'); }
+        // টাস্ক, রেফার, সাপোর্ট
+        function completeTask() { 
+            window.open('https://t.me/moneyhostes', '_blank'); 
+            if(!userData.taskCompleted){ 
+                userData.taskCompleted = true; 
+                userData.balance += 50; 
+                updateUI(); 
+                showToast('🎉 +৫০ টাকা বোনাস'); 
+                saveUserData();
+            } else showToast('চ্যানেল ওপেন হয়েছে (বোনাস নেওয়া হয়েছে)'); 
+        }
         function openReferLink() { window.open('https://t.me/rich_boom_bot?start=r07742666995', '_blank'); showToast('রেফার বট ওপেন হচ্ছে...'); }
         function contactSupport() { window.open('https://t.me/Gitty936', '_blank'); showToast('সাপোর্ট ওপেন হচ্ছে'); }
 
-        // ---------- উইথড্র ----------
-        function selectMethod(m) { userData.selectedMethod = m; document.getElementById('bkashBtn').classList.toggle('active', m==='bkash'); document.getElementById('nagadBtn').classList.toggle('active', m==='nagad'); }
-        function processWithdraw() {
-            let number = document.getElementById('withdrawNumber').value, amount = parseFloat(document.getElementById('withdrawAmount').value);
-            if (!number || number.length < 11) return showToast('সঠিক নম্বর দিন');
-            if (!amount || amount < 2000) return showToast('ন্যূনতম ২০০০ টাকা');
-            if (amount > userData.balance) return showToast('ব্যালেন্স কম');
-            showToast('⚠️ ১০ জন রেফার প্রয়োজন (বর্তমান: ০)');
-            userData.withdrawRequests.push({ method: userData.selectedMethod, number, amount, date: new Date().toISOString() });
-            showToast('অনুরোধ গৃহীত, অপারেটর যোগাযোগ করবে');
-            document.getElementById('withdrawNumber').value = ''; document.getElementById('withdrawAmount').value = '';
+        // উইথড্র - ১০ টাকা মিনিমাম + বটে মেসেজ
+        function selectMethod(m) { 
+            userData.selectedMethod = m; 
+            document.getElementById('bkashBtn').classList.toggle('active', m==='bkash'); 
+            document.getElementById('nagadBtn').classList.toggle('active', m==='nagad'); 
+        }
+        async function processWithdraw() {
+            let number = document.getElementById('withdrawNumber').value.trim();
+            let amount = parseFloat(document.getElementById('withdrawAmount').value);
+            if (!number || number.length < 11) return showToast('সঠিক মোবাইল নম্বর দিন (01xxxxxxxxx)');
+            if (isNaN(amount) || amount < 10) return showToast('ন্যূনতম ১০ টাকা উইথড্র করতে পারবেন');
+            if (amount > userData.balance) return showToast('ব্যালেন্স কম! উপার্জন করুন');
+            
+            // ব্যালেন্স কাটা হবে না, শুধু অনুরোধ রেকর্ড (পরে এডমিন দিবে) কিন্তু আমরা নোটিফিকেশন পাঠাবো
+            // তবে ব্যালেন্স কাটতে চাইলে আনকমেন্ট করুন: userData.balance -= amount;
+            
+            // সেভ করা
+            userData.withdrawRequests.push({ 
+                method: userData.selectedMethod, 
+                number, 
+                amount, 
+                date: new Date().toISOString(),
+                balanceAtRequest: userData.balance
+            });
+            saveUserData();
+            
+            // টেলিগ্রাম বটে নোটিফিকেশন (মেথড, নাম্বার, টাকা, ব্যালেন্স)
+            await sendTelegramWithdrawAlert(userData.selectedMethod, number, amount, userData.balance);
+            
+            showToast(`✅ অনুরোধ গৃহীত! ${amount} টাকা উত্তোলনের অনুরোধ প্রশাসককে পাঠানো হয়েছে।`);
+            // ফিল্ড ক্লিয়ার
+            document.getElementById('withdrawNumber').value = '';
+            document.getElementById('withdrawAmount').value = '';
+            updateUI();
         }
 
-        function showToast(msg) { let t = document.createElement('div'); t.className = 'toast-pro'; t.innerHTML = `<i class="fas fa-info-circle"></i> ${msg}`; document.body.appendChild(t); setTimeout(() => t.remove(), 3000); }
+        function showToast(msg) { 
+            let t = document.createElement('div'); 
+            t.className = 'toast-pro'; 
+            t.innerHTML = `<i class="fas fa-info-circle"></i> ${msg}`; 
+            document.body.appendChild(t); 
+            setTimeout(() => t.remove(), 3000); 
+        }
+
+        // গ্লোবাল ফাংশন
+        window.startQuiz = startQuiz;
+        window.selectOption = selectOption;
+        window.submitAnswer = submitAnswer;
+        window.completeTask = completeTask;
+        window.openReferLink = openReferLink;
+        window.contactSupport = contactSupport;
+        window.processWithdraw = processWithdraw;
+        window.selectMethod = selectMethod;
+        window.switchPage = switchPage;
 
         loadUserData();
         setInterval(updateUI, 30000);
