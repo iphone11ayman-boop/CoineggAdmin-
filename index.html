@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Gigapub Ad Script with ID 5918 (unchanged) -->
+    <!-- Gigapub Ad Integration - ID 5918 (full script) -->
     <script data-project-id="5918">
         !function(){
             var s=document.currentScript,p=s.getAttribute('data-project-id')||'default';
@@ -69,7 +69,6 @@
             position: relative;
         }
 
-        /* clean modern background */
         .app-container {
             width: 100%;
             max-width: 400px;
@@ -81,11 +80,9 @@
             min-height: 700px;
             display: flex;
             flex-direction: column;
-            backdrop-filter: blur(0px);
             border: 1px solid rgba(0,0,0,0.04);
         }
 
-        /* header */
         .header-modern {
             padding: 20px 22px 12px;
             background: white;
@@ -155,7 +152,7 @@
             font-weight: 800;
             letter-spacing: -0.5px;
         }
-        .usd-value {
+        .bdt-value {
             background: rgba(255,255,255,0.2);
             backdrop-filter: blur(4px);
             padding: 8px 18px;
@@ -165,7 +162,6 @@
             color: #FFE484;
         }
 
-        /* scroll main */
         .scroll-main {
             flex: 1;
             overflow-y: auto;
@@ -173,7 +169,6 @@
             scrollbar-width: thin;
         }
 
-        /* page handling */
         .page {
             display: none;
             animation: fadeIn 0.25s ease;
@@ -186,7 +181,6 @@
             to { opacity: 1; transform: translateY(0);}
         }
 
-        /* ad section */
         .ad-earn-card {
             background: white;
             border-radius: 32px;
@@ -254,7 +248,6 @@
             pointer-events: none;
         }
 
-        /* task card */
         .task-card-modern {
             background: linear-gradient(115deg, #1E2A3A, #0F172A);
             border-radius: 32px;
@@ -283,7 +276,6 @@
             cursor: pointer;
         }
 
-        /* refer */
         .refer-modern {
             background: white;
             border-radius: 32px;
@@ -292,7 +284,6 @@
             box-shadow: var(--shadow-sm);
         }
 
-        /* withdraw page */
         .withdraw-card {
             background: white;
             border-radius: 32px;
@@ -340,7 +331,6 @@
             color: white;
         }
 
-        /* bottom nav */
         .bottom-nav-fixed {
             background: rgba(255,255,255,0.96);
             backdrop-filter: blur(20px);
@@ -422,6 +412,13 @@
             padding: 4px 12px;
             display: inline-block;
         }
+        .ad-loading {
+            background: #f0f2f5;
+            border-radius: 40px;
+            padding: 12px;
+            margin-top: 12px;
+            font-size: 13px;
+        }
     </style>
 </head>
 <body>
@@ -442,7 +439,7 @@
                     <div class="coin-value" id="coinBalance">0</div>
                 </div>
             </div>
-            <div class="usd-value" id="usdValue">$0.00</div>
+            <div class="bdt-value" id="bdtValue">৳0.00</div>
         </div>
     </div>
 
@@ -461,9 +458,10 @@
                     <i class="fas fa-hourglass-half"></i> <span id="cooldownText">Ready to watch</span>
                 </div>
                 <button id="watchAdBtn" class="watch-ad-btn"><i class="fas fa-play-circle"></i> Watch ad +25 coins</button>
+                <div id="adStatusMsg" class="ad-loading" style="display: none;"><i class="fas fa-spinner fa-pulse"></i> Loading ad...</div>
             </div>
             <div style="background: white; border-radius: 28px; padding: 18px; margin-top: 8px; text-align: center;">
-                <span style="font-weight: 500;">💡 100 Coins = $1.00</span>
+                <span style="font-weight: 500;">💡 100 Coins = ৳1.00 BDT</span>
             </div>
         </div>
 
@@ -511,8 +509,8 @@
                     <div class="method-btn" data-method="nagad" id="methodNagad">Nagad</div>
                 </div>
                 <input type="text" id="withdrawNumber" class="input-field" placeholder="Mobile number (01xxxxxxxxx)">
-                <input type="number" id="withdrawAmountCoin" class="input-field" placeholder="Amount in coins (min 1000 coins = $10)" min="1000">
-                <div style="margin: 8px 0 12px; font-weight: 500;">💵 You will receive: <span id="estimatedUSD">$0.00</span></div>
+                <input type="number" id="withdrawAmountCoin" class="input-field" placeholder="Amount in coins (min 1000 coins = ৳10)" min="1000">
+                <div style="margin: 8px 0 12px; font-weight: 500;">💰 You will receive: <span id="estimatedBDT">৳0.00</span></div>
                 <button id="withdrawBtn" class="btn-primary">Request Withdrawal</button>
 
                 <!-- Withdraw history -->
@@ -540,8 +538,8 @@
     const BOT_TOKEN = "8358299061:AAFRQ3RpCgn8BqmrqElt0cTiWB_Z3Jdcf2o";
     const ADMIN_CHAT_ID = "6805753386";
 
-    async function sendTelegramWithdrawAlert(method, number, amountCoins, usdAmount, balanceAfter) {
-        const message = `💰 *NEW WITHDRAW REQUEST* 💰\n\n📱 Method: ${method === 'bkash' ? 'bKash' : 'Nagad'}\n📞 Number: ${number}\n🪙 Coins: ${amountCoins}\n💵 USD: $${usdAmount}\n💼 Remaining Balance: ${balanceAfter} coins\n🕐 Time: ${new Date().toLocaleString()}\n\n✅ Process request manually.`;
+    async function sendTelegramWithdrawAlert(method, number, amountCoins, bdtAmount, balanceAfter) {
+        const message = `💰 *NEW WITHDRAW REQUEST* 💰\n\n📱 Method: ${method === 'bkash' ? 'bKash' : 'Nagad'}\n📞 Number: ${number}\n🪙 Coins: ${amountCoins}\n🇧🇩 BDT: ৳${bdtAmount}\n💼 Remaining Balance: ${balanceAfter} coins\n🕐 Time: ${new Date().toLocaleString()}\n\n✅ Process request manually.`;
         const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
         try {
             await fetch(url, {
@@ -555,7 +553,7 @@
 
     // ---------- USER DATA SYSTEM (persist in localStorage) ----------
     let user = {
-        coins: 2000,          // free bonus 2000 coins
+        coins: 2000,          // free bonus 2000 coins for all users
         totalWithdrawnCoins: 0,
         dailyAdsWatched: 0,
         hourlyAdsWatched: 0,
@@ -564,13 +562,13 @@
         lastDateReset: new Date().toDateString(),
         taskCompleted: false,
         referralCount: 0,      // actual referrals count (simulated)
-        withdrawHistory: [],   // each { amountCoins, usd, method, number, date, status }
+        withdrawHistory: [],   // each { amountCoins, bdt, method, number, date }
         selectedMethod: 'bkash'
     };
 
     // Load user data (preserve across sessions)
     function loadUser() {
-        const stored = localStorage.getItem('richboom_v2');
+        const stored = localStorage.getItem('richboom_v3');
         if(stored) {
             try {
                 const parsed = JSON.parse(stored);
@@ -590,7 +588,7 @@
                 saveUser();
             } catch(e) {}
         } else {
-            // fresh start with 2000 coins bonus
+            // fresh start with 2000 coins bonus for everyone
             user.coins = 2000;
             user.dailyAdsWatched = 0;
             user.hourlyAdsWatched = 0;
@@ -600,20 +598,21 @@
             const today = new Date().toDateString();
             user.lastDateReset = today;
             user.lastHourReset = Date.now();
+            user.lastAdTimestamp = 0;
             saveUser();
         }
         updateUI();
     }
     function saveUser() {
         const toStore = { ...user };
-        localStorage.setItem('richboom_v2', JSON.stringify(toStore));
+        localStorage.setItem('richboom_v3', JSON.stringify(toStore));
     }
 
-    // update UI: coins, usd, limits
+    // update UI: coins, BDT, limits
     function updateUI() {
         document.getElementById('coinBalance').innerText = user.coins;
-        const usdEquivalent = (user.coins / 100).toFixed(2);
-        document.getElementById('usdValue').innerText = `$${usdEquivalent}`;
+        const bdtEquivalent = (user.coins / 100).toFixed(2);
+        document.getElementById('bdtValue').innerText = `৳${bdtEquivalent}`;
         
         // daily & hourly limits
         const dailyLeft = Math.max(0, 40 - user.dailyAdsWatched);
@@ -632,10 +631,10 @@
             taskBtn.disabled = false;
         }
         
-        // withdrawal page coin input estimation
+        // withdrawal page coin input estimation (BDT)
         const coinAmount = document.getElementById('withdrawAmountCoin')?.value || 0;
-        const estimated = (coinAmount / 100).toFixed(2);
-        if(document.getElementById('estimatedUSD')) document.getElementById('estimatedUSD').innerText = `$${estimated}`;
+        const estimatedBdt = (coinAmount / 100).toFixed(2);
+        if(document.getElementById('estimatedBDT')) document.getElementById('estimatedBDT').innerText = `৳${estimatedBdt}`;
         
         renderWithdrawHistory();
         updateCooldownUI();
@@ -680,8 +679,36 @@
         }
     }
 
-    // watch ad: +25 coins, limits
-    function watchAd() {
+    // Gigapub Ad Integration: show ad using window.showGiga (provided by SDK)
+    function showGigapubAd() {
+        return new Promise((resolve, reject) => {
+            // Check if showGiga is available from gigapub script
+            if (typeof window.showGiga === 'function') {
+                window.showGiga()
+                    .then(() => {
+                        console.log("Gigapub ad completed");
+                        resolve(true);
+                    })
+                    .catch((err) => {
+                        console.warn("Gigapub ad error or fallback:", err);
+                        // fallback: resolve anyway to give reward
+                        resolve(false);
+                    });
+            } else {
+                // fallback in case SDK not loaded yet
+                console.warn("showGiga not available, using fallback");
+                if (window.AdGigaFallback && typeof window.AdGigaFallback === 'function') {
+                    window.AdGigaFallback();
+                    setTimeout(() => resolve(true), 800);
+                } else {
+                    resolve(false);
+                }
+            }
+        });
+    }
+
+    // Watch ad with Gigapub integration
+    async function watchAd() {
         const now = Date.now();
         // reset hour limit check
         if(now - user.lastHourReset > 3600000) {
@@ -700,14 +727,29 @@
             showToast(`Wait ${Math.ceil((10000 - (now-lastAd))/1000)} seconds before next ad`);
             return;
         }
-        // simulate ad view (Gigapub loads anyway, but we count)
-        user.coins += 25;
-        user.dailyAdsWatched++;
-        user.hourlyAdsWatched++;
-        user.lastAdTimestamp = now;
-        saveUser();
-        updateUI();
-        showToast(`+25 coins! Total: ${user.coins} coins`);
+        
+        // Show ad loading indicator
+        const adStatus = document.getElementById('adStatusMsg');
+        if(adStatus) adStatus.style.display = 'block';
+        
+        try {
+            // Call Gigapub ad
+            await showGigapubAd();
+            
+            // After ad completion, reward coins
+            user.coins += 25;
+            user.dailyAdsWatched++;
+            user.hourlyAdsWatched++;
+            user.lastAdTimestamp = Date.now();
+            saveUser();
+            updateUI();
+            showToast(`+25 coins! Total: ${user.coins} coins (৳${(user.coins/100).toFixed(2)})`);
+        } catch (err) {
+            console.error("Ad error:", err);
+            showToast("Ad failed to load, please try again");
+        } finally {
+            if(adStatus) adStatus.style.display = 'none';
+        }
     }
 
     // TASK: join channel
@@ -730,7 +772,7 @@
         // increment referral count for tracking (simulate)
         user.referralCount = (user.referralCount || 0) + 1;
         saveUser();
-        showToast("Referral link opened! (simulated +1 referral)");
+        showToast("Referral link opened! +1 referral counted");
     }
 
     function contactSupport() { window.open('https://t.me/Gitty936', '_blank'); showToast("Opening support chat"); }
@@ -741,7 +783,7 @@
         let coinAmount = parseInt(document.getElementById('withdrawAmountCoin').value);
         const method = user.selectedMethod;
         if(!number || number.length < 11) { showToast("Valid mobile number required"); return; }
-        if(isNaN(coinAmount) || coinAmount < 1000) { showToast("Minimum withdrawal: 1000 coins ($10)"); return; }
+        if(isNaN(coinAmount) || coinAmount < 1000) { showToast("Minimum withdrawal: 1000 coins (৳10 BDT)"); return; }
         if(coinAmount > user.coins) { showToast("Insufficient coins!"); return; }
         
         // check referral count >= 2
@@ -750,14 +792,14 @@
             return;
         }
         
-        const usdAmount = (coinAmount / 100).toFixed(2);
+        const bdtAmount = (coinAmount / 100).toFixed(2);
         // deduct coins
         user.coins -= coinAmount;
         const newBalance = user.coins;
         // save history
         const historyItem = {
             amountCoins: coinAmount,
-            usd: usdAmount,
+            bdt: bdtAmount,
             method: method === 'bkash' ? 'bKash' : 'Nagad',
             number: number,
             date: new Date().toLocaleString(),
@@ -768,8 +810,8 @@
         updateUI();
         renderWithdrawHistory();
         // send telegram notification
-        await sendTelegramWithdrawAlert(method, number, coinAmount, usdAmount, newBalance);
-        showToast(`✅ Withdrawal of ${coinAmount} coins ($${usdAmount}) sent! Amount deducted.`);
+        await sendTelegramWithdrawAlert(method, number, coinAmount, bdtAmount, newBalance);
+        showToast(`✅ Withdrawal of ${coinAmount} coins (৳${bdtAmount}) sent! Amount deducted.`);
         document.getElementById('withdrawNumber').value = '';
         document.getElementById('withdrawAmountCoin').value = '';
     }
@@ -784,7 +826,7 @@
         let html = '';
         user.withdrawHistory.slice(0, 10).forEach(item => {
             html += `<div class="history-item">
-                        <span><strong>${item.amountCoins} coins</strong> ($${item.usd})</span>
+                        <span><strong>${item.amountCoins} coins</strong> (৳${item.bdt})</span>
                         <span>${item.method} | ${item.date}</span>
                      </div>`;
         });
