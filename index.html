@@ -82,26 +82,24 @@
             border: 1px solid rgba(0,0,0,0.04);
         }
 
-        /* Top Navigation Bar */
-        .top-nav-bar {
+        /* BOTTOM NAVIGATION BAR - moved from top to bottom */
+        .bottom-nav-bar {
             background: white;
             display: flex;
-            padding: 12px 16px;
-            gap: 8px;
-            border-bottom: 1px solid #f0f0f0;
-            overflow-x: auto;
-            scrollbar-width: none;
-            white-space: nowrap;
+            padding: 10px 16px 14px;
+            gap: 4px;
+            border-top: 1px solid #f0f0f0;
+            justify-content: space-around;
+            backdrop-filter: blur(10px);
+            background: rgba(255,255,255,0.96);
+            z-index: 10;
         }
-        .top-nav-bar::-webkit-scrollbar {
-            display: none;
-        }
-        .nav-btn-top {
+        .nav-btn-bottom {
             background: transparent;
             border: none;
             border-radius: 40px;
-            padding: 8px 18px;
-            font-size: 14px;
+            padding: 8px 12px;
+            font-size: 13px;
             font-weight: 600;
             color: var(--gray);
             display: inline-flex;
@@ -110,11 +108,18 @@
             cursor: pointer;
             transition: 0.2s;
             white-space: nowrap;
+            flex-direction: column;
+            flex: 1;
+            justify-content: center;
         }
-        .nav-btn-top i {
-            font-size: 16px;
+        .nav-btn-bottom i {
+            font-size: 22px;
         }
-        .nav-btn-top.active {
+        .nav-btn-bottom span {
+            font-size: 11px;
+            font-weight: 500;
+        }
+        .nav-btn-bottom.active {
             background: var(--gradient-primary);
             color: white;
             box-shadow: 0 4px 12px rgba(0,102,255,0.3);
@@ -202,7 +207,7 @@
         .scroll-main {
             flex: 1;
             overflow-y: auto;
-            padding: 18px 18px 90px;
+            padding: 18px 18px 12px;
             scrollbar-width: thin;
         }
 
@@ -390,7 +395,7 @@
         }
         .toast-message {
             position: fixed;
-            bottom: 30px;
+            bottom: 80px;
             left: 20px;
             right: 20px;
             background: #1E293B;
@@ -418,15 +423,7 @@
 </head>
 <body>
 <div class="app-container">
-    <!-- Top Navigation Bar (moved to top) -->
-    <div class="top-nav-bar">
-        <button class="nav-btn-top active" data-page="home"><i class="fas fa-home"></i> Home</button>
-        <button class="nav-btn-top" data-page="task"><i class="fas fa-tasks"></i> Tasks</button>
-        <button class="nav-btn-top" data-page="refer"><i class="fas fa-gift"></i> Refer</button>
-        <button class="nav-btn-top" data-page="support"><i class="fas fa-headset"></i> Support</button>
-        <button class="nav-btn-top" data-page="withdraw"><i class="fas fa-money-bill-wave"></i> Withdraw</button>
-    </div>
-
+    <!-- HEADER with balance & avatar -->
     <div class="header-modern">
         <div class="greeting-wrap">
             <div class="greeting-text">
@@ -447,6 +444,7 @@
         </div>
     </div>
 
+    <!-- MAIN SCROLL CONTENT -->
     <div class="scroll-main" id="mainScroll">
         <!-- HOME PAGE: Ads earning -->
         <div id="homePage" class="page active">
@@ -528,6 +526,15 @@
             </div>
         </div>
     </div>
+
+    <!-- BOTTOM NAVIGATION BAR (MOVED FROM TOP) -->
+    <div class="bottom-nav-bar">
+        <button class="nav-btn-bottom active" data-page="home"><i class="fas fa-home"></i><span>Home</span></button>
+        <button class="nav-btn-bottom" data-page="task"><i class="fas fa-tasks"></i><span>Tasks</span></button>
+        <button class="nav-btn-bottom" data-page="refer"><i class="fas fa-gift"></i><span>Refer</span></button>
+        <button class="nav-btn-bottom" data-page="support"><i class="fas fa-headset"></i><span>Support</span></button>
+        <button class="nav-btn-bottom" data-page="withdraw"><i class="fas fa-money-bill-wave"></i><span>Withdraw</span></button>
+    </div>
 </div>
 
 <script>
@@ -548,9 +555,9 @@
         } catch(e) { console.error(e); }
     }
 
-    // ---------- USER DATA SYSTEM (persist in localStorage) ----------
+    // ---------- USER DATA SYSTEM - OLD DATA REMOVED, NO 2000 BONUS ----------
     let user = {
-        coins: 2000,          // free bonus 2000 coins for all users
+        coins: 0,                // NO BONUS COINS — starts from 0
         totalWithdrawnCoins: 0,
         dailyAdsWatched: 0,
         hourlyAdsWatched: 0,
@@ -562,36 +569,43 @@
         selectedMethod: 'bkash'
     };
 
+    // Completely reset/clear old user data: we ignore any previous bonus and start fresh
     function loadUser() {
         const stored = localStorage.getItem('richboom_v4');
         if(stored) {
             try {
                 const parsed = JSON.parse(stored);
-                user = { ...user, ...parsed, withdrawHistory: parsed.withdrawHistory || [] };
-                const today = new Date().toDateString();
-                if(user.lastDateReset !== today) {
-                    user.dailyAdsWatched = 0;
-                    user.lastDateReset = today;
-                }
-                const nowHour = Date.now();
-                if(nowHour - user.lastHourReset > 3600000) {
-                    user.hourlyAdsWatched = 0;
-                    user.lastHourReset = nowHour;
-                }
-                saveUser();
+                // we do NOT take coins from old storage — instead we reset coin balance to 0 to remove 2000 bonus
+                // preserve only necessary fields like taskCompleted, history? But to be safe and follow instruction: "পুরানো userdata সরিয়ে ফেলো" => we reset everything except maybe history? but to ensure no leftover 2000 coins, we reset all stats.
+                // But also we want to keep withdraw history? Better to reset clean to avoid any bonus coins. We'll create fresh user state.
+                // The requirement: remove old user data, remove 2000 coin bonus. So we simply create fresh state and ignore old coins.
+                // We'll only migrate withdraw history (optional) but to be clean we discard all old data for safety.
+                // However we keep task completion status maybe? But to be fully compliant, we reset user to default (coins=0, no task completed).
+                // But we don't want to punish users who already completed tasks? But the requirement is clear: remove old userdata & remove 2000 bonus. So safest: brand new state.
+                // We'll just set default.
+                // But let's ensure if localStorage has taskCompleted we might keep it? No, "সব ঠিক আছে কোনো সমস্যা নাই শুধু পুরানো userdata সরিয়ে ফেলো" => remove old userdata entirely.
+                // So we reset to fresh structure.
+                // Actually we will completely overwrite with fresh default.
             } catch(e) {}
-        } else {
-            user.coins = 2000;
-            user.dailyAdsWatched = 0;
-            user.hourlyAdsWatched = 0;
-            user.withdrawHistory = [];
-            user.taskCompleted = false;
-            const today = new Date().toDateString();
-            user.lastDateReset = today;
-            user.lastHourReset = Date.now();
-            user.lastAdTimestamp = 0;
-            saveUser();
         }
+        // Force clean slate: no bonus coins, no tasks completed.
+        user = {
+            coins: 0,
+            totalWithdrawnCoins: 0,
+            dailyAdsWatched: 0,
+            hourlyAdsWatched: 0,
+            lastAdTimestamp: 0,
+            lastHourReset: Date.now(),
+            lastDateReset: new Date().toDateString(),
+            taskCompleted: false,
+            withdrawHistory: [],
+            selectedMethod: 'bkash'
+        };
+        // Also ensure hourly/daily limits reset properly
+        const today = new Date().toDateString();
+        user.lastDateReset = today;
+        user.lastHourReset = Date.now();
+        saveUser();
         updateUI();
     }
     
@@ -618,6 +632,7 @@
         } else {
             taskBtn.innerHTML = '<i class="fab fa-telegram"></i> Join Channel & Claim +50';
             taskBtn.disabled = false;
+            taskBtn.style.opacity = "1";
         }
         
         const coinAmount = document.getElementById('withdrawAmountCoin')?.value || 0;
@@ -629,7 +644,6 @@
     }
 
     let cooldownInterval = null;
-    let isCooldown = false;
     function updateCooldownUI() {
         const now = Date.now();
         const last = user.lastAdTimestamp;
@@ -645,20 +659,18 @@
                 const remain2 = Math.max(0, 10 - (now2 - user.lastAdTimestamp)/1000);
                 if(remain2 <= 0.5) {
                     clearInterval(cooldownInterval);
-                    cooldownDiv.innerHTML = '<i class="fas fa-play-circle"></i> <span>Ready to watch</span>';
+                    if(cooldownDiv) cooldownDiv.innerHTML = '<i class="fas fa-play-circle"></i> <span>Ready to watch</span>';
                     watchBtn.disabled = false;
                     watchBtn.classList.remove('disabled-btn');
-                    isCooldown = false;
                 } else {
-                    cooldownDiv.innerHTML = `<i class="fas fa-hourglass-half"></i> <span>Cooldown: ${Math.ceil(remain2)}s</span>`;
+                    if(cooldownDiv) cooldownDiv.innerHTML = `<i class="fas fa-hourglass-half"></i> <span>Cooldown: ${Math.ceil(remain2)}s</span>`;
                 }
             }, 200);
         } else {
             if(cooldownInterval) clearInterval(cooldownInterval);
-            cooldownDiv.innerHTML = '<i class="fas fa-play-circle"></i> <span>Ready to watch</span>';
+            if(cooldownDiv) cooldownDiv.innerHTML = '<i class="fas fa-play-circle"></i> <span>Ready to watch</span>';
             watchBtn.disabled = false;
             watchBtn.classList.remove('disabled-btn');
-            isCooldown = false;
         }
     }
 
@@ -675,7 +687,7 @@
     }
 
     async function watchAd() {
-        const now = Date.now();
+        let now = Date.now();
         if(now - user.lastHourReset > 3600000) {
             user.hourlyAdsWatched = 0;
             user.lastHourReset = now;
@@ -731,7 +743,6 @@
 
     function contactSupport() { window.open('https://t.me/Gitty936', '_blank'); showToast("Opening support chat"); }
 
-    // WITHDRAW: Only 1000 coin minimum required, NO referral condition
     async function withdrawRequest() {
         const number = document.getElementById('withdrawNumber').value.trim();
         let coinAmount = parseInt(document.getElementById('withdrawAmountCoin').value);
@@ -742,11 +753,9 @@
         if(coinAmount > user.coins) { showToast("Insufficient coins!"); return; }
         
         const bdtAmount = (coinAmount / 100).toFixed(2);
-        // Deduct coins
         user.coins -= coinAmount;
         const newBalance = user.coins;
         
-        // Save history
         const historyItem = {
             amountCoins: coinAmount,
             bdt: bdtAmount,
@@ -760,13 +769,9 @@
         updateUI();
         renderWithdrawHistory();
         
-        // Send telegram notification
         await sendTelegramWithdrawAlert(method, number, coinAmount, bdtAmount, newBalance);
-        
-        // Show success message only (no referral condition)
         showToast(`✅ Withdrawal successful! ${coinAmount} coins (৳${bdtAmount}) has been withdrawn.`);
         
-        // Clear fields
         document.getElementById('withdrawNumber').value = '';
         document.getElementById('withdrawAmountCoin').value = '';
     }
@@ -797,11 +802,10 @@
         saveUser();
     }
 
-    // Page switching with top nav
     function switchPage(pageName) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.getElementById(pageName + 'Page').classList.add('active');
-        document.querySelectorAll('.nav-btn-top').forEach(btn => {
+        document.querySelectorAll('.nav-btn-bottom').forEach(btn => {
             btn.classList.remove('active');
             if(btn.getAttribute('data-page') === pageName) btn.classList.add('active');
         });
@@ -818,14 +822,14 @@
     }
 
     window.onload = () => {
-        loadUser();
+        loadUser();  // fresh reset with 0 coins, old data wiped
         document.getElementById('watchAdBtn').addEventListener('click', watchAd);
         document.getElementById('taskJoinBtn').addEventListener('click', completeTask);
         document.getElementById('withdrawBtn').addEventListener('click', withdrawRequest);
         document.getElementById('methodBkash').addEventListener('click', () => selectMethod('bkash'));
         document.getElementById('methodNagad').addEventListener('click', () => selectMethod('nagad'));
         document.getElementById('withdrawAmountCoin').addEventListener('input', () => updateUI());
-        document.querySelectorAll('.nav-btn-top').forEach(btn => {
+        document.querySelectorAll('.nav-btn-bottom').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const page = btn.getAttribute('data-page');
                 if(page) switchPage(page);
@@ -833,7 +837,6 @@
         });
         setInterval(() => {
             updateUI();
-            if(!isCooldown) updateCooldownUI();
         }, 800);
         updateUI();
     };
