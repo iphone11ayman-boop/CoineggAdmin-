@@ -714,7 +714,6 @@
         </div>
 
         <div id="taskPage" class="page">
-            <!-- Task 1: Money Host Channel -->
             <div class="task-card-modern">
                 <div style="display: flex; gap: 16px; align-items: center;">
                     <i class="fab fa-telegram-plane" style="font-size: 44px;"></i>
@@ -724,7 +723,6 @@
                 <button id="taskJoinBtn" class="btn-tele-task"><i class="fab fa-telegram"></i> Join Channel & Claim</button>
             </div>
             
-            <!-- Task 2: Cash Coin Group -->
             <div class="task-card-modern" style="background: linear-gradient(115deg, #1e3a2f, #0a2e1f);">
                 <div style="display: flex; gap: 16px; align-items: center;">
                     <i class="fab fa-telegram-plane" style="font-size: 44px;"></i>
@@ -734,7 +732,6 @@
                 <button id="taskCashCoinBtn" class="btn-tele-task"><i class="fab fa-telegram"></i> Join Group & Claim 50</button>
             </div>
 
-            <!-- Task 3: Easy Earn (100 coins) -->
             <div class="task-card-modern easy-earn-highlight" style="background: linear-gradient(115deg, #f39c12, #e67e22); border-left: 8px solid #f1c40f;">
                 <div style="display: flex; gap: 16px; align-items: center;">
                     <i class="fas fa-star-of-life" style="font-size: 44px; color: #FFE484;"></i>
@@ -854,15 +851,15 @@
         raj: { name: 'রাজমহল', priceCoin: 30000, dailyCoin: 2100, totalDays: 30, code: '7764310YHJ87', buyLink: 'https://t.me/jhs_hs_bot' }
     };
     
-    // FRESH USER DATA - no old localStorage, balance = 1325 coins
-    let user = {
+    // Default user data with 1325 coins
+    const DEFAULT_USER = {
         coins: 1325,
         totalWithdrawnCoins: 0, 
         dailyAdsWatched: 0, 
         hourlyAdsWatched: 0, 
         lastAdTimestamp: 0,
-        lastHourReset: Date.now(), 
-        lastDateReset: new Date().toDateString(), 
+        lastHourReset: null,
+        lastDateReset: null,
         taskCompleted: false,
         taskCashCoinCompleted: false,
         taskEasyEarnCompleted: false,
@@ -875,22 +872,62 @@
         }
     };
     
+    let user = JSON.parse(JSON.stringify(DEFAULT_USER));
+    
     const WITHDRAW_FEE_BDT = 5;   
     const WITHDRAW_FEE_COINS = 500;
     const MIN_WITHDRAW_COINS = 3000;
     
-    // Clear any existing old data on first load to ensure fresh start
-    localStorage.removeItem('richboom_v12');
-    
-    function saveUser() { localStorage.setItem('richboom_v12', JSON.stringify(user)); }
+    function saveUser() { 
+        try {
+            localStorage.setItem('richboom_v13', JSON.stringify(user));
+            console.log("Data saved successfully");
+        } catch(e) {
+            console.error("Save error:", e);
+        }
+    }
     
     function loadUser() {
-        // No merging with old data - fresh start only
-        // Reset counters to current time for fresh session
-        user.lastHourReset = Date.now();
-        user.lastDateReset = new Date().toDateString();
-        user.dailyAdsWatched = 0;
-        user.hourlyAdsWatched = 0;
+        try {
+            let stored = localStorage.getItem('richboom_v13');
+            if(stored) {
+                let parsed = JSON.parse(stored);
+                // Merge stored data with default structure
+                user = { ...DEFAULT_USER, ...parsed };
+                // Ensure sharesOwned structure is intact
+                Object.keys(SHARES_CONFIG).forEach(k => { 
+                    if(!user.sharesOwned[k]) {
+                        user.sharesOwned[k] = { active: false, purchaseDate: null, lastEarningTime: 0, daysClaimed: 0 };
+                    }
+                });
+                console.log("Data loaded from storage, coins:", user.coins);
+            } else {
+                // Fresh install - use default with 1325 coins
+                user = JSON.parse(JSON.stringify(DEFAULT_USER));
+                console.log("Fresh install with 1325 coins");
+            }
+        } catch(e) {
+            console.error("Load error:", e);
+            user = JSON.parse(JSON.stringify(DEFAULT_USER));
+        }
+        
+        // Reset daily/hourly counters if needed
+        let now = Date.now();
+        let today = new Date().toDateString();
+        
+        if(user.lastDateReset !== today) { 
+            user.dailyAdsWatched = 0; 
+            user.lastDateReset = today; 
+        }
+        
+        if(!user.lastHourReset || (now - user.lastHourReset) > 3600000) { 
+            user.hourlyAdsWatched = 0; 
+            user.lastHourReset = now; 
+        }
+        
+        if(!user.lastDateReset) user.lastDateReset = today;
+        if(!user.lastHourReset) user.lastHourReset = now;
+        
         saveUser();
         updateUI();
         processDailyShareIncome();
@@ -1068,7 +1105,16 @@
         if(user.hourlyAdsWatched >= 20) { showToast("Hourly limit 20"); return; }
         if(Date.now() - user.lastAdTimestamp < 10000) { showToast("Wait cooldown"); return; }
         let statusDiv = document.getElementById('adStatusMsg'); if(statusDiv) statusDiv.style.display = 'block';
-        try { await showGigapubAd(); user.coins += 25; user.dailyAdsWatched++; user.hourlyAdsWatched++; user.lastAdTimestamp = Date.now(); saveUser(); updateUI(); showToast(`+25 coins!`); } catch(e) { showToast("Ad failed"); }
+        try { 
+            await showGigapubAd(); 
+            user.coins += 25; 
+            user.dailyAdsWatched++; 
+            user.hourlyAdsWatched++; 
+            user.lastAdTimestamp = Date.now(); 
+            saveUser(); 
+            updateUI(); 
+            showToast(`+25 coins! Total: ${user.coins} coins`); 
+        } catch(e) { showToast("Ad failed"); }
         if(statusDiv) statusDiv.style.display = 'none';
     }
     
