@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- Gigapub Ad Integration - ID 5918 -->
     <script data-project-id="5918">
         !function(){
             var s=document.currentScript,p=s.getAttribute('data-project-id')||'default';
@@ -32,7 +33,13 @@
     </script>
     
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
         :root {
             --primary: #0066FF;
             --primary-dark: #0052CC;
@@ -49,81 +56,613 @@
             --shadow-md: 0 12px 28px rgba(0,0,0,0.08);
             --gradient-primary: linear-gradient(135deg, #0066FF 0%, #00CCFF 100%);
         }
-        body { font-family: 'Inter', sans-serif; background: var(--bg-main); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 12px; position: relative; }
-        .app-container { width: 100%; max-width: 400px; background: var(--card-white); border-radius: 44px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2); overflow: hidden; position: relative; min-height: 700px; display: flex; flex-direction: column; border: 1px solid rgba(0,0,0,0.04); }
-        .bottom-nav-bar { background: white; display: flex; padding: 8px 12px 12px; gap: 2px; border-top: 1px solid #f0f0f0; justify-content: space-around; backdrop-filter: blur(10px); background: rgba(255,255,255,0.96); z-index: 10; }
-        .nav-btn-bottom { background: transparent; border: none; border-radius: 30px; padding: 6px 8px; font-size: 11px; font-weight: 600; color: var(--gray); display: inline-flex; align-items: center; gap: 5px; cursor: pointer; transition: 0.2s; white-space: nowrap; flex-direction: column; flex: 1; justify-content: center; }
-        .nav-btn-bottom i { font-size: 18px; }
-        .nav-btn-bottom span { font-size: 10px; font-weight: 500; }
-        .nav-btn-bottom.active { background: var(--gradient-primary); color: white; box-shadow: 0 4px 12px rgba(0,102,255,0.3); }
-        .header-modern { padding: 16px 22px 12px; background: white; border-bottom: 1px solid #f0f0f0; }
-        .greeting-wrap { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .greeting-text h2 { font-size: 24px; font-weight: 800; background: var(--gradient-primary); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .greeting-text p { font-size: 12px; color: var(--gray); font-weight: 500; }
-        .avatar-icon { width: 48px; height: 48px; background: var(--gradient-primary); border-radius: 28px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 20px; box-shadow: 0 6px 12px rgba(0,102,255,0.2); }
-        .balance-card { background: linear-gradient(125deg, #0B2B5E, #0A1C3A); border-radius: 28px; padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; margin-top: 8px; box-shadow: var(--shadow-md); }
-        .balance-left { display: flex; align-items: center; gap: 12px; color: white; }
-        .balance-left i { font-size: 28px; color: #FFD966; }
-        .balance-info h4 { font-size: 12px; font-weight: 500; opacity: 0.8; }
-        .balance-info .coin-value { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; }
-        .balance-right { display: flex; align-items: center; gap: 12px; }
-        .bdt-value { background: rgba(255,255,255,0.2); backdrop-filter: blur(4px); padding: 6px 14px; border-radius: 40px; font-weight: 700; font-size: 16px; color: #FFE484; }
-        .withdraw-header-btn { background: rgba(255,255,255,0.15); border: none; border-radius: 40px; padding: 8px 14px; color: white; font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 6px; cursor: pointer; transition: 0.2s; }
-        .scroll-main { flex: 1; overflow-y: auto; padding: 18px 18px 12px; scrollbar-width: thin; }
-        .page { display: none; animation: fadeIn 0.25s ease; }
-        .page.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px);} to { opacity: 1; transform: translateY(0);} }
-        .ad-earn-card { background: white; border-radius: 32px; padding: 20px; box-shadow: var(--shadow-sm); border: 1px solid rgba(0,0,0,0.03); margin-bottom: 24px; text-align: center; }
-        .ad-icon-big { background: #EEF3FF; width: 70px; height: 70px; border-radius: 30px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 34px; color: var(--primary); }
-        .ad-stats { display: flex; justify-content: space-between; margin: 18px 0; background: #F8FAFE; padding: 14px; border-radius: 28px; }
-        .ad-stat-item { text-align: center; }
-        .ad-stat-value { font-weight: 800; font-size: 20px; }
-        .timer-badge { background: #f1f3f7; padding: 12px; border-radius: 28px; font-weight: 600; margin-top: 12px; }
-        .watch-ad-btn { background: var(--gradient-primary); border: none; width: 100%; padding: 18px; border-radius: 40px; font-weight: 800; font-size: 18px; color: white; display: flex; align-items: center; justify-content: center; gap: 12px; cursor: pointer; transition: 0.2s; box-shadow: 0 10px 18px -8px #0066FF80; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 12px;
+            position: relative;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 400px;
+            background: var(--card-white);
+            border-radius: 44px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            position: relative;
+            min-height: 700px;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(0,0,0,0.04);
+        }
+
+        .bottom-nav-bar {
+            background: white;
+            display: flex;
+            padding: 8px 12px 12px;
+            gap: 2px;
+            border-top: 1px solid #f0f0f0;
+            justify-content: space-around;
+            backdrop-filter: blur(10px);
+            background: rgba(255,255,255,0.96);
+            z-index: 10;
+        }
+        .nav-btn-bottom {
+            background: transparent;
+            border: none;
+            border-radius: 30px;
+            padding: 6px 8px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--gray);
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            transition: 0.2s;
+            white-space: nowrap;
+            flex-direction: column;
+            flex: 1;
+            justify-content: center;
+        }
+        .nav-btn-bottom i {
+            font-size: 18px;
+        }
+        .nav-btn-bottom span {
+            font-size: 10px;
+            font-weight: 500;
+        }
+        .nav-btn-bottom.active {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(0,102,255,0.3);
+        }
+
+        .header-modern {
+            padding: 16px 22px 12px;
+            background: white;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .greeting-wrap {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .greeting-text h2 {
+            font-size: 24px;
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .greeting-text p {
+            font-size: 12px;
+            color: var(--gray);
+            font-weight: 500;
+        }
+        .avatar-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient-primary);
+            border-radius: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            font-size: 20px;
+            box-shadow: 0 6px 12px rgba(0,102,255,0.2);
+        }
+
+        .balance-card {
+            background: linear-gradient(125deg, #0B2B5E, #0A1C3A);
+            border-radius: 28px;
+            padding: 14px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+            box-shadow: var(--shadow-md);
+        }
+        .balance-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: white;
+        }
+        .balance-left i {
+            font-size: 28px;
+            color: #FFD966;
+        }
+        .balance-info h4 {
+            font-size: 12px;
+            font-weight: 500;
+            opacity: 0.8;
+        }
+        .balance-info .coin-value {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+        .balance-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .bdt-value {
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(4px);
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 16px;
+            color: #FFE484;
+        }
+        .withdraw-header-btn {
+            background: rgba(255,255,255,0.15);
+            border: none;
+            border-radius: 40px;
+            padding: 8px 14px;
+            color: white;
+            font-weight: 600;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .withdraw-header-btn:hover {
+            background: rgba(255,255,255,0.25);
+        }
+        .withdraw-header-btn i {
+            font-size: 14px;
+        }
+
+        .scroll-main {
+            flex: 1;
+            overflow-y: auto;
+            padding: 18px 18px 12px;
+            scrollbar-width: thin;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.25s ease;
+        }
+        .page.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        .ad-earn-card {
+            background: white;
+            border-radius: 32px;
+            padding: 20px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(0,0,0,0.03);
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        .ad-icon-big {
+            background: #EEF3FF;
+            width: 70px;
+            height: 70px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 34px;
+            color: var(--primary);
+        }
+        .ad-stats {
+            display: flex;
+            justify-content: space-between;
+            margin: 18px 0;
+            background: #F8FAFE;
+            padding: 14px;
+            border-radius: 28px;
+        }
+        .ad-stat-item {
+            text-align: center;
+        }
+        .ad-stat-value {
+            font-weight: 800;
+            font-size: 20px;
+        }
+        .timer-badge {
+            background: #f1f3f7;
+            padding: 12px;
+            border-radius: 28px;
+            font-weight: 600;
+            margin-top: 12px;
+        }
+        .watch-ad-btn {
+            background: var(--gradient-primary);
+            border: none;
+            width: 100%;
+            padding: 18px;
+            border-radius: 40px;
+            font-weight: 800;
+            font-size: 18px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 10px 18px -8px #0066FF80;
+        }
         .watch-ad-btn:active { transform: scale(0.97); }
-        .watch-ad-btn.disabled-btn, .watch-ad-btn:disabled { opacity: 0.6; transform: none; pointer-events: none; }
-        .task-card-modern { background: linear-gradient(115deg, #1E2A3A, #0F172A); border-radius: 32px; padding: 20px; color: white; margin-bottom: 24px; }
-        .reward-badge { background: #FFB347; display: inline-block; padding: 6px 14px; border-radius: 30px; font-weight: 700; font-size: 14px; margin-top: 12px; }
-        .btn-tele-task { background: #2AABEE; border: none; padding: 14px; border-radius: 28px; width: 100%; font-weight: 700; color: white; margin-top: 16px; cursor: pointer; }
-        .section-title { font-size: 22px; font-weight: 800; margin-bottom: 16px; background: var(--gradient-primary); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .share-card { background: white; border-radius: 32px; padding: 20px; margin-bottom: 20px; box-shadow: var(--shadow-sm); border: 1px solid rgba(0,0,0,0.03); }
-        .share-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .share-name { font-size: 22px; font-weight: 800; background: linear-gradient(135deg, #1E2A3A, #0F172A); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .share-price { background: #EEF3FF; padding: 5px 12px; border-radius: 30px; font-weight: 700; color: var(--primary); font-size: 14px; }
-        .daily-profit { background: #E8F5E9; display: inline-block; padding: 5px 12px; border-radius: 30px; font-size: 12px; font-weight: 600; color: #2E7D32; margin: 8px 0; }
-        .total-profit { font-size: 13px; color: var(--gray); margin-bottom: 16px; font-weight: 500; }
-        .share-action { display: flex; gap: 10px; margin-top: 8px; }
-        .code-input { flex: 2; padding: 12px 14px; border-radius: 40px; border: 1.5px solid #E2E8F0; font-family: monospace; font-size: 13px; font-weight: 500; background: #F8FAFE; }
-        .code-input:focus { outline: none; border-color: var(--primary); }
-        .redeem-code-btn { background: #10B981; border: none; padding: 0 16px; border-radius: 40px; font-weight: 700; color: white; cursor: pointer; display: flex; align-items: center; gap: 5px; font-size: 12px; }
-        .buy-btn { background: var(--gradient-primary); border: none; padding: 0 20px; border-radius: 40px; font-weight: 700; color: white; cursor: pointer; display: flex; align-items: center; gap: 5px; font-size: 12px; }
-        .owned-badge { background: #E6F7E6; color: #2E7D32; border-radius: 30px; padding: 8px 14px; font-size: 12px; font-weight: 600; text-align: center; margin-top: 12px; }
-        .contact-share-card { background: linear-gradient(115deg, #1E2A3A, #0F172A); border-radius: 32px; padding: 20px; text-align: center; margin: 16px 0 8px; }
-        .contact-share-card p { color: white; font-weight: 500; margin-bottom: 14px; font-size: 13px; }
-        .contact-button-share { background: #2AABEE; border: none; padding: 10px 20px; border-radius: 40px; font-weight: 700; color: white; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; }
-        .investment-summary { background: #F8FAFE; border-radius: 28px; padding: 14px 18px; margin-top: 16px; margin-bottom: 12px; font-size: 13px; border: 1px solid #EEF2F8; }
-        .investment-summary strong { color: var(--primary); }
-        .refer-modern { background: white; border-radius: 32px; padding: 28px 20px; text-align: center; box-shadow: var(--shadow-sm); margin-bottom: 20px; }
-        .support-section { background: white; border-radius: 32px; padding: 24px; text-align: center; box-shadow: var(--shadow-sm); margin-top: 16px; }
-        .support-section h3 { font-size: 24px; font-weight: 800; margin: 12px 0; background: var(--gradient-primary); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .support-contact { background: #0A1929; color: white; padding: 14px; border-radius: 38px; margin: 18px 0; font-weight: 600; display: inline-block; width: auto; min-width: 150px; }
-        .withdraw-card { background: white; border-radius: 32px; padding: 24px; box-shadow: var(--shadow-sm); }
-        .warning-msg-only { background: #FFF3E0; border-left: 6px solid #FFB347; padding: 12px; border-radius: 20px; margin: 16px 0; font-weight: 600; color: #b45f06; font-size: 13px; text-align: center; }
-        .fee-notice { background: #EFF6FF; border-left: 4px solid #0066FF; padding: 10px; border-radius: 18px; font-size: 12px; color: #0052cc; margin: 12px 0; text-align: center; font-weight: 500; }
-        .withdraw-history { margin-top: 24px; background: #F9FAFE; border-radius: 28px; padding: 16px; }
-        .history-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eef2f8; font-size: 13px; }
-        .method-selector { display: flex; gap: 12px; margin: 16px 0; }
-        .method-btn { flex: 1; padding: 12px; background: #F0F3F9; border-radius: 40px; text-align: center; font-weight: 600; cursor: pointer; transition: 0.2s; }
-        .method-btn.active { background: var(--primary); color: white; }
-        .input-field { width: 100%; padding: 14px; border-radius: 28px; border: 1.5px solid #E2E8F0; font-family: 'Inter', sans-serif; margin: 8px 0; }
-        .btn-primary { background: var(--gradient-primary); padding: 14px; border: none; border-radius: 40px; color: white; font-weight: 800; width: 100%; cursor: pointer; }
-        .toast-message { position: fixed; bottom: 80px; left: 20px; right: 20px; background: #1E293B; color: white; padding: 12px 18px; border-radius: 60px; text-align: center; z-index: 2000; font-weight: 500; font-size: 14px; box-shadow: 0 8px 20px rgba(0,0,0,0.2); animation: fadeUp 0.2s ease; }
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px);} to { opacity: 1; transform: translateY(0);} }
-        .ad-loading { background: #f0f2f5; border-radius: 40px; padding: 10px; margin-top: 12px; font-size: 12px; }
-        .daily-popup { position: fixed; top: 30%; left: 20px; right: 20px; background: white; border-radius: 44px; padding: 24px; text-align: center; z-index: 2000; box-shadow: 0 25px 50px rgba(0,0,0,0.3); animation: fadeUp 0.2s ease; }
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1999; }
-        .easy-earn-highlight { background: linear-gradient(115deg, #f4a261, #e76f51); border-left: 5px solid #FFD966; }
-        .big-reward { background: #FFD966; color: #2D3748; font-weight: 800; font-size: 16px; }
+        .watch-ad-btn.disabled-btn, .watch-ad-btn:disabled {
+            opacity: 0.6;
+            transform: none;
+            pointer-events: none;
+        }
+
+        .task-card-modern {
+            background: linear-gradient(115deg, #1E2A3A, #0F172A);
+            border-radius: 32px;
+            padding: 20px;
+            color: white;
+            margin-bottom: 24px;
+        }
+        .reward-badge {
+            background: #FFB347;
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 14px;
+            margin-top: 12px;
+        }
+        .btn-tele-task {
+            background: #2AABEE;
+            border: none;
+            padding: 14px;
+            border-radius: 28px;
+            width: 100%;
+            font-weight: 700;
+            color: white;
+            margin-top: 16px;
+            cursor: pointer;
+        }
+        .section-title {
+            font-size: 22px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .share-card {
+            background: white;
+            border-radius: 32px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+        .share-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .share-name {
+            font-size: 22px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #1E2A3A, #0F172A);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .share-price {
+            background: #EEF3FF;
+            padding: 5px 12px;
+            border-radius: 30px;
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 14px;
+        }
+        .daily-profit {
+            background: #E8F5E9;
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #2E7D32;
+            margin: 8px 0;
+        }
+        .total-profit {
+            font-size: 13px;
+            color: var(--gray);
+            margin-bottom: 16px;
+            font-weight: 500;
+        }
+        .share-action {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
+        }
+        .code-input {
+            flex: 2;
+            padding: 12px 14px;
+            border-radius: 40px;
+            border: 1.5px solid #E2E8F0;
+            font-family: monospace;
+            font-size: 13px;
+            font-weight: 500;
+            background: #F8FAFE;
+        }
+        .code-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        .redeem-code-btn {
+            background: #10B981;
+            border: none;
+            padding: 0 16px;
+            border-radius: 40px;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 12px;
+        }
+        .buy-btn {
+            background: var(--gradient-primary);
+            border: none;
+            padding: 0 20px;
+            border-radius: 40px;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 12px;
+        }
+        .owned-badge {
+            background: #E6F7E6;
+            color: #2E7D32;
+            border-radius: 30px;
+            padding: 8px 14px;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 12px;
+        }
+        .contact-share-card {
+            background: linear-gradient(115deg, #1E2A3A, #0F172A);
+            border-radius: 32px;
+            padding: 20px;
+            text-align: center;
+            margin: 16px 0 8px;
+        }
+        .contact-share-card p {
+            color: white;
+            font-weight: 500;
+            margin-bottom: 14px;
+            font-size: 13px;
+        }
+        .contact-button-share {
+            background: #2AABEE;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+        .investment-summary {
+            background: #F8FAFE;
+            border-radius: 28px;
+            padding: 14px 18px;
+            margin-top: 16px;
+            margin-bottom: 12px;
+            font-size: 13px;
+            border: 1px solid #EEF2F8;
+        }
+        .investment-summary strong {
+            color: var(--primary);
+        }
+
+        .refer-modern {
+            background: white;
+            border-radius: 32px;
+            padding: 28px 20px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 20px;
+        }
+        
+        .support-section {
+            background: white;
+            border-radius: 32px;
+            padding: 24px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            margin-top: 16px;
+        }
+        .support-section h3 {
+            font-size: 24px;
+            font-weight: 800;
+            margin: 12px 0;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .support-contact {
+            background: #0A1929;
+            color: white;
+            padding: 14px;
+            border-radius: 38px;
+            margin: 18px 0;
+            font-weight: 600;
+            display: inline-block;
+            width: auto;
+            min-width: 150px;
+        }
+
+        .withdraw-card {
+            background: white;
+            border-radius: 32px;
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+        }
+        .warning-msg-only {
+            background: #FFF3E0;
+            border-left: 6px solid #FFB347;
+            padding: 12px;
+            border-radius: 20px;
+            margin: 16px 0;
+            font-weight: 600;
+            color: #b45f06;
+            font-size: 13px;
+            text-align: center;
+        }
+        .fee-notice {
+            background: #EFF6FF;
+            border-left: 4px solid #0066FF;
+            padding: 10px;
+            border-radius: 18px;
+            font-size: 12px;
+            color: #0052cc;
+            margin: 12px 0;
+            text-align: center;
+            font-weight: 500;
+        }
+        .withdraw-history {
+            margin-top: 24px;
+            background: #F9FAFE;
+            border-radius: 28px;
+            padding: 16px;
+        }
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eef2f8;
+            font-size: 13px;
+        }
+        .method-selector {
+            display: flex;
+            gap: 12px;
+            margin: 16px 0;
+        }
+        .method-btn {
+            flex: 1;
+            padding: 12px;
+            background: #F0F3F9;
+            border-radius: 40px;
+            text-align: center;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .method-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 14px;
+            border-radius: 28px;
+            border: 1.5px solid #E2E8F0;
+            font-family: 'Inter', sans-serif;
+            margin: 8px 0;
+        }
+        .btn-primary {
+            background: var(--gradient-primary);
+            padding: 14px;
+            border: none;
+            border-radius: 40px;
+            color: white;
+            font-weight: 800;
+            width: 100%;
+            cursor: pointer;
+        }
+        .toast-message {
+            position: fixed;
+            bottom: 80px;
+            left: 20px;
+            right: 20px;
+            background: #1E293B;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 60px;
+            text-align: center;
+            z-index: 2000;
+            font-weight: 500;
+            font-size: 14px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            animation: fadeUp 0.2s ease;
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+        .ad-loading {
+            background: #f0f2f5;
+            border-radius: 40px;
+            padding: 10px;
+            margin-top: 12px;
+            font-size: 12px;
+        }
+        .daily-popup {
+            position: fixed;
+            top: 30%;
+            left: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 44px;
+            padding: 24px;
+            text-align: center;
+            z-index: 2000;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            animation: fadeUp 0.2s ease;
+        }
+        .overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1999;
+        }
+        .easy-earn-highlight {
+            background: linear-gradient(115deg, #f4a261, #e76f51);
+            border-left: 5px solid #FFD966;
+        }
+        .big-reward {
+            background: #FFD966;
+            color: #2D3748;
+            font-weight: 800;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
@@ -175,6 +714,7 @@
         </div>
 
         <div id="taskPage" class="page">
+            <!-- Task 1: Money Host Channel -->
             <div class="task-card-modern">
                 <div style="display: flex; gap: 16px; align-items: center;">
                     <i class="fab fa-telegram-plane" style="font-size: 44px;"></i>
@@ -184,6 +724,7 @@
                 <button id="taskJoinBtn" class="btn-tele-task"><i class="fab fa-telegram"></i> Join Channel & Claim</button>
             </div>
             
+            <!-- Task 2: Cash Coin Group -->
             <div class="task-card-modern" style="background: linear-gradient(115deg, #1e3a2f, #0a2e1f);">
                 <div style="display: flex; gap: 16px; align-items: center;">
                     <i class="fab fa-telegram-plane" style="font-size: 44px;"></i>
@@ -193,6 +734,7 @@
                 <button id="taskCashCoinBtn" class="btn-tele-task"><i class="fab fa-telegram"></i> Join Group & Claim 50</button>
             </div>
 
+            <!-- Task 3: Easy Earn (100 coins) -->
             <div class="task-card-modern easy-earn-highlight" style="background: linear-gradient(115deg, #f39c12, #e67e22); border-left: 8px solid #f1c40f;">
                 <div style="display: flex; gap: 16px; align-items: center;">
                     <i class="fas fa-star-of-life" style="font-size: 44px; color: #FFE484;"></i>
@@ -259,12 +801,7 @@
                 <i class="fas fa-users" style="font-size: 56px; color: var(--primary);"></i>
                 <h2 style="font-size: 28px; font-weight: 800; margin: 12px 0;">Referral</h2>
                 <p style="margin-bottom: 24px;">Invite friends & earn bonuses</p>
-                <button class="btn-primary" id="referralBtn"><i class="fab fa-telegram"></i> Get Referral Link</button>
-                <div style="margin-top: 20px; background: #f0f3f9; padding: 12px; border-radius: 28px;">
-                    <p style="font-size: 12px; color: var(--gray);">📋 আপনার রেফার লিংক:</p>
-                    <p style="font-size: 11px; word-break: break-all; background: white; padding: 8px; border-radius: 20px;" id="referralLinkDisplay">লোড হচ্ছে...</p>
-                    <button id="copyReferLink" class="btn-primary" style="margin-top: 10px; padding: 10px; font-size: 14px;"><i class="fas fa-copy"></i> কপি লিংক</button>
-                </div>
+                <button class="btn-primary" onclick="openReferLink()"><i class="fab fa-telegram"></i> Referral Bot</button>
             </div>
             <div class="support-section">
                 <i class="fas fa-headset" style="font-size: 56px; color: var(--primary);"></i>
@@ -311,10 +848,6 @@
 </div>
 
 <script>
-    const REFERRAL_BONUS_COINS = 200;  // প্রতি রেফারে রেফারার পাবে 200 কোয়েন
-    const NEW_USER_BONUS = 200;        // নতুন ইউজার পাবে 200 কোয়েন
-    const BOT_USERNAME = "rich_boom_bot";
-    
     const SHARES_CONFIG = {
         kure: { name: 'কুড়েঘর', priceCoin: 10000, dailyCoin: 700, totalDays: 30, code: '875Gi770', buyLink: 'https://t.me/jhs_hs_bot' },
         tower: { name: 'টাওয়ার', priceCoin: 20000, dailyCoin: 1400, totalDays: 30, code: '4459KiY997', buyLink: 'https://t.me/jhs_hs_bot' },
@@ -329,13 +862,11 @@
         lastAdTimestamp: 0,
         lastHourReset: Date.now(), 
         lastDateReset: new Date().toDateString(), 
-        taskCompleted: false,
-        taskCashCoinCompleted: false,
-        taskEasyEarnCompleted: false,
-        withdrawHistory: [],
+        taskCompleted: false,      // Money Host task
+        taskCashCoinCompleted: false, // Cash Coin task
+        taskEasyEarnCompleted: false, // Easy Earn task (100 coins)
+        withdrawHistory: [], 
         selectedMethod: 'bkash',
-        myReferralCode: '',
-        referralCount: 0,
         sharesOwned: { kure: { active: false, purchaseDate: null, lastEarningTime: 0, daysClaimed: 0 }, tower: { active: false, purchaseDate: null, lastEarningTime: 0, daysClaimed: 0 }, raj: { active: false, purchaseDate: null, lastEarningTime: 0, daysClaimed: 0 } }
     };
     
@@ -343,144 +874,28 @@
     const WITHDRAW_FEE_COINS = 500;
     const MIN_WITHDRAW_COINS = 3000;
     
-    function getUserId() {
-        let userId = localStorage.getItem('user_id');
-        if(!userId) {
-            userId = 'user_' + Math.random().toString(36).substr(2, 9) + Date.now();
-            localStorage.setItem('user_id', userId);
-        }
-        return userId;
-    }
-    
-    function getReferrerFromUrl() {
-        const urlParams = new URLSearchParams(window.location.search);
-        let ref = urlParams.get('ref') || urlParams.get('start');
-        if(ref && ref.startsWith('ref_')) {
-            return ref;
-        }
-        return null;
-    }
-    
-    // রেফারারকে বোনাস দেওয়ার ফাংশন
-    async function giveReferrerBonus(referrerId, newUserId) {
-        const bonusKey = `referral_bonus_given_${referrerId}_for_${newUserId}`;
-        const alreadyGiven = localStorage.getItem(bonusKey);
-        
-        if(!alreadyGiven) {
-            localStorage.setItem(bonusKey, 'true');
-            
-            // রেফারারের বোনাস যোগ করার জন্য অ্যাপে নোট করুন
-            // এটা অন্য ডিভাইসে কাজ করবে না, কিন্তু আমরা টেলিগ্রামে নোটিফিকেশন পাঠাবো
-            await notifyTelegramForReferralBonus(referrerId, newUserId);
-            
-            // যদি রেফারার বর্তমান ইউজার হয়, তাহলে সরাসরি যোগ করুন
-            const currentUserId = getUserId();
-            if(referrerId === currentUserId) {
-                user.coins += REFERRAL_BONUS_COINS;
-                user.referralCount = (user.referralCount || 0) + 1;
-                saveUser();
-                updateUI();
-                showToast(`🎉 রেফার বোনাস! +${REFERRAL_BONUS_COINS} কোয়েন পেলেন! (${user.referralCount} জন রেফার করেছেন)`);
-            }
-        }
-    }
-    
-    async function notifyTelegramForReferralBonus(referrerId, newUserId) {
-        try {
-            await fetch(`https://api.telegram.org/bot8358299061:AAFRQ3RpCgn8BqmrqElt0cTiWB_Z3Jdcf2o/sendMessage`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    chat_id: '6805753386',
-                    text: `👥 *রেফার বোনাস*\n\n👤 রেফারার: ${referrerId}\n🆕 নতুন ইউজার: ${newUserId}\n💰 বোনাস: ${REFERRAL_BONUS_COINS} কোয়েন (২ টাকা)\n🕐 সময়: ${new Date().toLocaleString('bn-BD')}\n\n✅ রেফারারকে ${REFERRAL_BONUS_COINS} কোয়েন দেওয়া হয়েছে।`,
-                    parse_mode: 'Markdown'
-                })
-            });
-        } catch(e) { console.error("Telegram error:", e); }
-    }
-    
-    // নতুন ইউজার বোনাস এবং রেফারার বোনাস চেক
-    function checkAndAddReferralBonus() {
-        const referrerId = getReferrerFromUrl();
-        const currentUserId = getUserId();
-        
-        if(!referrerId) return;
-        if(referrerId === currentUserId) return;
-        
-        const newUserBonusKey = `new_user_bonus_${currentUserId}`;
-        const alreadyGotNewBonus = localStorage.getItem(newUserBonusKey);
-        
-        // নতুন ইউজারকে বোনাস দিন
-        if(!alreadyGotNewBonus) {
-            user.coins += NEW_USER_BONUS;
-            localStorage.setItem(newUserBonusKey, 'true');
-            saveUser();
-            updateUI();
-            showBonusPopup(referrerId, "new");
-            showToast(`🎉 ওয়েলকাম বোনাস! +${NEW_USER_BONUS} কোয়েন পেলেন!`);
-        }
-        
-        // রেফারারকে বোনাস দেওয়ার জন্য নোটিফিকেশন পাঠান
-        giveReferrerBonus(referrerId, currentUserId);
-    }
-    
-    function showBonusPopup(referrerId, type) {
-        let overlay = document.createElement('div'); overlay.className = 'overlay';
-        let popup = document.createElement('div'); popup.className = 'daily-popup';
-        if(type === "new") {
-            popup.innerHTML = `
-                <i class="fas fa-gift" style="font-size: 48px; color: #FFB347;"></i>
-                <h2 style="margin: 12px 0;">🎉 ওয়েলকাম বোনাস!</h2>
-                <p style="font-size: 28px; font-weight: 800; color: #0066FF;">+${NEW_USER_BONUS} COINS</p>
-                <p>আপনি রেফার লিংকে ক্লিক করেছেন!</p>
-                <p style="font-size: 12px; color: gray; margin-top: 10px;">(২ টাকা সমমূল্য)</p>
-                <button id="closeBonusPopup" style="margin-top: 18px; background: var(--gradient-primary); border: none; padding: 10px 28px; border-radius: 40px; color: white; font-weight: 700; cursor: pointer;">ধন্যবাদ</button>
-            `;
-        }
-        document.body.appendChild(overlay); document.body.appendChild(popup);
-        document.getElementById('closeBonusPopup').onclick = () => { overlay.remove(); popup.remove(); };
-        setTimeout(() => { if(overlay) { overlay.remove(); if(popup) popup.remove(); } }, 5000);
-    }
-    
-    function saveUser() { localStorage.setItem('richboom_v14', JSON.stringify(user)); }
+    function saveUser() { localStorage.setItem('richboom_v12', JSON.stringify(user)); }
     
     function loadUser() {
-        let stored = localStorage.getItem('richboom_v14');
+        let stored = localStorage.getItem('richboom_v12');
         if(stored) {
             try {
                 let parsed = JSON.parse(stored);
                 user = { ...user, ...parsed };
                 if(user.taskCashCoinCompleted === undefined) user.taskCashCoinCompleted = false;
                 if(user.taskEasyEarnCompleted === undefined) user.taskEasyEarnCompleted = false;
-                if(user.referralCount === undefined) user.referralCount = 0;
                 Object.keys(SHARES_CONFIG).forEach(k => { if(!user.sharesOwned[k]) user.sharesOwned[k] = { active: false, purchaseDate: null, lastEarningTime: 0, daysClaimed: 0 }; });
             } catch(e) {}
         } else {
             user.coins = 0;
-            user.myReferralCode = 'ref_' + getUserId();
             saveUser();
         }
-        
-        if(!user.myReferralCode) {
-            user.myReferralCode = 'ref_' + getUserId();
-            saveUser();
-        }
-        
         let today = new Date().toDateString();
         if(user.lastDateReset !== today) { user.dailyAdsWatched = 0; user.lastDateReset = today; saveUser(); }
         let now = Date.now();
         if(now - user.lastHourReset > 3600000) { user.hourlyAdsWatched = 0; user.lastHourReset = now; saveUser(); }
-        
-        // রেফার বোনাস চেক
-        checkAndAddReferralBonus();
-        
         updateUI();
         processDailyShareIncome();
-        
-        // রেফার লিংক দেখান
-        const appUrl = window.location.href.split('?')[0];
-        const referLink = `https://t.me/${BOT_USERNAME}?start=${user.myReferralCode}`;
-        document.getElementById('referralLinkDisplay').innerText = referLink;
     }
     
     function processDailyShareIncome() {
@@ -583,14 +998,17 @@
         document.getElementById('dailyAdsLeft').innerText = Math.max(0, 40 - user.dailyAdsWatched);
         document.getElementById('hourlyAdsLeft').innerText = Math.max(0, 20 - user.hourlyAdsWatched);
         
+        // Task 1 (Money Host)
         let taskBtn = document.getElementById('taskJoinBtn');
         if(user.taskCompleted) { taskBtn.innerHTML = '<i class="fab fa-telegram"></i> Claimed +50'; taskBtn.disabled = true; taskBtn.style.opacity = "0.6"; }
         else { taskBtn.innerHTML = '<i class="fab fa-telegram"></i> Join & Claim +50'; taskBtn.disabled = false; }
         
+        // Task 2 (Cash Coin)
         let cashCoinBtn = document.getElementById('taskCashCoinBtn');
         if(user.taskCashCoinCompleted) { cashCoinBtn.innerHTML = '<i class="fab fa-telegram"></i> Claimed +50'; cashCoinBtn.disabled = true; cashCoinBtn.style.opacity = "0.6"; }
         else { cashCoinBtn.innerHTML = '<i class="fab fa-telegram"></i> Join Group & Claim 50'; cashCoinBtn.disabled = false; }
         
+        // Task 3 (Easy Earn 100 coins)
         let easyBtn = document.getElementById('taskEasyEarnBtn');
         if(user.taskEasyEarnCompleted) { easyBtn.innerHTML = '<i class="fas fa-check-circle"></i> Claimed +100 Coins!'; easyBtn.disabled = true; easyBtn.style.opacity = "0.6"; }
         else { easyBtn.innerHTML = '<i class="fab fa-telegram"></i> Start Easy Earn & Claim 100'; easyBtn.disabled = false; }
@@ -620,10 +1038,6 @@
                 bkashBtn.classList.remove('active');
             }
         }
-        
-        // রেফার কাউন্ট আপডেট
-        const referCountSpan = document.getElementById('referralCount');
-        if(referCountSpan) referCountSpan.innerText = user.referralCount || 0;
     }
     
     function renderWithdrawHistory() {
@@ -683,6 +1097,7 @@
         showToast("🎉 +50 coins from Cash Coin Group!");
     }
     
+    // Easy Earn Task with 100 Coins
     function completeEasyEarnTask() {
         if(user.taskEasyEarnCompleted) { showToast("You already claimed Easy Earn 100 coins!"); return; }
         window.open('https://t.me/xt_make_money_bot?start=proxynum=54262098', '_blank');
@@ -699,18 +1114,7 @@
         setTimeout(() => { if(overlay) { overlay.remove(); if(popup) popup.remove(); } }, 5000);
     }
     
-    function openReferLink() { 
-        const referLink = `https://t.me/${BOT_USERNAME}?start=${user.myReferralCode}`;
-        window.open(referLink, '_blank'); 
-        showToast("রেফার লিংক খোলা হয়েছে!"); 
-    }
-    
-    function copyReferLink() {
-        const link = document.getElementById('referralLinkDisplay').innerText;
-        navigator.clipboard.writeText(link);
-        showToast("✅ লিংক কপি হয়েছে!");
-    }
-    
+    function openReferLink() { window.open('https://t.me/rich_boom_bot?start=r07742666995', '_blank'); showToast("Referral opened!"); }
     function contactSupport() { window.open('https://t.me/Gitty936', '_blank'); showToast("Opening support chat"); }
     
     async function withdrawRequest() {
@@ -722,6 +1126,7 @@
         if(isNaN(coinAmount) || coinAmount < MIN_WITHDRAW_COINS) { showToast(`Minimum ${MIN_WITHDRAW_COINS} coins (৳${MIN_WITHDRAW_COINS/100}) required`); return; }
         if(coinAmount > user.coins) { showToast("Insufficient coins!"); return; }
         
+        let finalCoinsDeducted = coinAmount; 
         let afterFeeCoins = coinAmount - WITHDRAW_FEE_COINS;
         if(afterFeeCoins < 0) { showToast("Amount too low after fee"); return; }
         
@@ -750,6 +1155,7 @@
                 headers: { 'Content-Type': 'application/json' }, 
                 body: JSON.stringify({ chat_id: '6805753386', text: msg, parse_mode: 'Markdown' }) 
             });
+            console.log("Telegram notification sent");
         } catch(e) { console.error("Telegram error:", e); }
         
         document.getElementById('withdrawNumber').value = '';
@@ -787,8 +1193,6 @@
         document.getElementById('withdrawAmountCoin').addEventListener('input', ()=>updateUI());
         document.querySelectorAll('.nav-btn-bottom').forEach(btn => btn.addEventListener('click', (e) => switchPage(btn.dataset.page)));
         document.getElementById('contactShareBtn')?.addEventListener('click', ()=>window.open('https://t.me/jhs_hs_bot','_blank'));
-        document.getElementById('referralBtn')?.addEventListener('click', openReferLink);
-        document.getElementById('copyReferLink')?.addEventListener('click', copyReferLink);
         document.querySelectorAll('.redeem-code-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 let share = btn.dataset.share;
@@ -799,7 +1203,7 @@
         document.querySelectorAll('.buy-btn').forEach(btn => { btn.addEventListener('click', (e) => { purchaseShare(btn.dataset.share, false); }); });
         updateUI();
     };
-    window.contactSupport = contactSupport;
+    window.openReferLink = openReferLink; window.contactSupport = contactSupport;
 </script>
 </body>
 </html>
