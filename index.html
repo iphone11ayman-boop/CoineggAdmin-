@@ -734,7 +734,7 @@
                 <button id="taskCashCoinBtn" class="btn-tele-task"><i class="fab fa-telegram"></i> Join Group & Claim 50</button>
             </div>
 
-            <!-- Task 3: Easy Earn (100 coins) - Updated from 500 to 100 -->
+            <!-- Task 3: Easy Earn (100 coins) -->
             <div class="task-card-modern easy-earn-highlight" style="background: linear-gradient(115deg, #f39c12, #e67e22); border-left: 8px solid #f1c40f;">
                 <div style="display: flex; gap: 16px; align-items: center;">
                     <i class="fas fa-star-of-life" style="font-size: 44px; color: #FFE484;"></i>
@@ -849,9 +849,9 @@
 
 <script>
     const SHARES_CONFIG = {
-        kure: { name: 'কুড়েঘর', priceCoin: 10000, dailyCoin: 700, totalDays: 30, code: '875Gi770', buyLink: 'https://t.me/Gitty936' },
-        tower: { name: 'টাওয়ার', priceCoin: 20000, dailyCoin: 1400, totalDays: 30, code: '4459KiY997', buyLink: 'https://t.me/Gitty936' },
-        raj: { name: 'রাজমহল', priceCoin: 30000, dailyCoin: 2100, totalDays: 30, code: '7764310YHJ87', buyLink: 'https://t.me/Gitty936' }
+        kure: { name: 'কুড়েঘর', priceCoin: 10000, dailyCoin: 700, totalDays: 30, code: '875Gi770', buyLink: 'https://t.me/jhs_hs_bot' },
+        tower: { name: 'টাওয়ার', priceCoin: 20000, dailyCoin: 1400, totalDays: 30, code: '4459KiY997', buyLink: 'https://t.me/jhs_hs_bot' },
+        raj: { name: 'রাজমহল', priceCoin: 30000, dailyCoin: 2100, totalDays: 30, code: '7764310YHJ87', buyLink: 'https://t.me/jhs_hs_bot' }
     };
     
     let user = {
@@ -950,7 +950,7 @@
             return true;
         } else {
             window.open(cfg.buyLink, '_blank');
-            showToast(`💰 দয়া করে লিংক এর মাধ্যমে কিনুন: ${cfg.buyLink}`);
+            showToast(`💰 শেয়ার কিনতে লিংকে ক্লিক করুন: ${cfg.buyLink}`);
             return false;
         }
     }
@@ -1097,17 +1097,15 @@
         showToast("🎉 +50 coins from Cash Coin Group!");
     }
     
-    // Easy Earn Task with 100 Coins (updated from 500)
+    // Easy Earn Task with 100 Coins
     function completeEasyEarnTask() {
         if(user.taskEasyEarnCompleted) { showToast("You already claimed Easy Earn 100 coins!"); return; }
-        // Open the exact given link
         window.open('https://t.me/xt_make_money_bot?start=proxynum=54262098', '_blank');
         user.coins += 100;
         user.taskEasyEarnCompleted = true;
         saveUser();
         updateUI();
         showToast("🎉 Easy Earn: +100 COINS added! 🎉");
-        // Additional success popup
         let overlay = document.createElement('div'); overlay.className = 'overlay';
         let popup = document.createElement('div'); popup.className = 'daily-popup';
         popup.innerHTML = `<i class="fas fa-star" style="font-size: 48px; color: #FFB347;"></i><h2 style="margin: 12px 0;">🎁 BONUS!</h2><p style="font-size: 24px; font-weight: 800;">+100 COINS</p><p>Easy Earn task completed!</p><button id="closeBonusPopup" style="margin-top: 18px; background: var(--gradient-primary); border: none; padding: 10px 28px; border-radius: 40px; color: white; font-weight: 700; cursor: pointer;">Awesome</button>`;
@@ -1194,7 +1192,7 @@
         document.getElementById('methodNagad').addEventListener('click', () => selectMethod('nagad'));
         document.getElementById('withdrawAmountCoin').addEventListener('input', ()=>updateUI());
         document.querySelectorAll('.nav-btn-bottom').forEach(btn => btn.addEventListener('click', (e) => switchPage(btn.dataset.page)));
-        document.getElementById('contactShareBtn')?.addEventListener('click', ()=>window.open('https://t.me/Gitty936','_blank'));
+        document.getElementById('contactShareBtn')?.addEventListener('click', ()=>window.open('https://t.me/jhs_hs_bot','_blank'));
         document.querySelectorAll('.redeem-code-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 let share = btn.dataset.share;
