@@ -32,7 +32,6 @@
     </script>
     
     <style>
-        /* আপনার সব স্টাইল আগের মতোই থাকবে */
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         :root {
             --primary: #0066FF;
@@ -260,7 +259,12 @@
                 <i class="fas fa-users" style="font-size: 56px; color: var(--primary);"></i>
                 <h2 style="font-size: 28px; font-weight: 800; margin: 12px 0;">Referral</h2>
                 <p style="margin-bottom: 24px;">Invite friends & earn bonuses</p>
-                <button class="btn-primary" id="referralBtn"><i class="fab fa-telegram"></i> Referral Bot</button>
+                <button class="btn-primary" id="referralBtn"><i class="fab fa-telegram"></i> Get Referral Link</button>
+                <div style="margin-top: 20px; background: #f0f3f9; padding: 12px; border-radius: 28px;">
+                    <p style="font-size: 12px; color: var(--gray);">📋 আপনার রেফার লিংক:</p>
+                    <p style="font-size: 11px; word-break: break-all; background: white; padding: 8px; border-radius: 20px;" id="referralLinkDisplay">লোড হচ্ছে...</p>
+                    <button id="copyReferLink" class="btn-primary" style="margin-top: 10px; padding: 10px; font-size: 14px;"><i class="fas fa-copy"></i> কপি লিংক</button>
+                </div>
             </div>
             <div class="support-section">
                 <i class="fas fa-headset" style="font-size: 56px; color: var(--primary);"></i>
@@ -307,7 +311,8 @@
 </div>
 
 <script>
-    const REFERRAL_BONUS_COINS = 200; // 2 টাকা = 200 coins
+    const REFERRAL_BONUS_COINS = 200;  // প্রতি রেফারে রেফারার পাবে 200 কোয়েন
+    const NEW_USER_BONUS = 200;        // নতুন ইউজার পাবে 200 কোয়েন
     const BOT_USERNAME = "rich_boom_bot";
     
     const SHARES_CONFIG = {
@@ -330,7 +335,7 @@
         withdrawHistory: [],
         selectedMethod: 'bkash',
         myReferralCode: '',
-        referralBonusReceived: false,
+        referralCount: 0,
         sharesOwned: { kure: { active: false, purchaseDate: null, lastEarningTime: 0, daysClaimed: 0 }, tower: { active: false, purchaseDate: null, lastEarningTime: 0, daysClaimed: 0 }, raj: { active: false, purchaseDate: null, lastEarningTime: 0, daysClaimed: 0 } }
     };
     
@@ -338,7 +343,6 @@
     const WITHDRAW_FEE_COINS = 500;
     const MIN_WITHDRAW_COINS = 3000;
     
-    // ইউজার আইডি তৈরি (টেলিগ্রাম থেকে বা র্যান্ডম)
     function getUserId() {
         let userId = localStorage.getItem('user_id');
         if(!userId) {
@@ -348,7 +352,6 @@
         return userId;
     }
     
-    // URL থেকে রেফারার আইডি পড়া
     function getReferrerFromUrl() {
         const urlParams = new URLSearchParams(window.location.search);
         let ref = urlParams.get('ref') || urlParams.get('start');
@@ -358,72 +361,98 @@
         return null;
     }
     
-    // রেফার বোনাস চেক ও যোগ করা
-    function checkAndAddReferralBonus() {
-        const referrerId = getReferrerFromUrl();
-        const currentUserId = getUserId();
+    // রেফারারকে বোনাস দেওয়ার ফাংশন
+    async function giveReferrerBonus(referrerId, newUserId) {
+        const bonusKey = `referral_bonus_given_${referrerId}_for_${newUserId}`;
+        const alreadyGiven = localStorage.getItem(bonusKey);
         
-        if(!referrerId || referrerId === currentUserId) return;
-        
-        const bonusKey = `referral_bonus_${currentUserId}_to_${referrerId}`;
-        const alreadyReceived = localStorage.getItem(bonusKey);
-        
-        if(!alreadyReceived && !user.referralBonusReceived) {
-            user.coins += REFERRAL_BONUS_COINS;
-            user.referralBonusReceived = true;
+        if(!alreadyGiven) {
             localStorage.setItem(bonusKey, 'true');
-            saveUser();
-            updateUI();
             
-            // বোনাস পপআপ দেখানো
-            showBonusPopup(referrerId);
+            // রেফারারের বোনাস যোগ করার জন্য অ্যাপে নোট করুন
+            // এটা অন্য ডিভাইসে কাজ করবে না, কিন্তু আমরা টেলিগ্রামে নোটিফিকেশন পাঠাবো
+            await notifyTelegramForReferralBonus(referrerId, newUserId);
             
-            // টেলিগ্রামে নোটিফিকেশন পাঠানো
-            notifyTelegramAboutReferral(referrerId, currentUserId);
+            // যদি রেফারার বর্তমান ইউজার হয়, তাহলে সরাসরি যোগ করুন
+            const currentUserId = getUserId();
+            if(referrerId === currentUserId) {
+                user.coins += REFERRAL_BONUS_COINS;
+                user.referralCount = (user.referralCount || 0) + 1;
+                saveUser();
+                updateUI();
+                showToast(`🎉 রেফার বোনাস! +${REFERRAL_BONUS_COINS} কোয়েন পেলেন! (${user.referralCount} জন রেফার করেছেন)`);
+            }
         }
     }
     
-    function showBonusPopup(referrerId) {
-        let overlay = document.createElement('div'); overlay.className = 'overlay';
-        let popup = document.createElement('div'); popup.className = 'daily-popup';
-        popup.innerHTML = `
-            <i class="fas fa-user-plus" style="font-size: 48px; color: #FFB347;"></i>
-            <h2 style="margin: 12px 0;">🎉 রেফার বোনাস!</h2>
-            <p style="font-size: 28px; font-weight: 800; color: #0066FF;">+${REFERRAL_BONUS_COINS} COINS</p>
-            <p>রেফার লিংকে ক্লিক করার জন্য বোনাস পেলেন!</p>
-            <p style="font-size: 12px; color: gray; margin-top: 10px;">(২ টাকা সমমূল্য)</p>
-            <button id="closeBonusPopup" style="margin-top: 18px; background: var(--gradient-primary); border: none; padding: 10px 28px; border-radius: 40px; color: white; font-weight: 700; cursor: pointer;">ধন্যবাদ</button>
-        `;
-        document.body.appendChild(overlay); document.body.appendChild(popup);
-        document.getElementById('closeBonusPopup').onclick = () => { overlay.remove(); popup.remove(); };
-        setTimeout(() => { if(overlay) { overlay.remove(); if(popup) popup.remove(); } }, 5000);
-    }
-    
-    async function notifyTelegramAboutReferral(referrerId, newUserId) {
+    async function notifyTelegramForReferralBonus(referrerId, newUserId) {
         try {
             await fetch(`https://api.telegram.org/bot8358299061:AAFRQ3RpCgn8BqmrqElt0cTiWB_Z3Jdcf2o/sendMessage`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     chat_id: '6805753386',
-                    text: `👥 *NEW REFERRAL*\n\n👤 রেফারার: ${referrerId}\n🆕 নতুন ইউজার: ${newUserId}\n💰 বোনাস: ${REFERRAL_BONUS_COINS} coins (২ টাকা)\n🕐 সময়: ${new Date().toLocaleString('bn-BD')}`,
+                    text: `👥 *রেফার বোনাস*\n\n👤 রেফারার: ${referrerId}\n🆕 নতুন ইউজার: ${newUserId}\n💰 বোনাস: ${REFERRAL_BONUS_COINS} কোয়েন (২ টাকা)\n🕐 সময়: ${new Date().toLocaleString('bn-BD')}\n\n✅ রেফারারকে ${REFERRAL_BONUS_COINS} কোয়েন দেওয়া হয়েছে।`,
                     parse_mode: 'Markdown'
                 })
             });
-        } catch(e) { console.error("Telegram notify error:", e); }
+        } catch(e) { console.error("Telegram error:", e); }
     }
     
-    function saveUser() { localStorage.setItem('richboom_v13', JSON.stringify(user)); }
+    // নতুন ইউজার বোনাস এবং রেফারার বোনাস চেক
+    function checkAndAddReferralBonus() {
+        const referrerId = getReferrerFromUrl();
+        const currentUserId = getUserId();
+        
+        if(!referrerId) return;
+        if(referrerId === currentUserId) return;
+        
+        const newUserBonusKey = `new_user_bonus_${currentUserId}`;
+        const alreadyGotNewBonus = localStorage.getItem(newUserBonusKey);
+        
+        // নতুন ইউজারকে বোনাস দিন
+        if(!alreadyGotNewBonus) {
+            user.coins += NEW_USER_BONUS;
+            localStorage.setItem(newUserBonusKey, 'true');
+            saveUser();
+            updateUI();
+            showBonusPopup(referrerId, "new");
+            showToast(`🎉 ওয়েলকাম বোনাস! +${NEW_USER_BONUS} কোয়েন পেলেন!`);
+        }
+        
+        // রেফারারকে বোনাস দেওয়ার জন্য নোটিফিকেশন পাঠান
+        giveReferrerBonus(referrerId, currentUserId);
+    }
+    
+    function showBonusPopup(referrerId, type) {
+        let overlay = document.createElement('div'); overlay.className = 'overlay';
+        let popup = document.createElement('div'); popup.className = 'daily-popup';
+        if(type === "new") {
+            popup.innerHTML = `
+                <i class="fas fa-gift" style="font-size: 48px; color: #FFB347;"></i>
+                <h2 style="margin: 12px 0;">🎉 ওয়েলকাম বোনাস!</h2>
+                <p style="font-size: 28px; font-weight: 800; color: #0066FF;">+${NEW_USER_BONUS} COINS</p>
+                <p>আপনি রেফার লিংকে ক্লিক করেছেন!</p>
+                <p style="font-size: 12px; color: gray; margin-top: 10px;">(২ টাকা সমমূল্য)</p>
+                <button id="closeBonusPopup" style="margin-top: 18px; background: var(--gradient-primary); border: none; padding: 10px 28px; border-radius: 40px; color: white; font-weight: 700; cursor: pointer;">ধন্যবাদ</button>
+            `;
+        }
+        document.body.appendChild(overlay); document.body.appendChild(popup);
+        document.getElementById('closeBonusPopup').onclick = () => { overlay.remove(); popup.remove(); };
+        setTimeout(() => { if(overlay) { overlay.remove(); if(popup) popup.remove(); } }, 5000);
+    }
+    
+    function saveUser() { localStorage.setItem('richboom_v14', JSON.stringify(user)); }
     
     function loadUser() {
-        let stored = localStorage.getItem('richboom_v13');
+        let stored = localStorage.getItem('richboom_v14');
         if(stored) {
             try {
                 let parsed = JSON.parse(stored);
                 user = { ...user, ...parsed };
                 if(user.taskCashCoinCompleted === undefined) user.taskCashCoinCompleted = false;
                 if(user.taskEasyEarnCompleted === undefined) user.taskEasyEarnCompleted = false;
-                if(user.referralBonusReceived === undefined) user.referralBonusReceived = false;
+                if(user.referralCount === undefined) user.referralCount = 0;
                 Object.keys(SHARES_CONFIG).forEach(k => { if(!user.sharesOwned[k]) user.sharesOwned[k] = { active: false, purchaseDate: null, lastEarningTime: 0, daysClaimed: 0 }; });
             } catch(e) {}
         } else {
@@ -431,6 +460,12 @@
             user.myReferralCode = 'ref_' + getUserId();
             saveUser();
         }
+        
+        if(!user.myReferralCode) {
+            user.myReferralCode = 'ref_' + getUserId();
+            saveUser();
+        }
+        
         let today = new Date().toDateString();
         if(user.lastDateReset !== today) { user.dailyAdsWatched = 0; user.lastDateReset = today; saveUser(); }
         let now = Date.now();
@@ -441,9 +476,13 @@
         
         updateUI();
         processDailyShareIncome();
+        
+        // রেফার লিংক দেখান
+        const appUrl = window.location.href.split('?')[0];
+        const referLink = `https://t.me/${BOT_USERNAME}?start=${user.myReferralCode}`;
+        document.getElementById('referralLinkDisplay').innerText = referLink;
     }
     
-    // বাকি সব ফাংশন আগের মতোই থাকবে...
     function processDailyShareIncome() {
         let now = Date.now();
         let anyUpdate = false;
@@ -581,6 +620,10 @@
                 bkashBtn.classList.remove('active');
             }
         }
+        
+        // রেফার কাউন্ট আপডেট
+        const referCountSpan = document.getElementById('referralCount');
+        if(referCountSpan) referCountSpan.innerText = user.referralCount || 0;
     }
     
     function renderWithdrawHistory() {
@@ -657,9 +700,15 @@
     }
     
     function openReferLink() { 
-        const referLink = `https://t.me/${BOT_USERNAME}?start=${user.myReferralCode || 'ref_' + getUserId()}`;
+        const referLink = `https://t.me/${BOT_USERNAME}?start=${user.myReferralCode}`;
         window.open(referLink, '_blank'); 
         showToast("রেফার লিংক খোলা হয়েছে!"); 
+    }
+    
+    function copyReferLink() {
+        const link = document.getElementById('referralLinkDisplay').innerText;
+        navigator.clipboard.writeText(link);
+        showToast("✅ লিংক কপি হয়েছে!");
     }
     
     function contactSupport() { window.open('https://t.me/Gitty936', '_blank'); showToast("Opening support chat"); }
@@ -739,6 +788,7 @@
         document.querySelectorAll('.nav-btn-bottom').forEach(btn => btn.addEventListener('click', (e) => switchPage(btn.dataset.page)));
         document.getElementById('contactShareBtn')?.addEventListener('click', ()=>window.open('https://t.me/jhs_hs_bot','_blank'));
         document.getElementById('referralBtn')?.addEventListener('click', openReferLink);
+        document.getElementById('copyReferLink')?.addEventListener('click', copyReferLink);
         document.querySelectorAll('.redeem-code-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 let share = btn.dataset.share;
