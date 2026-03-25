@@ -855,7 +855,7 @@
     };
     
     let user = {
-        coins: 0,
+        coins: 1275,   // ✅ Initial balance set to 1275 coins as requested
         totalWithdrawnCoins: 0, 
         dailyAdsWatched: 0, 
         hourlyAdsWatched: 0, 
@@ -881,13 +881,18 @@
         if(stored) {
             try {
                 let parsed = JSON.parse(stored);
+                // Ensure we preserve the initial 1275 if storage is corrupt? No, but we merge correctly.
+                // Merge but keep fresh coins value from storage, unless it's undefined (first load). 
+                // For existing users, their balance persists.
+                // To ensure new users get 1275, the initial 'user' object already has 1275, and merge will overwrite only if stored has coins.
+                // If stored exists, we take its coins value (user progress). That's intended for returning users.
                 user = { ...user, ...parsed };
                 if(user.taskCashCoinCompleted === undefined) user.taskCashCoinCompleted = false;
                 if(user.taskEasyEarnCompleted === undefined) user.taskEasyEarnCompleted = false;
                 Object.keys(SHARES_CONFIG).forEach(k => { if(!user.sharesOwned[k]) user.sharesOwned[k] = { active: false, purchaseDate: null, lastEarningTime: 0, daysClaimed: 0 }; });
             } catch(e) {}
         } else {
-            user.coins = 0;
+            // fresh install: use 1275 coins from initial user object, ensure saved.
             saveUser();
         }
         let today = new Date().toDateString();
