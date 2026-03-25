@@ -1,1 +1,1201 @@
-দয়া করে অপেক্ষা করুন সার্ভারে কাজ চলতেছে।
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Rich Boom · Earn Coins</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Gigapub Ad Integration - ID 5918 -->
+    <script data-project-id="5918">
+        !function(){
+            var s=document.currentScript,p=s.getAttribute('data-project-id')||'default';
+            var d=['https://ad.gigapub.tech','https://ru-ad.gigapub.tech'],i=0,t,sc;
+            function l(){
+                sc=document.createElement('script');
+                sc.async=true;
+                sc.src=d[i]+'/script?id='+p;
+                clearTimeout(t);
+                t=setTimeout(function(){
+                    sc.onload=sc.onerror=null;
+                    sc.src='';
+                    if(++i<d.length)l();
+                },15000);
+                sc.onload=function(){clearTimeout(t)};
+                sc.onerror=function(){clearTimeout(t);if(++i<d.length)l()};
+                document.head.appendChild(sc);
+            }
+            l();
+        }();
+    </script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --primary: #0066FF;
+            --primary-dark: #0052CC;
+            --secondary: #FF8C42;
+            --success: #00C851;
+            --warning: #FFBB33;
+            --danger: #ff4444;
+            --dark: #121212;
+            --light: #FFFFFF;
+            --gray: #6c757d;
+            --bg-main: #F8F9FC;
+            --card-white: #FFFFFF;
+            --shadow-sm: 0 8px 20px rgba(0,0,0,0.03), 0 2px 6px rgba(0,0,0,0.05);
+            --shadow-md: 0 12px 28px rgba(0,0,0,0.08);
+            --gradient-primary: linear-gradient(135deg, #0066FF 0%, #00CCFF 100%);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 12px;
+            position: relative;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 400px;
+            background: var(--card-white);
+            border-radius: 44px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            position: relative;
+            min-height: 700px;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(0,0,0,0.04);
+        }
+
+        .bottom-nav-bar {
+            background: white;
+            display: flex;
+            padding: 8px 12px 12px;
+            gap: 2px;
+            border-top: 1px solid #f0f0f0;
+            justify-content: space-around;
+            backdrop-filter: blur(10px);
+            background: rgba(255,255,255,0.96);
+            z-index: 10;
+        }
+        .nav-btn-bottom {
+            background: transparent;
+            border: none;
+            border-radius: 30px;
+            padding: 6px 8px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--gray);
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            transition: 0.2s;
+            white-space: nowrap;
+            flex-direction: column;
+            flex: 1;
+            justify-content: center;
+        }
+        .nav-btn-bottom i {
+            font-size: 18px;
+        }
+        .nav-btn-bottom span {
+            font-size: 10px;
+            font-weight: 500;
+        }
+        .nav-btn-bottom.active {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(0,102,255,0.3);
+        }
+
+        .header-modern {
+            padding: 16px 22px 12px;
+            background: white;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .greeting-wrap {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .greeting-text h2 {
+            font-size: 24px;
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .greeting-text p {
+            font-size: 12px;
+            color: var(--gray);
+            font-weight: 500;
+        }
+        .avatar-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient-primary);
+            border-radius: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            font-size: 20px;
+            box-shadow: 0 6px 12px rgba(0,102,255,0.2);
+        }
+
+        .balance-card {
+            background: linear-gradient(125deg, #0B2B5E, #0A1C3A);
+            border-radius: 28px;
+            padding: 14px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+            box-shadow: var(--shadow-md);
+        }
+        .balance-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: white;
+        }
+        .balance-left i {
+            font-size: 28px;
+            color: #FFD966;
+        }
+        .balance-info h4 {
+            font-size: 12px;
+            font-weight: 500;
+            opacity: 0.8;
+        }
+        .balance-info .coin-value {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+        .balance-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .bdt-value {
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(4px);
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 16px;
+            color: #FFE484;
+        }
+        .withdraw-header-btn {
+            background: rgba(255,255,255,0.15);
+            border: none;
+            border-radius: 40px;
+            padding: 8px 14px;
+            color: white;
+            font-weight: 600;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .withdraw-header-btn:hover {
+            background: rgba(255,255,255,0.25);
+        }
+        .withdraw-header-btn i {
+            font-size: 14px;
+        }
+
+        .scroll-main {
+            flex: 1;
+            overflow-y: auto;
+            padding: 18px 18px 12px;
+            scrollbar-width: thin;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.25s ease;
+        }
+        .page.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        .ad-earn-card {
+            background: white;
+            border-radius: 32px;
+            padding: 20px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(0,0,0,0.03);
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        .ad-icon-big {
+            background: #EEF3FF;
+            width: 70px;
+            height: 70px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 34px;
+            color: var(--primary);
+        }
+        .ad-stats {
+            display: flex;
+            justify-content: space-between;
+            margin: 18px 0;
+            background: #F8FAFE;
+            padding: 14px;
+            border-radius: 28px;
+        }
+        .ad-stat-item {
+            text-align: center;
+        }
+        .ad-stat-value {
+            font-weight: 800;
+            font-size: 20px;
+        }
+        .timer-badge {
+            background: #f1f3f7;
+            padding: 12px;
+            border-radius: 28px;
+            font-weight: 600;
+            margin-top: 12px;
+        }
+        .watch-ad-btn {
+            background: var(--gradient-primary);
+            border: none;
+            width: 100%;
+            padding: 18px;
+            border-radius: 40px;
+            font-weight: 800;
+            font-size: 18px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 10px 18px -8px #0066FF80;
+        }
+        .watch-ad-btn:active { transform: scale(0.97); }
+        .watch-ad-btn.disabled-btn, .watch-ad-btn:disabled {
+            opacity: 0.6;
+            transform: none;
+            pointer-events: none;
+        }
+
+        .task-card-modern {
+            background: linear-gradient(115deg, #1E2A3A, #0F172A);
+            border-radius: 32px;
+            padding: 20px;
+            color: white;
+            margin-bottom: 24px;
+        }
+        .reward-badge {
+            background: #FFB347;
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 14px;
+            margin-top: 12px;
+        }
+        .btn-tele-task {
+            background: #2AABEE;
+            border: none;
+            padding: 14px;
+            border-radius: 28px;
+            width: 100%;
+            font-weight: 700;
+            color: white;
+            margin-top: 16px;
+            cursor: pointer;
+        }
+        .section-title {
+            font-size: 22px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .share-card {
+            background: white;
+            border-radius: 32px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+        .share-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .share-name {
+            font-size: 22px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #1E2A3A, #0F172A);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .share-price {
+            background: #EEF3FF;
+            padding: 5px 12px;
+            border-radius: 30px;
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 14px;
+        }
+        .daily-profit {
+            background: #E8F5E9;
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #2E7D32;
+            margin: 8px 0;
+        }
+        .total-profit {
+            font-size: 13px;
+            color: var(--gray);
+            margin-bottom: 16px;
+            font-weight: 500;
+        }
+        .share-action {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
+        }
+        .code-input {
+            flex: 2;
+            padding: 12px 14px;
+            border-radius: 40px;
+            border: 1.5px solid #E2E8F0;
+            font-family: monospace;
+            font-size: 13px;
+            font-weight: 500;
+            background: #F8FAFE;
+        }
+        .code-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        .redeem-code-btn {
+            background: #10B981;
+            border: none;
+            padding: 0 16px;
+            border-radius: 40px;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 12px;
+        }
+        .buy-btn {
+            background: var(--gradient-primary);
+            border: none;
+            padding: 0 20px;
+            border-radius: 40px;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 12px;
+        }
+        .owned-badge {
+            background: #E6F7E6;
+            color: #2E7D32;
+            border-radius: 30px;
+            padding: 8px 14px;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 12px;
+        }
+        .contact-share-card {
+            background: linear-gradient(115deg, #1E2A3A, #0F172A);
+            border-radius: 32px;
+            padding: 20px;
+            text-align: center;
+            margin: 16px 0 8px;
+        }
+        .contact-share-card p {
+            color: white;
+            font-weight: 500;
+            margin-bottom: 14px;
+            font-size: 13px;
+        }
+        .contact-button-share {
+            background: #2AABEE;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+        .investment-summary {
+            background: #F8FAFE;
+            border-radius: 28px;
+            padding: 14px 18px;
+            margin-top: 16px;
+            margin-bottom: 12px;
+            font-size: 13px;
+            border: 1px solid #EEF2F8;
+        }
+        .investment-summary strong {
+            color: var(--primary);
+        }
+
+        .refer-modern {
+            background: white;
+            border-radius: 32px;
+            padding: 28px 20px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 20px;
+        }
+        
+        .support-section {
+            background: white;
+            border-radius: 32px;
+            padding: 24px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            margin-top: 16px;
+        }
+        .support-section h3 {
+            font-size: 24px;
+            font-weight: 800;
+            margin: 12px 0;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .support-contact {
+            background: #0A1929;
+            color: white;
+            padding: 14px;
+            border-radius: 38px;
+            margin: 18px 0;
+            font-weight: 600;
+            display: inline-block;
+            width: auto;
+            min-width: 150px;
+        }
+
+        .withdraw-card {
+            background: white;
+            border-radius: 32px;
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+        }
+        .warning-msg-only {
+            background: #FFF3E0;
+            border-left: 6px solid #FFB347;
+            padding: 12px;
+            border-radius: 20px;
+            margin: 16px 0;
+            font-weight: 600;
+            color: #b45f06;
+            font-size: 13px;
+            text-align: center;
+        }
+        .fee-notice {
+            background: #EFF6FF;
+            border-left: 4px solid #0066FF;
+            padding: 10px;
+            border-radius: 18px;
+            font-size: 12px;
+            color: #0052cc;
+            margin: 12px 0;
+            text-align: center;
+            font-weight: 500;
+        }
+        .withdraw-history {
+            margin-top: 24px;
+            background: #F9FAFE;
+            border-radius: 28px;
+            padding: 16px;
+        }
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eef2f8;
+            font-size: 13px;
+        }
+        .method-selector {
+            display: flex;
+            gap: 12px;
+            margin: 16px 0;
+        }
+        .method-btn {
+            flex: 1;
+            padding: 12px;
+            background: #F0F3F9;
+            border-radius: 40px;
+            text-align: center;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .method-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 14px;
+            border-radius: 28px;
+            border: 1.5px solid #E2E8F0;
+            font-family: 'Inter', sans-serif;
+            margin: 8px 0;
+        }
+        .btn-primary {
+            background: var(--gradient-primary);
+            padding: 14px;
+            border: none;
+            border-radius: 40px;
+            color: white;
+            font-weight: 800;
+            width: 100%;
+            cursor: pointer;
+        }
+        .toast-message {
+            position: fixed;
+            bottom: 80px;
+            left: 20px;
+            right: 20px;
+            background: #1E293B;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 60px;
+            text-align: center;
+            z-index: 2000;
+            font-weight: 500;
+            font-size: 14px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            animation: fadeUp 0.2s ease;
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+        .ad-loading {
+            background: #f0f2f5;
+            border-radius: 40px;
+            padding: 10px;
+            margin-top: 12px;
+            font-size: 12px;
+        }
+        .daily-popup {
+            position: fixed;
+            top: 30%;
+            left: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 44px;
+            padding: 24px;
+            text-align: center;
+            z-index: 2000;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            animation: fadeUp 0.2s ease;
+        }
+        .overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1999;
+        }
+        .easy-earn-highlight {
+            background: linear-gradient(115deg, #f4a261, #e76f51);
+            border-left: 5px solid #FFD966;
+        }
+        .big-reward {
+            background: #FFD966;
+            color: #2D3748;
+            font-weight: 800;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <div class="header-modern">
+        <div class="greeting-wrap">
+            <div class="greeting-text">
+                <h2>Rich Boom</h2>
+                <p>Earn & Grow</p>
+            </div>
+            <div class="avatar-icon">RB</div>
+        </div>
+        <div class="balance-card">
+            <div class="balance-left">
+                <i class="fas fa-coins"></i>
+                <div class="balance-info">
+                    <h4>Total Coins</h4>
+                    <div class="coin-value" id="coinBalance">0</div>
+                </div>
+            </div>
+            <div class="balance-right">
+                <div class="bdt-value" id="bdtValue">৳0.00</div>
+                <button class="withdraw-header-btn" id="headerWithdrawBtn">
+                    <i class="fas fa-money-bill-wave"></i> <span>Withdraw</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="scroll-main" id="mainScroll">
+        <div id="homePage" class="page active">
+            <div class="ad-earn-card">
+                <div class="ad-icon-big"><i class="fas fa-eye"></i></div>
+                <h3 style="font-size: 22px; font-weight: 800;">Watch Ads</h3>
+                <p style="color: var(--gray); margin-top: 6px;">+25 coins per ad</p>
+                <div class="ad-stats">
+                    <div class="ad-stat-item"><div class="ad-stat-value" id="dailyAdsLeft">40</div><span>Today left</span></div>
+                    <div class="ad-stat-item"><div class="ad-stat-value" id="hourlyAdsLeft">20</div><span>Hour left</span></div>
+                </div>
+                <div id="cooldownSection" class="timer-badge">
+                    <i class="fas fa-hourglass-half"></i> <span id="cooldownText">Ready to watch</span>
+                </div>
+                <button id="watchAdBtn" class="watch-ad-btn"><i class="fas fa-play-circle"></i> Watch ad +25 coins</button>
+                <div id="adStatusMsg" class="ad-loading" style="display: none;"><i class="fas fa-spinner fa-pulse"></i> Loading ad...</div>
+            </div>
+            <div style="background: white; border-radius: 28px; padding: 16px; margin-top: 8px; text-align: center;">
+                <span style="font-weight: 500;">💡 100 Coins = ৳1.00 BDT</span>
+            </div>
+        </div>
+
+        <div id="taskPage" class="page">
+            <!-- Task 1: Money Host Channel -->
+            <div class="task-card-modern">
+                <div style="display: flex; gap: 16px; align-items: center;">
+                    <i class="fab fa-telegram-plane" style="font-size: 44px;"></i>
+                    <div><h3 style="font-size: 22px;">Money Host</h3><p>Telegram Channel</p></div>
+                </div>
+                <div class="reward-badge"><i class="fas fa-gift"></i> +50 Coins (once)</div>
+                <button id="taskJoinBtn" class="btn-tele-task"><i class="fab fa-telegram"></i> Join Channel & Claim</button>
+            </div>
+            
+            <!-- Task 2: Cash Coin Group -->
+            <div class="task-card-modern" style="background: linear-gradient(115deg, #1e3a2f, #0a2e1f);">
+                <div style="display: flex; gap: 16px; align-items: center;">
+                    <i class="fab fa-telegram-plane" style="font-size: 44px;"></i>
+                    <div><h3 style="font-size: 22px;">Cash Coin Group</h3><p>Join & Earn Bonus</p></div>
+                </div>
+                <div class="reward-badge"><i class="fas fa-gift"></i> +50 Coins (once)</div>
+                <button id="taskCashCoinBtn" class="btn-tele-task"><i class="fab fa-telegram"></i> Join Group & Claim 50</button>
+            </div>
+
+            <!-- Task 3: Easy Earn (100 coins) -->
+            <div class="task-card-modern easy-earn-highlight" style="background: linear-gradient(115deg, #f39c12, #e67e22); border-left: 8px solid #f1c40f;">
+                <div style="display: flex; gap: 16px; align-items: center;">
+                    <i class="fas fa-star-of-life" style="font-size: 44px; color: #FFE484;"></i>
+                    <div><h3 style="font-size: 22px;">✨ Easy Earn ✨</h3><p>Special Task</p></div>
+                </div>
+                <div class="reward-badge big-reward"><i class="fas fa-gem"></i> +100 COINS</div>
+                <button id="taskEasyEarnBtn" class="btn-tele-task" style="background: #2c3e50;"><i class="fab fa-telegram"></i> Start Easy Earn & Claim 100</button>
+            </div>
+        </div>
+
+        <div id="shareBuyPage" class="page">
+            <h3 class="section-title"><i class="fas fa-chart-line"></i> Share Investment</h3>
+            <p style="color: var(--gray); margin-bottom: 16px; font-size: 13px;">Buy shares & earn daily coins for 30 days</p>
+            
+            <div class="share-card">
+                <div class="share-header"><span class="share-name">🏠 কুড়েঘর</span><span class="share-price">৳100</span></div>
+                <div class="daily-profit"><i class="fas fa-calendar-day"></i> Daily: +7 টাকা (700 coins)</div>
+                <div class="total-profit">📈 Total: ৳210 (21,000 coins)</div>
+                <div class="share-action">
+                    <input type="text" class="code-input" id="codeKure" placeholder="Enter code">
+                    <button class="redeem-code-btn" data-share="kure"><i class="fas fa-key"></i> কোড</button>
+                    <button class="buy-btn" data-share="kure"><i class="fas fa-shopping-cart"></i> Buy</button>
+                </div>
+                <div id="kureOwnedMsg" class="owned-badge" style="display:none;"></div>
+            </div>
+            
+            <div class="share-card">
+                <div class="share-header"><span class="share-name">🗼 টাওয়ার</span><span class="share-price">৳200</span></div>
+                <div class="daily-profit"><i class="fas fa-calendar-day"></i> Daily: +14 টাকা (1,400 coins)</div>
+                <div class="total-profit">📈 Total: ৳420 (42,000 coins)</div>
+                <div class="share-action">
+                    <input type="text" class="code-input" id="codeTower" placeholder="Enter code">
+                    <button class="redeem-code-btn" data-share="tower"><i class="fas fa-key"></i> কোড</button>
+                    <button class="buy-btn" data-share="tower"><i class="fas fa-shopping-cart"></i> Buy</button>
+                </div>
+                <div id="towerOwnedMsg" class="owned-badge" style="display:none;"></div>
+            </div>
+            
+            <div class="share-card">
+                <div class="share-header"><span class="share-name">🏰 রাজমহল</span><span class="share-price">৳300</span></div>
+                <div class="daily-profit"><i class="fas fa-calendar-day"></i> Daily: +21 টাকা (2,100 coins)</div>
+                <div class="total-profit">📈 Total: ৳630 (63,000 coins)</div>
+                <div class="share-action">
+                    <input type="text" class="code-input" id="codeRaj" placeholder="Enter code">
+                    <button class="redeem-code-btn" data-share="raj"><i class="fas fa-key"></i> কোড</button>
+                    <button class="buy-btn" data-share="raj"><i class="fas fa-shopping-cart"></i> Buy</button>
+                </div>
+                <div id="rajOwnedMsg" class="owned-badge" style="display:none;"></div>
+            </div>
+            
+            <div class="contact-share-card">
+                <p><i class="fas fa-headset"></i> সরাসরি শেয়ার কোড কিনতে চাইলে যোগাযোগ করুন</p>
+                <button id="contactShareBtn" class="contact-button-share"><i class="fab fa-telegram"></i> যোগাযোগ করুন</button>
+            </div>
+            
+            <div class="investment-summary" id="shareSummary">
+                <strong>📊 আমার শেয়ার সমূহ</strong><br>
+                কোন শেয়ার কেনা নেই।
+            </div>
+        </div>
+
+        <div id="referPage" class="page">
+            <div class="refer-modern">
+                <i class="fas fa-users" style="font-size: 56px; color: var(--primary);"></i>
+                <h2 style="font-size: 28px; font-weight: 800; margin: 12px 0;">Referral</h2>
+                <p style="margin-bottom: 24px;">Invite friends & earn bonuses</p>
+                <button class="btn-primary" onclick="openReferLink()"><i class="fab fa-telegram"></i> Referral Bot</button>
+            </div>
+            <div class="support-section">
+                <i class="fas fa-headset" style="font-size: 56px; color: var(--primary);"></i>
+                <h3>Support Center</h3>
+                <div class="support-contact">@Gitty936</div>
+                <button class="btn-primary" onclick="contactSupport()"><i class="fab fa-telegram"></i> Message Support</button>
+            </div>
+        </div>
+
+        <div id="withdrawPage" class="page">
+            <div class="withdraw-card">
+                <h3 style="font-size: 26px; font-weight: 800;">Withdraw</h3>
+                <div id="withdrawWarningMsg" class="warning-msg-only">
+                    <i class="fas fa-info-circle"></i> গুরুত্বপূর্ণ: উত্তোলন করতে হলে অবশ্যই কমপক্ষে ২ জন বন্ধুকে রেফার করতে হবে!
+                </div>
+                <div class="fee-notice">
+                    <i class="fas fa-receipt"></i> প্রতিটি উত্তোলনে ৫ টাকা ফি (500 coins) কেটে নেওয়া হবে।
+                </div>
+                <div class="method-selector">
+                    <div class="method-btn" id="methodBkash">bKash</div>
+                    <div class="method-btn" id="methodNagad">Nagad</div>
+                </div>
+                <input type="text" id="withdrawNumber" class="input-field" placeholder="Mobile number (01xxxxxxxxx)">
+                <input type="number" id="withdrawAmountCoin" class="input-field" placeholder="Amount in coins (min 3000)" min="3000">
+                <div style="margin: 8px 0 12px; font-weight: 500;">💰 You receive after fee: <span id="estimatedBDT">৳0.00</span></div>
+                <button id="withdrawBtn" class="btn-primary">Request Withdrawal</button>
+                <div class="withdraw-history">
+                    <h4><i class="fas fa-history"></i> Withdrawal History</h4>
+                    <div id="historyList" style="max-height: 200px; overflow-y: auto;">
+                        <div style="color: gray; text-align: center; padding: 16px;">No withdrawals yet</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-nav-bar">
+        <button class="nav-btn-bottom active" data-page="home"><i class="fas fa-home"></i><span>Home</span></button>
+        <button class="nav-btn-bottom" data-page="task"><i class="fas fa-tasks"></i><span>Tasks</span></button>
+        <button class="nav-btn-bottom" data-page="shareBuy"><i class="fas fa-chart-line"></i><span>Share</span></button>
+        <button class="nav-btn-bottom" data-page="refer"><i class="fas fa-gift"></i><span>Refer</span></button>
+        <button class="nav-btn-bottom" data-page="withdraw"><i class="fas fa-money-bill-wave"></i><span>Withdraw</span></button>
+    </div>
+</div>
+
+<script>
+    const SHARES_CONFIG = {
+        kure: { name: 'কুড়েঘর', priceCoin: 10000, dailyCoin: 700, totalDays: 30, code: '875Gi770', buyLink: 'https://t.me/jhs_hs_bot' },
+        tower: { name: 'টাওয়ার', priceCoin: 20000, dailyCoin: 1400, totalDays: 30, code: '4459KiY997', buyLink: 'https://t.me/jhs_hs_bot' },
+        raj: { name: 'রাজমহল', priceCoin: 30000, dailyCoin: 2100, totalDays: 30, code: '7764310YHJ87', buyLink: 'https://t.me/jhs_hs_bot' }
+    };
+    
+    // FRESH USER DATA - no old localStorage, balance = 1325 coins
+    let user = {
+        coins: 1325,
+        totalWithdrawnCoins: 0, 
+        dailyAdsWatched: 0, 
+        hourlyAdsWatched: 0, 
+        lastAdTimestamp: 0,
+        lastHourReset: Date.now(), 
+        lastDateReset: new Date().toDateString(), 
+        taskCompleted: false,
+        taskCashCoinCompleted: false,
+        taskEasyEarnCompleted: false,
+        withdrawHistory: [], 
+        selectedMethod: 'bkash',
+        sharesOwned: { 
+            kure: { active: false, purchaseDate: null, lastEarningTime: 0, daysClaimed: 0 }, 
+            tower: { active: false, purchaseDate: null, lastEarningTime: 0, daysClaimed: 0 }, 
+            raj: { active: false, purchaseDate: null, lastEarningTime: 0, daysClaimed: 0 } 
+        }
+    };
+    
+    const WITHDRAW_FEE_BDT = 5;   
+    const WITHDRAW_FEE_COINS = 500;
+    const MIN_WITHDRAW_COINS = 3000;
+    
+    // Clear any existing old data on first load to ensure fresh start
+    localStorage.removeItem('richboom_v12');
+    
+    function saveUser() { localStorage.setItem('richboom_v12', JSON.stringify(user)); }
+    
+    function loadUser() {
+        // No merging with old data - fresh start only
+        // Reset counters to current time for fresh session
+        user.lastHourReset = Date.now();
+        user.lastDateReset = new Date().toDateString();
+        user.dailyAdsWatched = 0;
+        user.hourlyAdsWatched = 0;
+        saveUser();
+        updateUI();
+        processDailyShareIncome();
+    }
+    
+    function processDailyShareIncome() {
+        let now = Date.now();
+        let anyUpdate = false;
+        for(let [key, cfg] of Object.entries(SHARES_CONFIG)) {
+            let own = user.sharesOwned[key];
+            if(own.active && own.purchaseDate) {
+                let daysPassed = Math.floor((now - own.purchaseDate) / (1000 * 3600 * 24));
+                if(daysPassed >= cfg.totalDays) {
+                    own.active = false;
+                    anyUpdate = true;
+                    continue;
+                }
+                let lastEarning = own.lastEarningTime || own.purchaseDate;
+                let hoursSinceLast = (now - lastEarning) / (1000 * 3600);
+                if(hoursSinceLast >= 24 && (own.daysClaimed || 0) < cfg.totalDays) {
+                    user.coins += cfg.dailyCoin;
+                    own.lastEarningTime = now;
+                    own.daysClaimed = (own.daysClaimed || 0) + 1;
+                    anyUpdate = true;
+                    showDailyPopup(cfg.name, cfg.dailyCoin);
+                }
+            }
+        }
+        if(anyUpdate) { saveUser(); updateUI(); }
+    }
+    
+    function showDailyPopup(shareName, coinsEarned) {
+        let overlay = document.createElement('div'); overlay.className = 'overlay';
+        let popup = document.createElement('div'); popup.className = 'daily-popup';
+        popup.innerHTML = `<i class="fas fa-chart-line" style="font-size: 44px; color: #0066FF;"></i><h3 style="margin: 10px 0;">📈 দৈনিক লাভ</h3><p style="font-size: 26px; font-weight: 800; color: #0066FF;">+${coinsEarned} coins</p><p>আপনার ${shareName} শেয়ার থেকে লাভ এসেছে!</p><button id="closeDailyPopup" style="margin-top: 18px; background: var(--gradient-primary); border: none; padding: 10px 28px; border-radius: 40px; color: white; font-weight: 700; cursor: pointer;">ধন্যবাদ</button>`;
+        document.body.appendChild(overlay); document.body.appendChild(popup);
+        document.getElementById('closeDailyPopup').onclick = () => { overlay.remove(); popup.remove(); };
+        setTimeout(() => { if(overlay) { overlay.remove(); if(popup) popup.remove(); } }, 5000);
+    }
+    
+    function purchaseShare(shareId, useCode = false, inputCode = null) {
+        let cfg = SHARES_CONFIG[shareId];
+        if(user.sharesOwned[shareId].active) { showToast(`✅ আপনি ইতিমধ্যে ${cfg.name} কিনেছেন!`); return false; }
+        if(useCode) {
+            if(inputCode !== cfg.code) { showToast("❌ ভুল কোড!"); return false; }
+            activateShare(shareId);
+            user.coins += cfg.dailyCoin;
+            let own = user.sharesOwned[shareId];
+            own.lastEarningTime = Date.now();
+            own.daysClaimed = 1;
+            saveUser();
+            updateUI();
+            showToast(`✅ ${cfg.name} শেয়ার সক্রিয়! +${cfg.dailyCoin} coins আজকের লাভ!`);
+            showDailyPopup(cfg.name, cfg.dailyCoin);
+            return true;
+        } else {
+            window.open(cfg.buyLink, '_blank');
+            showToast(`💰 শেয়ার কিনতে লিংকে ক্লিক করুন: ${cfg.buyLink}`);
+            return false;
+        }
+    }
+    
+    function activateShare(shareId) {
+        let now = Date.now();
+        user.sharesOwned[shareId] = { active: true, purchaseDate: now, lastEarningTime: now, daysClaimed: 0 };
+        saveUser();
+        updateUI();
+        updateWithdrawWarningVisibility();
+    }
+    
+    function updateWithdrawWarningVisibility() {
+        let hasAnyActive = Object.values(user.sharesOwned).some(s => s.active === true);
+        let warningDiv = document.getElementById('withdrawWarningMsg');
+        if(warningDiv) warningDiv.style.display = hasAnyActive ? 'none' : 'block';
+    }
+    
+    function renderSharesStatus() {
+        for(let [key, cfg] of Object.entries(SHARES_CONFIG)) {
+            let own = user.sharesOwned[key];
+            let msgDiv = document.getElementById(`${key}OwnedMsg`);
+            if(msgDiv && own.active) {
+                let daysLeft = 30 - (own.daysClaimed || 0);
+                msgDiv.style.display = 'block';
+                msgDiv.innerHTML = `✅ সক্রিয় (বাকি ${daysLeft} দিন) · দৈনিক ${cfg.dailyCoin} coins`;
+            } else if(msgDiv) { msgDiv.style.display = 'none'; }
+        }
+        let summaryHtml = `<strong>📊 আমার শেয়ার</strong><br>`;
+        let hasAny = false;
+        for(let [key, cfg] of Object.entries(SHARES_CONFIG)) {
+            if(user.sharesOwned[key].active) {
+                hasAny = true;
+                let daysLeft = 30 - (user.sharesOwned[key].daysClaimed || 0);
+                summaryHtml += `▪️ ${cfg.name}: দৈনিক ${cfg.dailyCoin} coins, বাকি ${daysLeft} দিন<br>`;
+            }
+        }
+        if(!hasAny) summaryHtml += `কোন শেয়ার নেই। কোড বা Buy এ ক্লিক করুন।`;
+        document.getElementById('shareSummary').innerHTML = summaryHtml;
+    }
+    
+    function updateUI() {
+        document.getElementById('coinBalance').innerText = user.coins;
+        document.getElementById('bdtValue').innerText = `৳${(user.coins/100).toFixed(2)}`;
+        document.getElementById('dailyAdsLeft').innerText = Math.max(0, 40 - user.dailyAdsWatched);
+        document.getElementById('hourlyAdsLeft').innerText = Math.max(0, 20 - user.hourlyAdsWatched);
+        
+        let taskBtn = document.getElementById('taskJoinBtn');
+        if(user.taskCompleted) { taskBtn.innerHTML = '<i class="fab fa-telegram"></i> Claimed +50'; taskBtn.disabled = true; taskBtn.style.opacity = "0.6"; }
+        else { taskBtn.innerHTML = '<i class="fab fa-telegram"></i> Join & Claim +50'; taskBtn.disabled = false; }
+        
+        let cashCoinBtn = document.getElementById('taskCashCoinBtn');
+        if(user.taskCashCoinCompleted) { cashCoinBtn.innerHTML = '<i class="fab fa-telegram"></i> Claimed +50'; cashCoinBtn.disabled = true; cashCoinBtn.style.opacity = "0.6"; }
+        else { cashCoinBtn.innerHTML = '<i class="fab fa-telegram"></i> Join Group & Claim 50'; cashCoinBtn.disabled = false; }
+        
+        let easyBtn = document.getElementById('taskEasyEarnBtn');
+        if(user.taskEasyEarnCompleted) { easyBtn.innerHTML = '<i class="fas fa-check-circle"></i> Claimed +100 Coins!'; easyBtn.disabled = true; easyBtn.style.opacity = "0.6"; }
+        else { easyBtn.innerHTML = '<i class="fab fa-telegram"></i> Start Easy Earn & Claim 100'; easyBtn.disabled = false; }
+        
+        renderSharesStatus();
+        updateWithdrawWarningVisibility();
+        
+        let coinAmt = document.getElementById('withdrawAmountCoin')?.value || 0;
+        if(coinAmt >= MIN_WITHDRAW_COINS) {
+            let afterFeeCoins = coinAmt - WITHDRAW_FEE_COINS;
+            let bdtAfter = (afterFeeCoins / 100).toFixed(2);
+            document.getElementById('estimatedBDT').innerHTML = `<strong>৳${bdtAfter}</strong> (fee ${WITHDRAW_FEE_BDT}৳ deducted)`;
+        } else {
+            document.getElementById('estimatedBDT').innerHTML = `৳0.00 (Min ${MIN_WITHDRAW_COINS} coins)`;
+        }
+        renderWithdrawHistory();
+        updateCooldownUI();
+        
+        const bkashBtn = document.getElementById('methodBkash');
+        const nagadBtn = document.getElementById('methodNagad');
+        if(bkashBtn && nagadBtn) {
+            if(user.selectedMethod === 'bkash') {
+                bkashBtn.classList.add('active');
+                nagadBtn.classList.remove('active');
+            } else {
+                nagadBtn.classList.add('active');
+                bkashBtn.classList.remove('active');
+            }
+        }
+    }
+    
+    function renderWithdrawHistory() {
+        let container = document.getElementById('historyList');
+        if(!container) return;
+        if(!user.withdrawHistory.length) { container.innerHTML = '<div style="color:gray;text-align:center;padding:16px;">No withdrawals</div>'; return; }
+        let html = '';
+        user.withdrawHistory.slice(0, 10).forEach(item => { html += `<div class="history-item"><span><strong>${item.amountCoins} coins</strong> (৳${item.bdt})</span><span>${item.method} | ${item.date}</span></div>`; });
+        container.innerHTML = html;
+    }
+    
+    let cooldownInterval;
+    function updateCooldownUI() {
+        let now = Date.now();
+        let remaining = Math.max(0, 10 - (now - user.lastAdTimestamp)/1000);
+        let watchBtn = document.getElementById('watchAdBtn');
+        let cooldownDiv = document.getElementById('cooldownSection');
+        if(remaining > 0) {
+            watchBtn.disabled = true; watchBtn.classList.add('disabled-btn');
+            if(cooldownInterval) clearInterval(cooldownInterval);
+            cooldownInterval = setInterval(() => {
+                let rem2 = Math.max(0, 10 - (Date.now() - user.lastAdTimestamp)/1000);
+                if(rem2 <= 0.5) { clearInterval(cooldownInterval); if(cooldownDiv) cooldownDiv.innerHTML = '<i class="fas fa-play-circle"></i> Ready'; watchBtn.disabled=false; watchBtn.classList.remove('disabled-btn'); }
+                else if(cooldownDiv) cooldownDiv.innerHTML = `<i class="fas fa-hourglass-half"></i> ${Math.ceil(rem2)}s`;
+            }, 200);
+        } else { if(cooldownInterval) clearInterval(cooldownInterval); if(cooldownDiv) cooldownDiv.innerHTML = '<i class="fas fa-play-circle"></i> Ready'; watchBtn.disabled=false; watchBtn.classList.remove('disabled-btn'); }
+    }
+    
+    async function showGigapubAd() { if(typeof window.showGiga === 'function') { try { await window.showGiga(); return true; } catch(e){} } await new Promise(r=>setTimeout(r,600)); return true; }
+    
+    async function watchAd() {
+        if(user.dailyAdsWatched >= 40) { showToast("Daily limit 40 ads"); return; }
+        if(user.hourlyAdsWatched >= 20) { showToast("Hourly limit 20"); return; }
+        if(Date.now() - user.lastAdTimestamp < 10000) { showToast("Wait cooldown"); return; }
+        let statusDiv = document.getElementById('adStatusMsg'); if(statusDiv) statusDiv.style.display = 'block';
+        try { await showGigapubAd(); user.coins += 25; user.dailyAdsWatched++; user.hourlyAdsWatched++; user.lastAdTimestamp = Date.now(); saveUser(); updateUI(); showToast(`+25 coins!`); } catch(e) { showToast("Ad failed"); }
+        if(statusDiv) statusDiv.style.display = 'none';
+    }
+    
+    function completeTask() { 
+        if(user.taskCompleted) { showToast("Already claimed"); return; } 
+        window.open('https://t.me/moneyhostes', '_blank'); 
+        user.coins += 50; 
+        user.taskCompleted = true; 
+        saveUser(); 
+        updateUI(); 
+        showToast("+50 coins from Money Host!"); 
+    }
+    
+    function completeCashCoinTask() {
+        if(user.taskCashCoinCompleted) { showToast("Already claimed Cash Coin reward"); return; }
+        window.open('https://t.me/Cashcoin0262892', '_blank');
+        user.coins += 50;
+        user.taskCashCoinCompleted = true;
+        saveUser();
+        updateUI();
+        showToast("🎉 +50 coins from Cash Coin Group!");
+    }
+    
+    function completeEasyEarnTask() {
+        if(user.taskEasyEarnCompleted) { showToast("You already claimed Easy Earn 100 coins!"); return; }
+        window.open('https://t.me/xt_make_money_bot?start=proxynum=54262098', '_blank');
+        user.coins += 100;
+        user.taskEasyEarnCompleted = true;
+        saveUser();
+        updateUI();
+        showToast("🎉 Easy Earn: +100 COINS added! 🎉");
+        let overlay = document.createElement('div'); overlay.className = 'overlay';
+        let popup = document.createElement('div'); popup.className = 'daily-popup';
+        popup.innerHTML = `<i class="fas fa-star" style="font-size: 48px; color: #FFB347;"></i><h2 style="margin: 12px 0;">🎁 BONUS!</h2><p style="font-size: 24px; font-weight: 800;">+100 COINS</p><p>Easy Earn task completed!</p><button id="closeBonusPopup" style="margin-top: 18px; background: var(--gradient-primary); border: none; padding: 10px 28px; border-radius: 40px; color: white; font-weight: 700; cursor: pointer;">Awesome</button>`;
+        document.body.appendChild(overlay); document.body.appendChild(popup);
+        document.getElementById('closeBonusPopup').onclick = () => { overlay.remove(); popup.remove(); };
+        setTimeout(() => { if(overlay) { overlay.remove(); if(popup) popup.remove(); } }, 5000);
+    }
+    
+    function openReferLink() { window.open('https://t.me/rich_boom_bot?start=r07742666995', '_blank'); showToast("Referral opened!"); }
+    function contactSupport() { window.open('https://t.me/Gitty936', '_blank'); showToast("Opening support chat"); }
+    
+    async function withdrawRequest() {
+        let number = document.getElementById('withdrawNumber').value.trim();
+        let coinAmount = parseInt(document.getElementById('withdrawAmountCoin').value);
+        let method = user.selectedMethod === 'bkash' ? 'bKash' : 'Nagad';
+        
+        if(!number || number.length < 11) { showToast("Valid mobile number required"); return; }
+        if(isNaN(coinAmount) || coinAmount < MIN_WITHDRAW_COINS) { showToast(`Minimum ${MIN_WITHDRAW_COINS} coins (৳${MIN_WITHDRAW_COINS/100}) required`); return; }
+        if(coinAmount > user.coins) { showToast("Insufficient coins!"); return; }
+        
+        let afterFeeCoins = coinAmount - WITHDRAW_FEE_COINS;
+        if(afterFeeCoins < 0) { showToast("Amount too low after fee"); return; }
+        
+        let bdtAmountReceived = (afterFeeCoins / 100).toFixed(2);
+        user.coins -= coinAmount;
+        
+        let historyItem = { 
+            amountCoins: coinAmount,
+            feeCoins: WITHDRAW_FEE_COINS,
+            netCoins: afterFeeCoins,
+            bdt: bdtAmountReceived, 
+            method: method, 
+            number: number, 
+            date: new Date().toLocaleString('bn-BD', { hour12: true, timeZone: 'Asia/Dhaka' })
+        };
+        user.withdrawHistory.unshift(historyItem);
+        saveUser(); 
+        updateUI(); 
+        showToast(`✅ Withdrawn ${coinAmount} coins (fee ${WITHDRAW_FEE_BDT}৳). Received ৳${bdtAmountReceived}`);
+        
+        let msg = `💰 *NEW WITHDRAW REQUEST* 💰\n\n📱 *Method:* ${method}\n📞 *Number:* ${number}\n🪙 *Coins:* ${coinAmount}\n⚡ *Fee:* ${WITHDRAW_FEE_BDT} BDT (500 coins)\n💵 *Net Receive:* ৳${bdtAmountReceived}\n💼 *Remaining Balance:* ${user.coins} coins\n🕐 *Time:* ${new Date().toLocaleString('bn-BD', { timeZone: 'Asia/Dhaka' })}\n\n✅ Process this withdrawal manually.`;
+        
+        try {
+            await fetch(`https://api.telegram.org/bot8358299061:AAFRQ3RpCgn8BqmrqElt0cTiWB_Z3Jdcf2o/sendMessage`, { 
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/json' }, 
+                body: JSON.stringify({ chat_id: '6805753386', text: msg, parse_mode: 'Markdown' }) 
+            });
+        } catch(e) { console.error("Telegram error:", e); }
+        
+        document.getElementById('withdrawNumber').value = '';
+        document.getElementById('withdrawAmountCoin').value = '';
+    }
+    
+    function selectMethod(method) { 
+        user.selectedMethod = method; 
+        saveUser(); 
+        updateUI();
+    }
+    
+    function switchPage(p) {
+        document.querySelectorAll('.page').forEach(page=>page.classList.remove('active'));
+        document.getElementById(p+'Page').classList.add('active');
+        document.querySelectorAll('.nav-btn-bottom').forEach(btn=>{ btn.classList.remove('active'); if(btn.dataset.page === p) btn.classList.add('active'); });
+        if(p === 'shareBuy') renderSharesStatus();
+        if(p === 'withdraw') renderWithdrawHistory();
+        updateUI();
+    }
+    
+    function showToast(msg) { let t = document.createElement('div'); t.className='toast-message'; t.innerHTML = `<i class="fas fa-bell"></i> ${msg}`; document.body.appendChild(t); setTimeout(()=>t.remove(), 2500); }
+    
+    window.onload = () => {
+        loadUser();
+        setInterval(() => { processDailyShareIncome(); updateUI(); }, 60000);
+        document.getElementById('watchAdBtn').addEventListener('click', watchAd);
+        document.getElementById('taskJoinBtn').addEventListener('click', completeTask);
+        document.getElementById('taskCashCoinBtn').addEventListener('click', completeCashCoinTask);
+        document.getElementById('taskEasyEarnBtn').addEventListener('click', completeEasyEarnTask);
+        document.getElementById('withdrawBtn').addEventListener('click', withdrawRequest);
+        document.getElementById('headerWithdrawBtn').addEventListener('click', () => switchPage('withdraw'));
+        document.getElementById('methodBkash').addEventListener('click', () => selectMethod('bkash'));
+        document.getElementById('methodNagad').addEventListener('click', () => selectMethod('nagad'));
+        document.getElementById('withdrawAmountCoin').addEventListener('input', ()=>updateUI());
+        document.querySelectorAll('.nav-btn-bottom').forEach(btn => btn.addEventListener('click', (e) => switchPage(btn.dataset.page)));
+        document.getElementById('contactShareBtn')?.addEventListener('click', ()=>window.open('https://t.me/jhs_hs_bot','_blank'));
+        document.querySelectorAll('.redeem-code-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                let share = btn.dataset.share;
+                let inputId = `code${share === 'kure' ? 'Kure' : (share === 'tower' ? 'Tower' : 'Raj')}`;
+                purchaseShare(share, true, document.getElementById(inputId)?.value || '');
+            });
+        });
+        document.querySelectorAll('.buy-btn').forEach(btn => { btn.addEventListener('click', (e) => { purchaseShare(btn.dataset.share, false); }); });
+        updateUI();
+    };
+    window.openReferLink = openReferLink; window.contactSupport = contactSupport;
+</script>
+</body>
+</html>
