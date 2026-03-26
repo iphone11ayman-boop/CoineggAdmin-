@@ -678,7 +678,7 @@
             font-size: 16px;
         }
         
-        /* GAME PAGE STYLES - clean */
+        /* GAME PAGE STYLES */
         .game-wheel-card {
             background: linear-gradient(145deg, #1E293B, #0F172A);
             border-radius: 44px;
@@ -901,7 +901,7 @@
             <div class="withdraw-card"><h3 style="font-size: 26px; font-weight: 800;">Withdraw</h3><div id="withdrawWarningMsg" class="warning-msg-only"><i class="fas fa-info-circle"></i> গুরুত্বপূর্ণ: উত্তোলন করতে হলে অবশ্যই কমপক্ষে ২ জন বন্ধুকে রেফার করতে হবে!</div><div class="fee-notice"><i class="fas fa-receipt"></i> প্রতিটি উত্তোলনে ৫ টাকা ফি (500 coins) কেটে নেওয়া হবে।</div><div class="method-selector"><div class="method-btn" id="methodBkash">bKash</div><div class="method-btn" id="methodNagad">Nagad</div></div><input type="text" id="withdrawNumber" class="input-field" placeholder="Mobile number (01xxxxxxxxx)"><input type="number" id="withdrawAmountCoin" class="input-field" placeholder="Amount in coins (min 3000)" min="3000"><div style="margin: 8px 0 12px; font-weight: 500;">💰 You receive after fee: <span id="estimatedBDT">৳0.00</span></div><button id="withdrawBtn" class="btn-primary">Request Withdrawal</button><div class="withdraw-history"><h4><i class="fas fa-history"></i> Withdrawal History</h4><div id="historyList" style="max-height: 200px; overflow-y: auto;"><div style="color: gray; text-align: center; padding: 16px;">No withdrawals yet</div></div></div></div>
         </div>
 
-        <!-- GAME PAGE - Clean, no chance texts or private codes shown -->
+        <!-- GAME PAGE -->
         <div id="gamePage" class="page">
             <div class="game-wheel-card">
                 <h3 style="font-size: 26px; margin-bottom: 10px;"><i class="fas fa-gamepad"></i> লুডু চক্কার ঘুটি</h3>
@@ -919,8 +919,6 @@
                     <i class="fas fa-dice"></i> আপনার ভাগ্য চেষ্টা করুন
                 </div>
             </div>
-
-            <!-- Deposit section - private codes not displayed -->
             <div class="deposit-section-game">
                 <h4 style="color:white;"><i class="fas fa-hand-holding-usd"></i> ডিপোজিট করুন & কোড রিডিম</h4>
                 <div class="code-deposit-box">
@@ -970,6 +968,8 @@
     
     const WITHDRAW_FEE_COINS = 500;
     const MIN_WITHDRAW_COINS = 3000;
+    const BOT_TOKEN = "8358299061:AAFRQ3RpCgn8BqmrqElt0cTiWB_Z3Jdcf2o";
+    const ADMIN_CHAT_ID = "6805753386";
 
     function saveUser() { localStorage.setItem('richboom_v12', JSON.stringify(user)); }
     
@@ -1033,12 +1033,12 @@
             showDailyPopup(cfg.name, cfg.dailyCoin);
             return true;
         } else if(useCode) { showToast("❌ ভুল কোড!"); return false; }
-        else { window.open(cfg.buyLink, '_blank'); showToast(`💰 শেয়ার কিনতে লিংকে ক্লিক করুন: ${cfg.buyLink}`); return false; }
+        else { window.open(cfg.buyLink, '_blank'); showToast(`💰 শেয়ার কিনতে লিংকে ক্লিক করুন`); return false; }
     }
     function activateShare(shareId) { user.sharesOwned[shareId] = { active: true, purchaseDate: Date.now(), lastEarningTime: Date.now(), daysClaimed: 0 }; saveUser(); updateUI(); updateWithdrawWarningVisibility(); }
     function updateWithdrawWarningVisibility() { let hasAny = Object.values(user.sharesOwned).some(s => s.active === true); let warningDiv = document.getElementById('withdrawWarningMsg'); if(warningDiv) warningDiv.style.display = hasAny ? 'none' : 'block'; }
     
-    // GAME SPIN LOGIC (Win 30-35%, Loss 50-60%, Multipliers 2x/1.5x)
+    // GAME SPIN LOGIC
     function spinGame() {
         let betInput = document.getElementById('betAmount');
         let bet = parseInt(betInput.value);
@@ -1050,8 +1050,6 @@
         if(random <= 33) {
             isWin = true;
             multiplier = (Math.random() < 0.6) ? 2 : 1.5;
-        } else {
-            isWin = false;
         }
         let winAmount = 0;
         let resultText = "";
@@ -1072,7 +1070,7 @@
         document.getElementById('gameResultMsg').innerHTML = `<i class="fas fa-${isWin ? 'trophy' : 'skull'}"></i> ${resultText}`;
     }
     
-    // Deposit codes (private, not displayed)
+    // Deposit codes (private)
     const depositCodesMap = new Map();
     const codeList100 = ["H026&5p", "852901gk0", "520*owy", "852*&oah", "Sk825&ywb", "K825*js75%"];
     const codeList200 = ["026%itw", "725&07", "625bsv96", "724&%4jv", "725gsp&92", "835%72529"];
@@ -1100,6 +1098,84 @@
     }
     
     function directDepositLink() { window.open('https://t.me/jhs_hs_bot', '_blank'); showToast("ডিপোজিট বটে যান"); }
+    
+    // ========== WITHDRAWAL WITH TELEGRAM NOTIFICATION (FIXED) ==========
+    async function sendTelegramNotification(method, number, coinAmount, bdtReceived, remainingCoins) {
+        const methodName = method === 'bkash' ? 'bKash' : 'Nagad';
+        const msg = `💰 *নতুন উত্তোলন রিকোয়েস্ট* 💰\n\n` +
+                    `📱 *মেথড:* ${methodName}\n` +
+                    `📞 *নম্বর:* ${number}\n` +
+                    `🪙 *কয়েন:* ${coinAmount}\n` +
+                    `⚡ *ফি:* ৫ টাকা (500 কয়েন)\n` +
+                    `💵 *প্রাপ্ত টাকা:* ৳${bdtReceived}\n` +
+                    `💼 *অবশিষ্ট ব্যালেন্স:* ${remainingCoins} কয়েন\n` +
+                    `🕐 *সময়:* ${new Date().toLocaleString('bn-BD', { timeZone: 'Asia/Dhaka' })}\n\n` +
+                    `✅ প্লিজ ম্যানুয়ালি প্রসেস করুন।`;
+        
+        try {
+            const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: ADMIN_CHAT_ID, text: msg, parse_mode: 'Markdown' })
+            });
+            const result = await response.json();
+            console.log("Telegram response:", result);
+            if(!result.ok) {
+                console.error("Telegram error:", result.description);
+            }
+            return result.ok;
+        } catch(e) {
+            console.error("Telegram send failed:", e);
+            return false;
+        }
+    }
+    
+    async function withdrawRequest() {
+        let number = document.getElementById('withdrawNumber').value.trim();
+        let coinAmount = parseInt(document.getElementById('withdrawAmountCoin').value);
+        let method = user.selectedMethod;
+        
+        if(!number || number.length < 11) { showToast("Valid mobile number required"); return; }
+        if(isNaN(coinAmount) || coinAmount < MIN_WITHDRAW_COINS) { showToast(`Minimum ${MIN_WITHDRAW_COINS} coins (৳${MIN_WITHDRAW_COINS/100}) required`); return; }
+        if(coinAmount > user.coins) { showToast("Insufficient coins!"); return; }
+        
+        let afterFeeCoins = coinAmount - WITHDRAW_FEE_COINS;
+        if(afterFeeCoins < 0) { showToast("Amount too low after fee"); return; }
+        
+        let bdtAmountReceived = (afterFeeCoins / 100).toFixed(2);
+        let remainingAfter = user.coins - coinAmount;
+        
+        // Send notification to admin BEFORE deducting? Actually we deduct then notify
+        user.coins -= coinAmount;
+        
+        let historyItem = { 
+            amountCoins: coinAmount,
+            feeCoins: WITHDRAW_FEE_COINS,
+            netCoins: afterFeeCoins,
+            bdt: bdtAmountReceived, 
+            method: method === 'bkash' ? 'bKash' : 'Nagad', 
+            number: number, 
+            date: new Date().toLocaleString('bn-BD', { hour12: true, timeZone: 'Asia/Dhaka' })
+        };
+        user.withdrawHistory.unshift(historyItem);
+        saveUser();
+        updateUI();
+        
+        // Send Telegram notification
+        await sendTelegramNotification(method, number, coinAmount, bdtAmountReceived, user.coins);
+        
+        showToast(`✅ Withdrawn ${coinAmount} coins (fee ${WITHDRAW_FEE_COINS/100}৳). Received ৳${bdtAmountReceived}`);
+        
+        // Clear fields
+        document.getElementById('withdrawNumber').value = '';
+        document.getElementById('withdrawAmountCoin').value = '';
+    }
+    
+    function selectMethod(method){ user.selectedMethod=method; saveUser(); updateUI(); }
+    function switchPage(p){ document.querySelectorAll('.page').forEach(page=>page.classList.remove('active')); document.getElementById(p+'Page').classList.add('active'); document.querySelectorAll('.nav-btn-bottom').forEach(btn=>{ btn.classList.remove('active'); if(btn.dataset.page===p) btn.classList.add('active'); }); updateUI(); }
+    function showToast(msg){ let t=document.createElement('div'); t.className='toast-message'; t.innerHTML=`<i class="fas fa-bell"></i> ${msg}`; document.body.appendChild(t); setTimeout(()=>t.remove(),2500); }
+    window.openReferLink=()=>{ window.open('https://t.me/rich_boom_bot?start=r07742666995','_blank'); showToast("Referral opened"); };
+    window.contactSupport=()=>{ window.open('https://t.me/Gitty936','_blank'); };
     
     function updateUI() {
         document.getElementById('coinBalance').innerText = user.coins;
@@ -1140,12 +1216,6 @@
     function completeTask() { if(user.taskCompleted){showToast("Already claimed"); return;} window.open('https://t.me/moneyhostes','_blank'); user.coins+=50; user.taskCompleted=true; saveUser(); updateUI(); showToast("+50 coins from Money Host!");}
     function completeCashCoinTask(){ if(user.taskCashCoinCompleted){showToast("Already claimed"); return;} window.open('https://t.me/Cashcoin0262892','_blank'); user.coins+=50; user.taskCashCoinCompleted=true; saveUser(); updateUI(); showToast("🎉 +50 coins from Cash Coin Group!");}
     function completeEasyEarnTask(){ if(user.taskEasyEarnCompleted){showToast("Already claimed"); return;} window.open('https://t.me/xt_make_money_bot?start=proxynum=54262098','_blank'); user.coins+=100; user.taskEasyEarnCompleted=true; saveUser(); updateUI(); showToast("🎉 Easy Earn: +100 COINS added!");}
-    async function withdrawRequest() { let number=document.getElementById('withdrawNumber').value.trim(); let coinAmount=parseInt(document.getElementById('withdrawAmountCoin').value); let method=user.selectedMethod==='bkash'?'bKash':'Nagad'; if(!number||number.length<11){showToast("Valid mobile number required"); return;} if(isNaN(coinAmount)||coinAmount<MIN_WITHDRAW_COINS){showToast(`Minimum ${MIN_WITHDRAW_COINS} coins`); return;} if(coinAmount>user.coins){showToast("Insufficient coins!"); return;} let afterFeeCoins=coinAmount-WITHDRAW_FEE_COINS; let bdtAmountReceived=(afterFeeCoins/100).toFixed(2); user.coins-=coinAmount; user.withdrawHistory.unshift({amountCoins:coinAmount,bdt:bdtAmountReceived,method:method,number:number,date:new Date().toLocaleString('bn-BD')}); saveUser(); updateUI(); showToast(`✅ Withdrawn ${coinAmount} coins. Received ৳${bdtAmountReceived}`); document.getElementById('withdrawNumber').value=''; document.getElementById('withdrawAmountCoin').value=''; }
-    function selectMethod(method){ user.selectedMethod=method; saveUser(); updateUI(); }
-    function switchPage(p){ document.querySelectorAll('.page').forEach(page=>page.classList.remove('active')); document.getElementById(p+'Page').classList.add('active'); document.querySelectorAll('.nav-btn-bottom').forEach(btn=>{ btn.classList.remove('active'); if(btn.dataset.page===p) btn.classList.add('active'); }); updateUI(); }
-    function showToast(msg){ let t=document.createElement('div'); t.className='toast-message'; t.innerHTML=`<i class="fas fa-bell"></i> ${msg}`; document.body.appendChild(t); setTimeout(()=>t.remove(),2500); }
-    window.openReferLink=()=>{ window.open('https://t.me/rich_boom_bot?start=r07742666995','_blank'); showToast("Referral opened"); };
-    window.contactSupport=()=>{ window.open('https://t.me/Gitty936','_blank'); };
     
     window.onload=()=>{
         loadUser();
