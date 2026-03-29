@@ -303,7 +303,6 @@
         let countdownInterval = null;
         let isAdPlaying = false;
         
-        // ==================== সেভ ও লোড ফাংশন ====================
         function showSaveIndicator() {
             const indicator = document.getElementById('saveIndicator');
             if(indicator) {
@@ -322,33 +321,66 @@
             }
         }
         
+        // সব পুরনো ভার্সন থেকে ডাটা লোড করার ফাংশন
         function loadUser() {
-            try {
-                const saved = localStorage.getItem('richboom_final_data');
-                if(saved) {
-                    const parsed = JSON.parse(saved);
-                    if(parsed && typeof parsed.balance === 'number') {
-                        user = parsed;
-                        console.log("✅ Existing user loaded. Balance:", user.balance);
-                        
-                        // নিশ্চিত করা যে সব ফিল্ড আছে
-                        if(!user.usedDepositCodes) user.usedDepositCodes = [];
-                        if(user.taskWoolRushCompleted === undefined) user.taskWoolRushCompleted = false;
-                        if(user.taskCashBoxCompleted === undefined) user.taskCashBoxCompleted = false;
-                        if(!user.sharesOwned) {
-                            user.sharesOwned = getDefaultUserData().sharesOwned;
+            let existingData = null;
+            let foundKey = null;
+            
+            // সব পুরনো স্টোরেজ কী চেক করা
+            const oldKeys = [
+                'richboom_final_data', 
+                'richboom_final_v7', 
+                'richboom_final_v6', 
+                'richboom_final_v5', 
+                'richboom_final_v4', 
+                'richboom_final_v3', 
+                'richboom_final_v2',
+                'richboom_user_data',
+                'richboom_final'
+            ];
+            
+            for(let key of oldKeys) {
+                const data = localStorage.getItem(key);
+                if(data) {
+                    try {
+                        const parsed = JSON.parse(data);
+                        if(parsed && typeof parsed.balance === 'number' && parsed.balance > 0) {
+                            existingData = parsed;
+                            foundKey = key;
+                            console.log(`✅ Found existing data in ${key} with balance:`, parsed.balance);
+                            break;
                         }
-                        Object.keys(SHARES_CONFIG).forEach(k => { 
-                            if(!user.sharesOwned[k]) user.sharesOwned[k] = { active: false, purchaseDate: null, lastEarningTime: 0, daysClaimed: 0 }; 
-                        });
-                        return;
-                    }
+                    } catch(e) {}
                 }
-            } catch(e) {
-                console.error("Load error:", e);
             }
             
-            // নতুন ইউজার - ১০০ টাকা বোনাস
+            if(existingData) {
+                // পুরনো ডাটা মার্জ করা
+                user = { ...getDefaultUserData(), ...existingData };
+                
+                // নিশ্চিত করা যে সব ফিল্ড আছে
+                if(!user.usedDepositCodes) user.usedDepositCodes = [];
+                if(user.taskWoolRushCompleted === undefined) user.taskWoolRushCompleted = false;
+                if(user.taskCashBoxCompleted === undefined) user.taskCashBoxCompleted = false;
+                if(!user.sharesOwned) {
+                    user.sharesOwned = getDefaultUserData().sharesOwned;
+                }
+                Object.keys(SHARES_CONFIG).forEach(k => { 
+                    if(!user.sharesOwned[k]) user.sharesOwned[k] = { active: false, purchaseDate: null, lastEarningTime: 0, daysClaimed: 0 }; 
+                });
+                
+                // সেভ করা
+                saveUser();
+                console.log("✅ User data restored. Final balance:", user.balance);
+                
+                // টোস্ট মেসেজ দেখানো
+                setTimeout(() => {
+                    showToast(`✅ Your balance ৳${user.balance.toFixed(2)} has been restored!`);
+                }, 1000);
+                return;
+            }
+            
+            // কোনো পুরনো ডাটা না পেলে নতুন ইউজার
             user = getDefaultUserData();
             saveUser();
             setTimeout(() => {
@@ -1031,7 +1063,6 @@
             const gameNavBadge = document.getElementById('gameNavBadge');
             if(gameNavBadge) gameNavBadge.addEventListener('click', () => switchPage('game'));
             
-            // পেজ বন্ধ হওয়ার আগে সেভ করা নিশ্চিত করা
             window.addEventListener('beforeunload', () => {
                 saveUser();
             });
@@ -1039,7 +1070,6 @@
             updateUI();
         }
         
-        // সবকিছু শুরু
         init();
     })();
 </script>
