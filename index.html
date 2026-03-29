@@ -314,8 +314,8 @@
         
         function saveUser() {
             try {
-                localStorage.setItem('richboom_user_data', JSON.stringify(user));
-                console.log("✅ Data saved:", user.balance);
+                localStorage.setItem('richboom_final_data', JSON.stringify(user));
+                console.log("✅ Data saved - Balance:", user.balance);
                 showSaveIndicator();
             } catch(e) {
                 console.error("Save error:", e);
@@ -324,7 +324,7 @@
         
         function loadUser() {
             try {
-                const saved = localStorage.getItem('richboom_user_data');
+                const saved = localStorage.getItem('richboom_final_data');
                 if(saved) {
                     const parsed = JSON.parse(saved);
                     if(parsed && typeof parsed.balance === 'number') {
@@ -392,8 +392,10 @@
             
             const dailyLeft = Math.max(0, DAILY_AD_LIMIT - user.dailyAdsWatched);
             const hourlyLeft = Math.max(0, HOURLY_AD_LIMIT - user.hourlyAdsWatched);
-            document.getElementById('dailyAdsLeft').innerText = dailyLeft;
-            document.getElementById('hourlyAdsLeft').innerText = hourlyLeft;
+            const dailyEl = document.getElementById('dailyAdsLeft');
+            const hourlyEl = document.getElementById('hourlyAdsLeft');
+            if(dailyEl) dailyEl.innerText = dailyLeft;
+            if(hourlyEl) hourlyEl.innerText = hourlyLeft;
             
             const progressPercent = ((DAILY_AD_LIMIT - dailyLeft) / DAILY_AD_LIMIT) * 100;
             const progressBar = document.querySelector('.progress-bar');
