@@ -125,6 +125,7 @@
         .info-note { background: rgba(0, 102, 255, 0.15); padding: 10px; border-radius: 20px; font-size: 11px; color: #60A5FA; margin-top: 12px; text-align: center; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
         .cooldown-timer { font-size: 14px; font-weight: 600; margin-top: 10px; text-align: center; color: #FFD966; }
+        .save-indicator { position: fixed; bottom: 80px; right: 15px; background: #10B981; color: white; padding: 5px 10px; border-radius: 20px; font-size: 10px; font-weight: 600; opacity: 0; transition: opacity 0.3s; z-index: 1000; }
     </style>
 </head>
 <body>
@@ -251,6 +252,7 @@
         <button class="nav-btn-bottom" data-page="game"><i class="fas fa-dice"></i><span>Play</span></button>
         <button class="nav-btn-bottom" data-page="withdraw"><i class="fas fa-money-bill-wave"></i><span>Cash Out</span></button>
     </div>
+    <div id="saveIndicator" class="save-indicator">✓ Saved</div>
 </div>
 
 <script>
@@ -261,12 +263,9 @@
         raj: { name: 'রাজমহল', price: 300, dailyProfit: 21, totalDays: 30, code: '7764310YHJ87', buyLink: 'https://t.me/jhs_hs_bot' }
     };
     
-    // Deposit codes - 100 Taka codes (6 codes)
     const DEPOSIT_CODES_100 = ["H026&5p", "852901gk0", "520*owy", "852*&oah", "Sk825&ywb", "K825*js75%"];
-    // Deposit codes - 200 Taka codes (6 codes)
     const DEPOSIT_CODES_200 = ["026%itw", "725&07", "625bsv96", "724&%4jv", "725gsp&92", "835%72529"];
     
-    // Default user data for NEW users only (100 taka bonus)
     const DEFAULT_NEW_USER_DATA = {
         balance: 100.00,
         totalWithdrawn: 0,
@@ -299,28 +298,37 @@
     
     let countdownInterval = null;
     let isAdPlaying = false;
-    let isNewUser = false;
+    
+    function showSaveIndicator() {
+        const indicator = document.getElementById('saveIndicator');
+        if(indicator) {
+            indicator.style.opacity = '1';
+            setTimeout(() => {
+                indicator.style.opacity = '0';
+            }, 1500);
+        }
+    }
+    
+    function saveUser() { 
+        localStorage.setItem('richboom_final_v7', JSON.stringify(user));
+        showSaveIndicator();
+    }
     
     function updateBalanceAnimation() { 
         const el = document.getElementById('balanceAmount'); 
         if(el) { el.style.transform = "scale(1.2)"; setTimeout(() => { if(el) el.style.transform = "scale(1)"; }, 200); } 
     }
     
-    function saveUser() { 
-        localStorage.setItem('richboom_final_v6', JSON.stringify(user)); 
-    }
-    
     function loadUser() {
-        // First, try to load existing user data from previous version
         let existingData = null;
-        const oldKeys = ['richboom_final_v2', 'richboom_final_v3', 'richboom_final_v4', 'richboom_final_v5'];
+        const oldKeys = ['richboom_final_v2', 'richboom_final_v3', 'richboom_final_v4', 'richboom_final_v5', 'richboom_final_v6'];
         
         for(let key of oldKeys) {
             const data = localStorage.getItem(key);
             if(data) {
                 try {
                     const parsed = JSON.parse(data);
-                    if(parsed && parsed.balance !== undefined) {
+                    if(parsed && parsed.balance !== undefined && parsed.balance > 0) {
                         existingData = parsed;
                         break;
                     }
@@ -328,23 +336,19 @@
             }
         }
         
-        // Also check current storage
-        let stored = localStorage.getItem('richboom_final_v6');
+        let stored = localStorage.getItem('richboom_final_v7');
         
         if(existingData) {
-            // Existing user found - preserve their data
             user = { ...DEFAULT_NEW_USER_DATA, ...existingData };
-            // Ensure all required fields exist
             if(!user.usedDepositCodes) user.usedDepositCodes = [];
             if(user.taskWoolRushCompleted === undefined) user.taskWoolRushCompleted = false;
             if(user.taskCashBoxCompleted === undefined) user.taskCashBoxCompleted = false;
             Object.keys(SHARES_CONFIG).forEach(k => { 
                 if(!user.sharesOwned[k]) user.sharesOwned[k] = { active: false, purchaseDate: null, lastEarningTime: 0, daysClaimed: 0 }; 
             });
-            isNewUser = false;
+            saveUser();
         } 
         else if(stored) {
-            // User exists in new storage
             try {
                 let parsed = JSON.parse(stored);
                 user = { ...DEFAULT_NEW_USER_DATA, ...parsed };
@@ -354,13 +358,10 @@
                 Object.keys(SHARES_CONFIG).forEach(k => { 
                     if(!user.sharesOwned[k]) user.sharesOwned[k] = { active: false, purchaseDate: null, lastEarningTime: 0, daysClaimed: 0 }; 
                 });
-                isNewUser = false;
-            } catch(e) { console.error("Load error:", e); user = { ...DEFAULT_NEW_USER_DATA }; isNewUser = true; }
+            } catch(e) { console.error("Load error:", e); user = { ...DEFAULT_NEW_USER_DATA }; saveUser(); }
         } 
         else {
-            // NEW USER - give 100 taka bonus
             user = { ...DEFAULT_NEW_USER_DATA };
-            isNewUser = true;
             saveUser();
             setTimeout(() => {
                 showToast("🎉 Welcome! You received 100 ৳ bonus!");
@@ -385,7 +386,7 @@
         const btn = document.getElementById('watchAdBtn');
         const timerDiv = document.getElementById('cooldownTimer');
         let timeLeft = AD_COOLDOWN_SEC;
-        const updateUI = () => {
+        const updateFn = () => {
             if(timeLeft <= 0) {
                 clearInterval(countdownInterval);
                 countdownInterval = null;
@@ -399,8 +400,8 @@
                 timeLeft--;
             }
         };
-        updateUI();
-        countdownInterval = setInterval(updateUI, 1000);
+        updateFn();
+        countdownInterval = setInterval(updateFn, 1000);
     }
     
     function updateUI() {
@@ -674,7 +675,6 @@
     window.contactSupport=()=>{ window.open('https://t.me/Gitty936','_blank'); };
     
     window.onload=()=>{
-        // NOT clearing old storage - preserving existing user data
         loadUser();
         setInterval(()=>{ processDailyShareIncome(); updateUI(); }, 60000);
         document.getElementById('watchAdBtn').addEventListener('click', watchAd);
@@ -697,6 +697,10 @@
         document.getElementById('directDepositLinkBtn').addEventListener('click', directDepositLink);
         document.getElementById('gameNavBadge').addEventListener('click', ()=>switchPage('game'));
         updateUI();
+        
+        window.addEventListener('beforeunload', function() {
+            saveUser();
+        });
     };
 </script>
 </body>
