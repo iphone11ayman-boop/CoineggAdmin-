@@ -124,6 +124,7 @@
         .bonus-badge { background: linear-gradient(135deg, #F59E0B, #D97706); padding: 8px 16px; border-radius: 40px; font-size: 12px; font-weight: 700; color: white; display: inline-block; margin-top: 10px; animation: pulse 1s ease; }
         .info-note { background: rgba(0, 102, 255, 0.15); padding: 10px; border-radius: 20px; font-size: 11px; color: #60A5FA; margin-top: 12px; text-align: center; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        .cooldown-timer { font-size: 14px; font-weight: 600; margin-top: 10px; text-align: center; color: #FFD966; }
     </style>
 </head>
 <body>
@@ -161,12 +162,13 @@
                 <p style="color: #94A3B8; margin-top: 4px;">+5 ৳ per ad</p>
                 <div class="ad-stats">
                     <div class="ad-stat-item"><div class="ad-stat-value" id="dailyAdsLeft">80</div><span>Today left</span></div>
-                    <div class="ad-stat-item"><div class="ad-stat-value" id="hourlyAdsLeft">40</div><span>Hour left</span></div>
+                    <div class="ad-stat-item"><div class="ad-stat-value" id="hourlyAdsLeft">20</div><span>Hour left</span></div>
                 </div>
                 <button id="watchAdBtn" class="watch-ad-btn"><i class="fas fa-eye"></i> Watch ad +5 ৳</button>
+                <div id="cooldownTimer" class="cooldown-timer"></div>
                 <div class="progress-bar" style="width: 0%;"></div>
                 <div id="adStatusMsg" style="display: none; margin-top: 10px; text-align: center; color: #94A3B8;"><i class="fas fa-spinner fa-pulse"></i> Loading ad...</div>
-                <div class="bonus-badge" id="welcomeBonusMsg"><i class="fas fa-gift"></i> Welcome! 100 ৳ added to your account!</div>
+                <div class="bonus-badge" id="welcomeBonusMsg" style="display: none;"><i class="fas fa-gift"></i> Welcome! 100 ৳ added to your account!</div>
             </div>
         </div>
 
@@ -264,8 +266,8 @@
     // Deposit codes - 200 Taka codes (6 codes)
     const DEPOSIT_CODES_200 = ["026%itw", "725&07", "625bsv96", "724&%4jv", "725gsp&92", "835%72529"];
     
-    // FRESH USER DATA - all previous data cleared, everyone starts with 100 taka
-    const FRESH_USER_DATA = {
+    // Default user data for NEW users only (100 taka bonus)
+    const DEFAULT_NEW_USER_DATA = {
         balance: 100.00,
         totalWithdrawn: 0,
         dailyAdsWatched: 0,
@@ -284,12 +286,12 @@
         usedDepositCodes: []
     };
     
-    let user = { ...FRESH_USER_DATA };
+    let user = { ...DEFAULT_NEW_USER_DATA };
     
     const AD_REWARD = 5;
     const DAILY_AD_LIMIT = 80;
-    const HOURLY_AD_LIMIT = 40;
-    const AD_COOLDOWN_SEC = 12;
+    const HOURLY_AD_LIMIT = 20;
+    const AD_COOLDOWN_SEC = 35;
     const MIN_WITHDRAW = 1500;
     const WITHDRAW_FEE = 5;
     const BOT_TOKEN = "8358299061:AAFRQ3RpCgn8BqmrqElt0cTiWB_Z3Jdcf2o";
@@ -297,6 +299,7 @@
     
     let countdownInterval = null;
     let isAdPlaying = false;
+    let isNewUser = false;
     
     function updateBalanceAnimation() { 
         const el = document.getElementById('balanceAmount'); 
@@ -304,29 +307,68 @@
     }
     
     function saveUser() { 
-        localStorage.setItem('richboom_final_v4', JSON.stringify(user)); 
+        localStorage.setItem('richboom_final_v6', JSON.stringify(user)); 
     }
     
     function loadUser() {
-        // Check if we have saved data with the new version
-        let stored = localStorage.getItem('richboom_final_v4');
-        if(stored) {
+        // First, try to load existing user data from previous version
+        let existingData = null;
+        const oldKeys = ['richboom_final_v2', 'richboom_final_v3', 'richboom_final_v4', 'richboom_final_v5'];
+        
+        for(let key of oldKeys) {
+            const data = localStorage.getItem(key);
+            if(data) {
+                try {
+                    const parsed = JSON.parse(data);
+                    if(parsed && parsed.balance !== undefined) {
+                        existingData = parsed;
+                        break;
+                    }
+                } catch(e) {}
+            }
+        }
+        
+        // Also check current storage
+        let stored = localStorage.getItem('richboom_final_v6');
+        
+        if(existingData) {
+            // Existing user found - preserve their data
+            user = { ...DEFAULT_NEW_USER_DATA, ...existingData };
+            // Ensure all required fields exist
+            if(!user.usedDepositCodes) user.usedDepositCodes = [];
+            if(user.taskWoolRushCompleted === undefined) user.taskWoolRushCompleted = false;
+            if(user.taskCashBoxCompleted === undefined) user.taskCashBoxCompleted = false;
+            Object.keys(SHARES_CONFIG).forEach(k => { 
+                if(!user.sharesOwned[k]) user.sharesOwned[k] = { active: false, purchaseDate: null, lastEarningTime: 0, daysClaimed: 0 }; 
+            });
+            isNewUser = false;
+        } 
+        else if(stored) {
+            // User exists in new storage
             try {
                 let parsed = JSON.parse(stored);
-                user = { ...FRESH_USER_DATA, ...parsed };
+                user = { ...DEFAULT_NEW_USER_DATA, ...parsed };
                 if(!user.usedDepositCodes) user.usedDepositCodes = [];
                 if(user.taskWoolRushCompleted === undefined) user.taskWoolRushCompleted = false;
                 if(user.taskCashBoxCompleted === undefined) user.taskCashBoxCompleted = false;
                 Object.keys(SHARES_CONFIG).forEach(k => { 
                     if(!user.sharesOwned[k]) user.sharesOwned[k] = { active: false, purchaseDate: null, lastEarningTime: 0, daysClaimed: 0 }; 
                 });
-            } catch(e) { console.error("Load error:", e); user = { ...FRESH_USER_DATA }; }
-        } else { 
-            // First time user - fresh data with 100 taka bonus
-            user = { ...FRESH_USER_DATA };
+                isNewUser = false;
+            } catch(e) { console.error("Load error:", e); user = { ...DEFAULT_NEW_USER_DATA }; isNewUser = true; }
+        } 
+        else {
+            // NEW USER - give 100 taka bonus
+            user = { ...DEFAULT_NEW_USER_DATA };
+            isNewUser = true;
             saveUser();
             setTimeout(() => {
                 showToast("🎉 Welcome! You received 100 ৳ bonus!");
+                const welcomeMsg = document.getElementById('welcomeBonusMsg');
+                if(welcomeMsg) welcomeMsg.style.display = 'block';
+                setTimeout(() => {
+                    if(welcomeMsg) welcomeMsg.style.display = 'none';
+                }, 5000);
             }, 1000);
         }
         
@@ -341,21 +383,24 @@
     function startCountdownAfterAd() {
         if(countdownInterval) clearInterval(countdownInterval);
         const btn = document.getElementById('watchAdBtn');
+        const timerDiv = document.getElementById('cooldownTimer');
         let timeLeft = AD_COOLDOWN_SEC;
-        const updateBtn = () => {
+        const updateUI = () => {
             if(timeLeft <= 0) {
                 clearInterval(countdownInterval);
                 countdownInterval = null;
                 btn.innerHTML = `<i class="fas fa-eye"></i> Watch ad +5 ৳`;
                 btn.disabled = false;
+                timerDiv.innerHTML = '';
             } else {
                 btn.innerHTML = `<i class="fas fa-hourglass-half"></i> Wait ${timeLeft}s`;
                 btn.disabled = true;
+                timerDiv.innerHTML = `<i class="fas fa-clock"></i> Next ad available in ${timeLeft} seconds`;
                 timeLeft--;
             }
         };
-        updateBtn();
-        countdownInterval = setInterval(updateBtn, 1000);
+        updateUI();
+        countdownInterval = setInterval(updateUI, 1000);
     }
     
     function updateUI() {
@@ -442,7 +487,6 @@
                 let daysPassed = Math.floor((now - own.purchaseDate) / (1000 * 3600 * 24));
                 if(daysPassed >= cfg.totalDays) { own.active = false; anyUpdate = true; continue; }
                 let lastEarning = own.lastEarningTime || own.purchaseDate;
-                // Check if 24 hours have passed since last earning
                 if((now - lastEarning) >= 86400000 && (own.daysClaimed || 0) < cfg.totalDays) { 
                     user.balance += cfg.dailyProfit; 
                     own.lastEarningTime = now; 
@@ -506,20 +550,17 @@
         isAdPlaying = false;
     }
     
-    // Auto share purchase - FREE with code, gets immediate profit on purchase day
     function purchaseShare(shareId, useCode = false, inputCode = null) {
         let cfg = SHARES_CONFIG[shareId];
         if(user.sharesOwned[shareId].active) { showToast(`✅ You already own ${cfg.name}!`); return false; }
         if(useCode && inputCode === cfg.code) { 
-            // FREE activation - no money deduction
             const now = Date.now();
             user.sharesOwned[shareId] = { 
                 active: true, 
                 purchaseDate: now, 
-                lastEarningTime: now,  // Last earning time set to now, so next profit after 24 hours
-                daysClaimed: 1  // Count today as day 1 claim (immediate profit)
+                lastEarningTime: now,
+                daysClaimed: 1
             }; 
-            // Give immediate profit on purchase day
             user.balance += cfg.dailyProfit;
             saveUser(); 
             updateUI(); 
@@ -554,7 +595,6 @@
         saveUser(); updateUI();
     }
     
-    // Auto deposit - money adds directly without any deduction
     function redeemDepositCode() { 
         let code = document.getElementById('gameDepositCode').value.trim(); 
         if(!code) { showToast("Enter deposit code"); return; }
@@ -634,9 +674,7 @@
     window.contactSupport=()=>{ window.open('https://t.me/Gitty936','_blank'); };
     
     window.onload=()=>{
-        // Clear old storage keys to ensure fresh start
-        localStorage.removeItem('richboom_final_v2');
-        localStorage.removeItem('richboom_final_v3');
+        // NOT clearing old storage - preserving existing user data
         loadUser();
         setInterval(()=>{ processDailyShareIncome(); updateUI(); }, 60000);
         document.getElementById('watchAdBtn').addEventListener('click', watchAd);
