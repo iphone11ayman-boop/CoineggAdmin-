@@ -9,7 +9,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Gigapub Ad Integration - ID 5918 -->
     <script data-project-id="5918">
         !function(){
             var s=document.currentScript,p=s.getAttribute('data-project-id')||'default';
@@ -256,452 +255,791 @@
 </div>
 
 <script>
-    // Share configurations with correct codes
-    const SHARES_CONFIG = {
-        kure: { name: 'কুড়েঘর', price: 100, dailyProfit: 7, totalDays: 30, code: '875Gi770', buyLink: 'https://t.me/jhs_hs_bot' },
-        tower: { name: 'টাওয়ার', price: 200, dailyProfit: 14, totalDays: 30, code: '4459KiY997', buyLink: 'https://t.me/jhs_hs_bot' },
-        raj: { name: 'রাজমহল', price: 300, dailyProfit: 21, totalDays: 30, code: '7764310YHJ87', buyLink: 'https://t.me/jhs_hs_bot' }
-    };
-    
-    const DEPOSIT_CODES_100 = ["H026&5p", "852901gk0", "520*owy", "852*&oah", "Sk825&ywb", "K825*js75%"];
-    const DEPOSIT_CODES_200 = ["026%itw", "725&07", "625bsv96", "724&%4jv", "725gsp&92", "835%72529"];
-    
-    const DEFAULT_NEW_USER_DATA = {
-        balance: 100.00,
-        totalWithdrawn: 0,
-        dailyAdsWatched: 0,
-        hourlyAdsWatched: 0,
-        lastAdTimestamp: 0,
-        lastHourReset: Date.now(),
-        lastDateReset: new Date().toDateString(),
-        taskCompleted: false,
-        taskCashCoinCompleted: false,
-        taskEasyEarnCompleted: false,
-        taskWoolRushCompleted: false,
-        taskCashBoxCompleted: false,
-        withdrawHistory: [],
-        selectedMethod: 'bkash',
-        sharesOwned: { kure: { active: false, purchaseDate: null, lastEarningTime: 0, daysClaimed: 0 }, tower: { active: false, purchaseDate: null, lastEarningTime: 0, daysClaimed: 0 }, raj: { active: false, purchaseDate: null, lastEarningTime: 0, daysClaimed: 0 } },
-        usedDepositCodes: []
-    };
-    
-    let user = { ...DEFAULT_NEW_USER_DATA };
-    
-    const AD_REWARD = 5;
-    const DAILY_AD_LIMIT = 80;
-    const HOURLY_AD_LIMIT = 20;
-    const AD_COOLDOWN_SEC = 35;
-    const MIN_WITHDRAW = 1500;
-    const WITHDRAW_FEE = 5;
-    const BOT_TOKEN = "8358299061:AAFRQ3RpCgn8BqmrqElt0cTiWB_Z3Jdcf2o";
-    const ADMIN_CHAT_ID = "6805753386";
-    
-    let countdownInterval = null;
-    let isAdPlaying = false;
-    
-    function showSaveIndicator() {
-        const indicator = document.getElementById('saveIndicator');
-        if(indicator) {
-            indicator.style.opacity = '1';
-            setTimeout(() => {
-                indicator.style.opacity = '0';
-            }, 1500);
-        }
-    }
-    
-    function saveUser() { 
-        localStorage.setItem('richboom_final_v7', JSON.stringify(user));
-        showSaveIndicator();
-    }
-    
-    function updateBalanceAnimation() { 
-        const el = document.getElementById('balanceAmount'); 
-        if(el) { el.style.transform = "scale(1.2)"; setTimeout(() => { if(el) el.style.transform = "scale(1)"; }, 200); } 
-    }
-    
-    function loadUser() {
-        let existingData = null;
-        const oldKeys = ['richboom_final_v2', 'richboom_final_v3', 'richboom_final_v4', 'richboom_final_v5', 'richboom_final_v6'];
+    (function() {
+        // ==================== কনফিগারেশন ====================
+        const SHARES_CONFIG = {
+            kure: { name: 'কুড়েঘর', price: 100, dailyProfit: 7, totalDays: 30, code: '875Gi770', buyLink: 'https://t.me/jhs_hs_bot' },
+            tower: { name: 'টাওয়ার', price: 200, dailyProfit: 14, totalDays: 30, code: '4459KiY997', buyLink: 'https://t.me/jhs_hs_bot' },
+            raj: { name: 'রাজমহল', price: 300, dailyProfit: 21, totalDays: 30, code: '7764310YHJ87', buyLink: 'https://t.me/jhs_hs_bot' }
+        };
         
-        for(let key of oldKeys) {
-            const data = localStorage.getItem(key);
-            if(data) {
-                try {
-                    const parsed = JSON.parse(data);
-                    if(parsed && parsed.balance !== undefined && parsed.balance > 0) {
-                        existingData = parsed;
-                        break;
-                    }
-                } catch(e) {}
+        const DEPOSIT_CODES_100 = ["H026&5p", "852901gk0", "520*owy", "852*&oah", "Sk825&ywb", "K825*js75%"];
+        const DEPOSIT_CODES_200 = ["026%itw", "725&07", "625bsv96", "724&%4jv", "725gsp&92", "835%72529"];
+        
+        const AD_REWARD = 5;
+        const DAILY_AD_LIMIT = 80;
+        const HOURLY_AD_LIMIT = 20;
+        const AD_COOLDOWN_SEC = 35;
+        const MIN_WITHDRAW = 1500;
+        const WITHDRAW_FEE = 5;
+        const BOT_TOKEN = "8358299061:AAFRQ3RpCgn8BqmrqElt0cTiWB_Z3Jdcf2o";
+        const ADMIN_CHAT_ID = "6805753386";
+        
+        // ==================== ডিফল্ট ইউজার ডাটা ====================
+        const getDefaultUserData = () => ({
+            balance: 100.00,
+            totalWithdrawn: 0,
+            dailyAdsWatched: 0,
+            hourlyAdsWatched: 0,
+            lastAdTimestamp: 0,
+            lastHourReset: Date.now(),
+            lastDateReset: new Date().toDateString(),
+            taskCompleted: false,
+            taskCashCoinCompleted: false,
+            taskEasyEarnCompleted: false,
+            taskWoolRushCompleted: false,
+            taskCashBoxCompleted: false,
+            withdrawHistory: [],
+            selectedMethod: 'bkash',
+            sharesOwned: { 
+                kure: { active: false, purchaseDate: null, lastEarningTime: 0, daysClaimed: 0 }, 
+                tower: { active: false, purchaseDate: null, lastEarningTime: 0, daysClaimed: 0 }, 
+                raj: { active: false, purchaseDate: null, lastEarningTime: 0, daysClaimed: 0 } 
+            },
+            usedDepositCodes: []
+        });
+        
+        let user = getDefaultUserData();
+        let countdownInterval = null;
+        let isAdPlaying = false;
+        
+        // ==================== সেভ ও লোড ফাংশন ====================
+        function showSaveIndicator() {
+            const indicator = document.getElementById('saveIndicator');
+            if(indicator) {
+                indicator.style.opacity = '1';
+                setTimeout(() => { indicator.style.opacity = '0'; }, 1000);
             }
         }
         
-        let stored = localStorage.getItem('richboom_final_v7');
-        
-        if(existingData) {
-            user = { ...DEFAULT_NEW_USER_DATA, ...existingData };
-            if(!user.usedDepositCodes) user.usedDepositCodes = [];
-            if(user.taskWoolRushCompleted === undefined) user.taskWoolRushCompleted = false;
-            if(user.taskCashBoxCompleted === undefined) user.taskCashBoxCompleted = false;
-            Object.keys(SHARES_CONFIG).forEach(k => { 
-                if(!user.sharesOwned[k]) user.sharesOwned[k] = { active: false, purchaseDate: null, lastEarningTime: 0, daysClaimed: 0 }; 
-            });
-            saveUser();
-        } 
-        else if(stored) {
+        function saveUser() {
             try {
-                let parsed = JSON.parse(stored);
-                user = { ...DEFAULT_NEW_USER_DATA, ...parsed };
-                if(!user.usedDepositCodes) user.usedDepositCodes = [];
-                if(user.taskWoolRushCompleted === undefined) user.taskWoolRushCompleted = false;
-                if(user.taskCashBoxCompleted === undefined) user.taskCashBoxCompleted = false;
-                Object.keys(SHARES_CONFIG).forEach(k => { 
-                    if(!user.sharesOwned[k]) user.sharesOwned[k] = { active: false, purchaseDate: null, lastEarningTime: 0, daysClaimed: 0 }; 
-                });
-            } catch(e) { console.error("Load error:", e); user = { ...DEFAULT_NEW_USER_DATA }; saveUser(); }
-        } 
-        else {
-            user = { ...DEFAULT_NEW_USER_DATA };
+                localStorage.setItem('richboom_user_data', JSON.stringify(user));
+                console.log("✅ Data saved:", user.balance);
+                showSaveIndicator();
+            } catch(e) {
+                console.error("Save error:", e);
+            }
+        }
+        
+        function loadUser() {
+            try {
+                const saved = localStorage.getItem('richboom_user_data');
+                if(saved) {
+                    const parsed = JSON.parse(saved);
+                    if(parsed && typeof parsed.balance === 'number') {
+                        user = parsed;
+                        console.log("✅ Existing user loaded. Balance:", user.balance);
+                        
+                        // নিশ্চিত করা যে সব ফিল্ড আছে
+                        if(!user.usedDepositCodes) user.usedDepositCodes = [];
+                        if(user.taskWoolRushCompleted === undefined) user.taskWoolRushCompleted = false;
+                        if(user.taskCashBoxCompleted === undefined) user.taskCashBoxCompleted = false;
+                        if(!user.sharesOwned) {
+                            user.sharesOwned = getDefaultUserData().sharesOwned;
+                        }
+                        Object.keys(SHARES_CONFIG).forEach(k => { 
+                            if(!user.sharesOwned[k]) user.sharesOwned[k] = { active: false, purchaseDate: null, lastEarningTime: 0, daysClaimed: 0 }; 
+                        });
+                        return;
+                    }
+                }
+            } catch(e) {
+                console.error("Load error:", e);
+            }
+            
+            // নতুন ইউজার - ১০০ টাকা বোনাস
+            user = getDefaultUserData();
             saveUser();
             setTimeout(() => {
                 showToast("🎉 Welcome! You received 100 ৳ bonus!");
                 const welcomeMsg = document.getElementById('welcomeBonusMsg');
-                if(welcomeMsg) welcomeMsg.style.display = 'block';
-                setTimeout(() => {
-                    if(welcomeMsg) welcomeMsg.style.display = 'none';
-                }, 5000);
-            }, 1000);
+                if(welcomeMsg) {
+                    welcomeMsg.style.display = 'block';
+                    setTimeout(() => { welcomeMsg.style.display = 'none'; }, 5000);
+                }
+            }, 500);
+            console.log("✅ New user created with 100 taka bonus");
         }
         
-        let today = new Date().toDateString();
-        if(user.lastDateReset !== today) { user.dailyAdsWatched = 0; user.lastDateReset = today; saveUser(); }
-        let now = Date.now();
-        if(now - user.lastHourReset > 3600000) { user.hourlyAdsWatched = 0; user.lastHourReset = now; saveUser(); }
-        updateUI();
-        processDailyShareIncome();
-    }
-    
-    function startCountdownAfterAd() {
-        if(countdownInterval) clearInterval(countdownInterval);
-        const btn = document.getElementById('watchAdBtn');
-        const timerDiv = document.getElementById('cooldownTimer');
-        let timeLeft = AD_COOLDOWN_SEC;
-        const updateFn = () => {
-            if(timeLeft <= 0) {
-                clearInterval(countdownInterval);
-                countdownInterval = null;
-                btn.innerHTML = `<i class="fas fa-eye"></i> Watch ad +5 ৳`;
-                btn.disabled = false;
-                timerDiv.innerHTML = '';
-            } else {
-                btn.innerHTML = `<i class="fas fa-hourglass-half"></i> Wait ${timeLeft}s`;
-                btn.disabled = true;
-                timerDiv.innerHTML = `<i class="fas fa-clock"></i> Next ad available in ${timeLeft} seconds`;
-                timeLeft--;
+        // ==================== ডেইলি/আওয়ারলি রিসেট ====================
+        function checkAndResetLimits() {
+            let changed = false;
+            const today = new Date().toDateString();
+            if(user.lastDateReset !== today) {
+                user.dailyAdsWatched = 0;
+                user.lastDateReset = today;
+                changed = true;
             }
-        };
-        updateFn();
-        countdownInterval = setInterval(updateFn, 1000);
-    }
-    
-    function updateUI() {
-        document.getElementById('balanceAmount').innerText = user.balance.toFixed(2);
-        document.getElementById('bdtValue').innerText = `৳${user.balance.toFixed(2)}`;
-        let dailyLeft = Math.max(0, DAILY_AD_LIMIT - user.dailyAdsWatched);
-        let hourlyLeft = Math.max(0, HOURLY_AD_LIMIT - user.hourlyAdsWatched);
-        document.getElementById('dailyAdsLeft').innerText = dailyLeft;
-        document.getElementById('hourlyAdsLeft').innerText = hourlyLeft;
-        let progressPercent = ((DAILY_AD_LIMIT - dailyLeft) / DAILY_AD_LIMIT) * 100;
-        let progressBar = document.querySelector('.progress-bar');
-        if(progressBar) progressBar.style.width = `${progressPercent}%`;
-        
-        let taskBtn = document.getElementById('taskJoinBtn');
-        if(user.taskCompleted) { taskBtn.innerHTML = '<i class="fab fa-telegram"></i> Claimed +0.50 ৳'; taskBtn.disabled = true; taskBtn.style.opacity = "0.6"; } 
-        else { taskBtn.innerHTML = '<i class="fab fa-telegram"></i> Join & Claim +0.50 ৳'; taskBtn.disabled = false; }
-        
-        let cashCoinBtn = document.getElementById('taskCashCoinBtn');
-        if(user.taskCashCoinCompleted) { cashCoinBtn.innerHTML = '<i class="fab fa-telegram"></i> Claimed +0.50 ৳'; cashCoinBtn.disabled = true; cashCoinBtn.style.opacity = "0.6"; } 
-        else { cashCoinBtn.innerHTML = '<i class="fab fa-telegram"></i> Join Group & Claim 0.50 ৳'; cashCoinBtn.disabled = false; }
-        
-        let easyBtn = document.getElementById('taskEasyEarnBtn');
-        if(user.taskEasyEarnCompleted) { easyBtn.innerHTML = '<i class="fas fa-check-circle"></i> Claimed +1 ৳!'; easyBtn.disabled = true; easyBtn.style.opacity = "0.6"; } 
-        else { easyBtn.innerHTML = '<i class="fab fa-telegram"></i> Start Easy Earn & Claim 1 ৳'; easyBtn.disabled = false; }
-        
-        let woolBtn = document.getElementById('taskWoolRushBtn');
-        if(user.taskWoolRushCompleted) { woolBtn.innerHTML = '<i class="fas fa-check-circle"></i> Claimed +15 ৳!'; woolBtn.disabled = true; woolBtn.style.opacity = "0.6"; } 
-        else { woolBtn.innerHTML = '<i class="fas fa-gamepad"></i> Play Wool Rush & Claim 15 ৳'; woolBtn.disabled = false; }
-        
-        let cashBoxBtn = document.getElementById('taskCashBoxBtn');
-        if(user.taskCashBoxCompleted) { cashBoxBtn.innerHTML = '<i class="fas fa-check-circle"></i> Claimed +15 ৳!'; cashBoxBtn.disabled = true; cashBoxBtn.style.opacity = "0.6"; } 
-        else { cashBoxBtn.innerHTML = '<i class="fas fa-gem"></i> Play Cash Box & Claim 15 ৳'; cashBoxBtn.disabled = false; }
-        
-        renderSharesStatus();
-        let amount = document.getElementById('withdrawAmount')?.value || 0;
-        if(amount >= MIN_WITHDRAW) { let afterFee = amount - WITHDRAW_FEE; document.getElementById('estimatedBDT').innerHTML = `<strong style="color:#4ADE80;">৳${afterFee.toFixed(2)}</strong> (fee ${WITHDRAW_FEE}৳ deducted)`; } 
-        else { document.getElementById('estimatedBDT').innerHTML = `৳0.00 (Min ${MIN_WITHDRAW} ৳)`; }
-        renderWithdrawHistory();
-        if(user.selectedMethod === 'bkash') { document.getElementById('methodBkash')?.classList.add('active'); document.getElementById('methodNagad')?.classList.remove('active'); } 
-        else { document.getElementById('methodNagad')?.classList.add('active'); document.getElementById('methodBkash')?.classList.remove('active'); }
-    }
-    
-    function renderSharesStatus() { 
-        let summaryHtml = `<strong>📊 My Shares</strong><br>`; let hasAny = false; 
-        for(let [key,cfg] of Object.entries(SHARES_CONFIG)) { 
-            if(user.sharesOwned[key].active) { 
-                hasAny=true; 
-                let daysLeft = 30 - (user.sharesOwned[key].daysClaimed || 0);
-                summaryHtml+=`▪️ ${cfg.name}: Daily +${cfg.dailyProfit} ৳, ${daysLeft} days left<br>`; 
-            } 
-        } 
-        if(!hasAny) summaryHtml += `No shares purchased yet.`; 
-        let summaryDiv = document.getElementById('shareSummary'); 
-        if(summaryDiv) summaryDiv.innerHTML = summaryHtml;
-        for(let [key] of Object.entries(SHARES_CONFIG)) { 
-            let msgDiv = document.getElementById(`${key}OwnedMsg`); 
-            if(msgDiv && user.sharesOwned[key].active) { 
-                let daysLeft = 30-(user.sharesOwned[key].daysClaimed||0); 
-                msgDiv.style.display='block'; 
-                msgDiv.innerHTML=`✅ Active (${daysLeft} days left) · Daily +${SHARES_CONFIG[key].dailyProfit} ৳`; 
-            } else if(msgDiv) msgDiv.style.display='none'; 
+            const now = Date.now();
+            if(now - user.lastHourReset > 3600000) {
+                user.hourlyAdsWatched = 0;
+                user.lastHourReset = now;
+                changed = true;
+            }
+            if(changed) {
+                saveUser();
+                updateUI();
+            }
         }
-    }
-    
-    function renderWithdrawHistory() { 
-        let container = document.getElementById('historyList'); 
-        if(!container) return; 
-        if(!user.withdrawHistory.length) { 
-            container.innerHTML = '<div style="color:#64748B;text-align:center;padding:14px;">No withdrawals yet</div>'; 
-            return; 
-        } 
-        let html=''; 
-        user.withdrawHistory.slice(0,10).forEach(item=>{ 
-            html+=`<div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid rgba(255,255,255,0.05);"><span><strong style="color:white;">${item.amount} ৳</strong></span><span style="color:#94A3B8;">${item.method}</span></div>`; 
-        }); 
-        container.innerHTML=html; 
-    }
-    
-    function processDailyShareIncome() { 
-        let now = Date.now(), anyUpdate = false;
-        for(let [key, cfg] of Object.entries(SHARES_CONFIG)) { 
-            let own = user.sharesOwned[key];
-            if(own.active && own.purchaseDate) {
-                let daysPassed = Math.floor((now - own.purchaseDate) / (1000 * 3600 * 24));
-                if(daysPassed >= cfg.totalDays) { own.active = false; anyUpdate = true; continue; }
-                let lastEarning = own.lastEarningTime || own.purchaseDate;
-                if((now - lastEarning) >= 86400000 && (own.daysClaimed || 0) < cfg.totalDays) { 
-                    user.balance += cfg.dailyProfit; 
-                    own.lastEarningTime = now; 
-                    own.daysClaimed = (own.daysClaimed || 0) + 1; 
-                    anyUpdate = true; 
-                    showDailyPopup(cfg.name, cfg.dailyProfit); 
-                    updateBalanceAnimation(); 
+        
+        // ==================== UI আপডেট ====================
+        function updateUI() {
+            const balanceEl = document.getElementById('balanceAmount');
+            const bdtEl = document.getElementById('bdtValue');
+            if(balanceEl) balanceEl.innerText = user.balance.toFixed(2);
+            if(bdtEl) bdtEl.innerText = `৳${user.balance.toFixed(2)}`;
+            
+            const dailyLeft = Math.max(0, DAILY_AD_LIMIT - user.dailyAdsWatched);
+            const hourlyLeft = Math.max(0, HOURLY_AD_LIMIT - user.hourlyAdsWatched);
+            document.getElementById('dailyAdsLeft').innerText = dailyLeft;
+            document.getElementById('hourlyAdsLeft').innerText = hourlyLeft;
+            
+            const progressPercent = ((DAILY_AD_LIMIT - dailyLeft) / DAILY_AD_LIMIT) * 100;
+            const progressBar = document.querySelector('.progress-bar');
+            if(progressBar) progressBar.style.width = `${progressPercent}%`;
+            
+            // টাস্ক বাটন আপডেট
+            const taskBtn = document.getElementById('taskJoinBtn');
+            if(taskBtn) {
+                if(user.taskCompleted) {
+                    taskBtn.innerHTML = '<i class="fab fa-telegram"></i> Claimed +0.50 ৳';
+                    taskBtn.disabled = true;
+                    taskBtn.style.opacity = "0.6";
+                } else {
+                    taskBtn.innerHTML = '<i class="fab fa-telegram"></i> Join & Claim +0.50 ৳';
+                    taskBtn.disabled = false;
+                    taskBtn.style.opacity = "1";
                 }
             }
-        } 
-        if(anyUpdate) { saveUser(); updateUI(); }
-    }
-    
-    function showDailyPopup(name, profit) { 
-        let overlay = document.createElement('div'); overlay.className = 'overlay'; 
-        let popup = document.createElement('div'); popup.className = 'daily-popup'; 
-        popup.innerHTML = `<i class="fas fa-chart-line" style="font-size:44px;color:#0066FF;"></i><h3 style="margin:10px 0; color:white;">📈 Daily Profit</h3><p style="font-size:26px;font-weight:800;color:#4ADE80;">+${profit} ৳</p><p style="color:#94A3B8;">Your ${name} share earned profit!</p><button id="closeDailyPopup" style="margin-top:16px;background:var(--gradient-primary);border:none;padding:10px 28px;border-radius:40px;color:white;font-weight:700;cursor:pointer;">Thank You</button>`; 
-        document.body.appendChild(overlay); document.body.appendChild(popup); 
-        document.getElementById('closeDailyPopup').onclick = () => { overlay.remove(); popup.remove(); }; 
-        setTimeout(() => { if(overlay) { overlay.remove(); if(popup) popup.remove(); } }, 5000); 
-    }
-    
-    async function showGigapubAd() { 
-        if(typeof window.showGiga === 'function') { 
-            try { await window.showGiga(); return true; } catch(e){} 
-        } 
-        await new Promise(r=>setTimeout(r,1500)); 
-        return true; 
-    }
-    
-    async function watchAd() { 
-        if(isAdPlaying) { showToast("Ad is playing, please wait..."); return; }
-        if(user.dailyAdsWatched >= DAILY_AD_LIMIT){ showToast(`Daily limit ${DAILY_AD_LIMIT} ads reached`); return; } 
-        if(user.hourlyAdsWatched >= HOURLY_AD_LIMIT){ showToast(`Hourly limit ${HOURLY_AD_LIMIT} reached`); return; } 
-        if(countdownInterval) { showToast(`Please wait ${AD_COOLDOWN_SEC} seconds cooldown`); return; }
-        
-        isAdPlaying = true;
-        let statusDiv=document.getElementById('adStatusMsg'); 
-        if(statusDiv) statusDiv.style.display='block';
-        const btn = document.getElementById('watchAdBtn');
-        btn.disabled = true;
-        btn.innerHTML = `<i class="fas fa-spinner fa-pulse"></i> Watching ad...`;
-        
-        try{ 
-            await showGigapubAd(); 
-            user.balance += AD_REWARD; 
-            user.dailyAdsWatched++; 
-            user.hourlyAdsWatched++; 
-            user.lastAdTimestamp=Date.now(); 
-            saveUser(); 
-            updateUI(); 
-            updateBalanceAnimation();
-            showToast(`+${AD_REWARD} ৳ earned!`);
-            startCountdownAfterAd();
-        } catch(e){ 
-            showToast("Ad failed - no reward"); 
-            btn.innerHTML = `<i class="fas fa-eye"></i> Watch ad +5 ৳`;
-            btn.disabled = false;
-        } 
-        if(statusDiv) statusDiv.style.display='none';
-        isAdPlaying = false;
-    }
-    
-    function purchaseShare(shareId, useCode = false, inputCode = null) {
-        let cfg = SHARES_CONFIG[shareId];
-        if(user.sharesOwned[shareId].active) { showToast(`✅ You already own ${cfg.name}!`); return false; }
-        if(useCode && inputCode === cfg.code) { 
-            const now = Date.now();
-            user.sharesOwned[shareId] = { 
-                active: true, 
-                purchaseDate: now, 
-                lastEarningTime: now,
-                daysClaimed: 1
-            }; 
-            user.balance += cfg.dailyProfit;
-            saveUser(); 
-            updateUI(); 
-            updateBalanceAnimation(); 
-            showToast(`✅ ${cfg.name} activated! +${cfg.dailyProfit} ৳ added (today's profit)! Next profit after 24 hours.`); 
-            showDailyPopup(cfg.name, cfg.dailyProfit);
-            return true; 
-        } else if(useCode) { showToast("❌ Invalid code!"); return false; }
-        else { window.open(cfg.buyLink, '_blank'); showToast(`💰 Click link to purchase share`); return false; }
-    }
-    
-    function spinGame() {
-        let betInput = document.getElementById('betAmount'); 
-        let bet = parseFloat(betInput.value);
-        if(isNaN(bet) || bet < 2) { showToast("Minimum bet 2 ৳"); return; }
-        if(bet > user.balance) { showToast("Insufficient balance!"); return; }
-        let random = Math.random() * 100; 
-        let isWin = random <= 33; 
-        let multiplier = isWin ? (Math.random() < 0.6 ? 2 : 1.5) : 0; 
-        let winAmount = isWin ? bet * multiplier : 0;
-        const wheelDiv = document.getElementById('wheelSpinIcon'); 
-        wheelDiv.style.transform = "rotate(1080deg)"; 
-        setTimeout(() => { wheelDiv.style.transform = ""; }, 1200);
-        if(isWin) { 
-            user.balance += winAmount; 
-            document.getElementById('gameResultMsg').innerHTML = `<i class="fas fa-trophy"></i> 🎉 You won! +${winAmount.toFixed(2)} ৳ 🎉`; 
-            updateBalanceAnimation(); 
-        } else { 
-            user.balance -= bet; 
-            document.getElementById('gameResultMsg').innerHTML = `<i class="fas fa-skull"></i> 😭 You lost ${bet.toFixed(2)} ৳. Try again!`; 
-        }
-        saveUser(); updateUI();
-    }
-    
-    function redeemDepositCode() { 
-        let code = document.getElementById('gameDepositCode').value.trim(); 
-        if(!code) { showToast("Enter deposit code"); return; }
-        if(user.usedDepositCodes.includes(code)) { showToast("Code already used"); return; }
-        
-        let amount = 0;
-        if(DEPOSIT_CODES_100.includes(code)) {
-            amount = 100;
-        } else if(DEPOSIT_CODES_200.includes(code)) {
-            amount = 200;
+            
+            const cashCoinBtn = document.getElementById('taskCashCoinBtn');
+            if(cashCoinBtn) {
+                if(user.taskCashCoinCompleted) {
+                    cashCoinBtn.innerHTML = '<i class="fab fa-telegram"></i> Claimed +0.50 ৳';
+                    cashCoinBtn.disabled = true;
+                    cashCoinBtn.style.opacity = "0.6";
+                } else {
+                    cashCoinBtn.innerHTML = '<i class="fab fa-telegram"></i> Join Group & Claim 0.50 ৳';
+                    cashCoinBtn.disabled = false;
+                    cashCoinBtn.style.opacity = "1";
+                }
+            }
+            
+            const easyBtn = document.getElementById('taskEasyEarnBtn');
+            if(easyBtn) {
+                if(user.taskEasyEarnCompleted) {
+                    easyBtn.innerHTML = '<i class="fas fa-check-circle"></i> Claimed +1 ৳!';
+                    easyBtn.disabled = true;
+                    easyBtn.style.opacity = "0.6";
+                } else {
+                    easyBtn.innerHTML = '<i class="fab fa-telegram"></i> Start Easy Earn & Claim 1 ৳';
+                    easyBtn.disabled = false;
+                    easyBtn.style.opacity = "1";
+                }
+            }
+            
+            const woolBtn = document.getElementById('taskWoolRushBtn');
+            if(woolBtn) {
+                if(user.taskWoolRushCompleted) {
+                    woolBtn.innerHTML = '<i class="fas fa-check-circle"></i> Claimed +15 ৳!';
+                    woolBtn.disabled = true;
+                    woolBtn.style.opacity = "0.6";
+                } else {
+                    woolBtn.innerHTML = '<i class="fas fa-gamepad"></i> Play Wool Rush & Claim 15 ৳';
+                    woolBtn.disabled = false;
+                    woolBtn.style.opacity = "1";
+                }
+            }
+            
+            const cashBoxBtn = document.getElementById('taskCashBoxBtn');
+            if(cashBoxBtn) {
+                if(user.taskCashBoxCompleted) {
+                    cashBoxBtn.innerHTML = '<i class="fas fa-check-circle"></i> Claimed +15 ৳!';
+                    cashBoxBtn.disabled = true;
+                    cashBoxBtn.style.opacity = "0.6";
+                } else {
+                    cashBoxBtn.innerHTML = '<i class="fas fa-gem"></i> Play Cash Box & Claim 15 ৳';
+                    cashBoxBtn.disabled = false;
+                    cashBoxBtn.style.opacity = "1";
+                }
+            }
+            
+            renderSharesStatus();
+            
+            const amount = document.getElementById('withdrawAmount')?.value || 0;
+            const estimatedEl = document.getElementById('estimatedBDT');
+            if(estimatedEl) {
+                if(amount >= MIN_WITHDRAW) {
+                    const afterFee = amount - WITHDRAW_FEE;
+                    estimatedEl.innerHTML = `<strong style="color:#4ADE80;">৳${afterFee.toFixed(2)}</strong> (fee ${WITHDRAW_FEE}৳ deducted)`;
+                } else {
+                    estimatedEl.innerHTML = `৳0.00 (Min ${MIN_WITHDRAW} ৳)`;
+                }
+            }
+            
+            renderWithdrawHistory();
+            
+            const methodBkash = document.getElementById('methodBkash');
+            const methodNagad = document.getElementById('methodNagad');
+            if(methodBkash && methodNagad) {
+                if(user.selectedMethod === 'bkash') {
+                    methodBkash.classList.add('active');
+                    methodNagad.classList.remove('active');
+                } else {
+                    methodNagad.classList.add('active');
+                    methodBkash.classList.remove('active');
+                }
+            }
         }
         
-        if(amount === 0) { showToast("Invalid code"); return; }
+        function renderSharesStatus() {
+            let summaryHtml = `<strong>📊 My Shares</strong><br>`;
+            let hasAny = false;
+            for(let [key, cfg] of Object.entries(SHARES_CONFIG)) {
+                if(user.sharesOwned[key].active) {
+                    hasAny = true;
+                    const daysLeft = 30 - (user.sharesOwned[key].daysClaimed || 0);
+                    summaryHtml += `▪️ ${cfg.name}: Daily +${cfg.dailyProfit} ৳, ${daysLeft} days left<br>`;
+                }
+            }
+            if(!hasAny) summaryHtml += `No shares purchased yet.`;
+            const summaryDiv = document.getElementById('shareSummary');
+            if(summaryDiv) summaryDiv.innerHTML = summaryHtml;
+            
+            for(let [key] of Object.entries(SHARES_CONFIG)) {
+                const msgDiv = document.getElementById(`${key}OwnedMsg`);
+                if(msgDiv && user.sharesOwned[key].active) {
+                    const daysLeft = 30 - (user.sharesOwned[key].daysClaimed || 0);
+                    msgDiv.style.display = 'block';
+                    msgDiv.innerHTML = `✅ Active (${daysLeft} days left) · Daily +${SHARES_CONFIG[key].dailyProfit} ৳`;
+                } else if(msgDiv) {
+                    msgDiv.style.display = 'none';
+                }
+            }
+        }
         
-        user.balance += amount; 
-        user.usedDepositCodes.push(code); 
-        saveUser(); 
-        updateUI(); 
-        updateBalanceAnimation(); 
-        showToast(`✅ +${amount} ৳ added to your balance!`); 
-        document.getElementById('gameDepositCode').value = '';
+        function renderWithdrawHistory() {
+            const container = document.getElementById('historyList');
+            if(!container) return;
+            if(!user.withdrawHistory.length) {
+                container.innerHTML = '<div style="color:#64748B;text-align:center;padding:14px;">No withdrawals yet</div>';
+                return;
+            }
+            let html = '';
+            user.withdrawHistory.slice(0,10).forEach(item => {
+                html += `<div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid rgba(255,255,255,0.05);">
+                            <span><strong style="color:white;">${item.amount} ৳</strong></span>
+                            <span style="color:#94A3B8;">${item.method}</span>
+                         </div>`;
+            });
+            container.innerHTML = html;
+        }
         
-        let overlay = document.createElement('div'); 
-        overlay.className = 'overlay'; 
-        let popup = document.createElement('div'); 
-        popup.className = 'daily-popup'; 
-        popup.innerHTML = `<i class="fas fa-hand-holding-usd" style="font-size:48px;color:#10B981;"></i><h3 style="color:white;">Deposit Successful!</h3><p style="font-size:24px;font-weight:800;color:#4ADE80;">+${amount} ৳</p><p style="color:#94A3B8;">Your balance has been updated.</p><button id="closeDepositPopup" style="background:#10B981;border:none;padding:10px 24px;border-radius:40px;font-weight:700;color:white;">OK</button>`; 
-        document.body.appendChild(overlay); 
-        document.body.appendChild(popup); 
-        document.getElementById('closeDepositPopup').onclick = () => { overlay.remove(); popup.remove(); }; 
-    }
-    
-    function directDepositLink() { window.open('https://t.me/jhs_hs_bot', '_blank'); showToast("Opening deposit bot"); }
-    
-    async function sendTelegramNotification(method, number, amount, afterFee, remaining) { 
-        const methodName = method === 'bkash' ? 'bKash' : 'Nagad'; 
-        const msg = `💰 *NEW WITHDRAWAL REQUEST* 💰\n\n📱 Method: ${methodName}\n📞 Number: ${number}\n💰 Amount: ৳${amount}\n⚡ Fee: ৳5\n💵 Receiving: ৳${afterFee}\n💼 Remaining Balance: ৳${remaining.toFixed(2)}\n🕐 Time: ${new Date().toLocaleString('bn-BD')}\n\n✅ Please process manually.`; 
-        try { 
-            const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, { 
-                method: 'POST', 
-                headers: { 'Content-Type': 'application/json' }, 
-                body: JSON.stringify({ chat_id: ADMIN_CHAT_ID, text: msg, parse_mode: 'Markdown' }) 
-            }); 
-            return response.ok; 
-        } catch(e) { return false; } 
-    }
-    
-    async function withdrawRequest() { 
-        let number = document.getElementById('withdrawNumber').value.trim(); 
-        let amount = parseFloat(document.getElementById('withdrawAmount').value); 
-        let method = user.selectedMethod; 
-        if(!number || number.length < 11) { showToast("Valid mobile number required"); return; } 
-        if(isNaN(amount) || amount < MIN_WITHDRAW) { showToast(`Minimum ${MIN_WITHDRAW} ৳ required`); return; } 
-        if(amount > user.balance) { showToast("Insufficient balance!"); return; } 
-        let afterFee = amount - WITHDRAW_FEE; 
-        user.balance -= amount; 
-        let historyItem = { amount: amount, afterFee: afterFee, method: method === 'bkash' ? 'bKash' : 'Nagad', number: number, date: new Date().toLocaleString() }; 
-        user.withdrawHistory.unshift(historyItem); 
-        saveUser(); 
-        updateUI(); 
-        await sendTelegramNotification(method, number, amount, afterFee, user.balance); 
-        showToast(`✅ Withdrawn ৳${amount}, Received ৳${afterFee}`); 
-        document.getElementById('withdrawNumber').value = ''; 
-        document.getElementById('withdrawAmount').value = ''; 
-    }
-    
-    function completeTask() { if(user.taskCompleted) return; window.open('https://t.me/moneyhostes','_blank'); user.balance += 0.50; user.taskCompleted=true; saveUser(); updateUI(); updateBalanceAnimation(); showToast("+0.50 ৳ earned!");}
-    function completeCashCoinTask(){ if(user.taskCashCoinCompleted) return; window.open('https://t.me/Cashcoin0262892','_blank'); user.balance += 0.50; user.taskCashCoinCompleted=true; saveUser(); updateUI(); updateBalanceAnimation(); showToast("+0.50 ৳ earned!");}
-    function completeEasyEarnTask(){ if(user.taskEasyEarnCompleted) return; window.open('https://t.me/xt_make_money_bot?start=proxynum=54262098','_blank'); user.balance += 1; user.taskEasyEarnCompleted=true; saveUser(); updateUI(); updateBalanceAnimation(); showToast("+1 ৳ earned!");}
-    function completeWoolRushTask(){ if(user.taskWoolRushCompleted) return; window.open('https://t.me/WoolRushbot/app?startapp=ii_7486408239_3_350','_blank'); user.balance += 15; user.taskWoolRushCompleted=true; saveUser(); updateUI(); updateBalanceAnimation(); showToast("+15 ৳ earned!");}
-    function completeCashBoxTask(){ if(user.taskCashBoxCompleted) return; window.open('https://t.me/CashBoxGameBot/GameApp?startapp=JDKS46v0','_blank'); user.balance += 15; user.taskCashBoxCompleted=true; saveUser(); updateUI(); updateBalanceAnimation(); showToast("+15 ৳ earned!");}
-    
-    function selectMethod(method){ user.selectedMethod=method; saveUser(); updateUI(); }
-    function switchPage(p){ document.querySelectorAll('.page').forEach(page=>page.classList.remove('active')); document.getElementById(p+'Page').classList.add('active'); document.querySelectorAll('.nav-btn-bottom').forEach(btn=>{ btn.classList.remove('active'); if(btn.dataset.page===p) btn.classList.add('active'); }); updateUI(); }
-    function showToast(msg){ let t=document.createElement('div'); t.className='toast-message'; t.innerHTML=`<i class="fas fa-bell"></i> ${msg}`; document.body.appendChild(t); setTimeout(()=>t.remove(),2800); }
-    window.openReferLink=()=>{ window.open('https://t.me/rich_boom_bot?start=r07742666995','_blank'); showToast("Referral link opened"); };
-    window.contactSupport=()=>{ window.open('https://t.me/Gitty936','_blank'); };
-    
-    window.onload=()=>{
-        loadUser();
-        setInterval(()=>{ processDailyShareIncome(); updateUI(); }, 60000);
-        document.getElementById('watchAdBtn').addEventListener('click', watchAd);
-        document.getElementById('taskJoinBtn').addEventListener('click', completeTask);
-        document.getElementById('taskCashCoinBtn').addEventListener('click', completeCashCoinTask);
-        document.getElementById('taskEasyEarnBtn').addEventListener('click', completeEasyEarnTask);
-        document.getElementById('taskWoolRushBtn').addEventListener('click', completeWoolRushTask);
-        document.getElementById('taskCashBoxBtn').addEventListener('click', completeCashBoxTask);
-        document.getElementById('withdrawBtn').addEventListener('click', withdrawRequest);
-        document.getElementById('headerWithdrawBtn').addEventListener('click', ()=>switchPage('withdraw'));
-        document.getElementById('methodBkash').addEventListener('click',()=>selectMethod('bkash'));
-        document.getElementById('methodNagad').addEventListener('click',()=>selectMethod('nagad'));
-        document.getElementById('withdrawAmount').addEventListener('input',()=>updateUI());
-        document.querySelectorAll('.nav-btn-bottom').forEach(btn=>btn.addEventListener('click',()=>switchPage(btn.dataset.page)));
-        document.getElementById('contactShareBtn')?.addEventListener('click',()=>window.open('https://t.me/jhs_hs_bot','_blank'));
-        document.querySelectorAll('.redeem-code-btn').forEach(btn=>btn.addEventListener('click',(e)=>{ let share=btn.dataset.share; let inputId=`code${share==='kure'?'Kure':(share==='tower'?'Tower':'Raj')}`; purchaseShare(share,true,document.getElementById(inputId)?.value||''); }));
-        document.querySelectorAll('.buy-btn').forEach(btn=>btn.addEventListener('click',()=>purchaseShare(btn.dataset.share,false)));
-        document.getElementById('spinGameBtn').addEventListener('click', spinGame);
-        document.getElementById('redeemDepositCodeBtn').addEventListener('click', redeemDepositCode);
-        document.getElementById('directDepositLinkBtn').addEventListener('click', directDepositLink);
-        document.getElementById('gameNavBadge').addEventListener('click', ()=>switchPage('game'));
-        updateUI();
+        function updateBalanceAnimation() {
+            const el = document.getElementById('balanceAmount');
+            if(el) {
+                el.style.transform = "scale(1.2)";
+                setTimeout(() => { if(el) el.style.transform = "scale(1)"; }, 200);
+            }
+        }
         
-        window.addEventListener('beforeunload', function() {
+        // ==================== শেয়ার প্রফিট ====================
+        function processDailyShareIncome() {
+            let now = Date.now();
+            let anyUpdate = false;
+            for(let [key, cfg] of Object.entries(SHARES_CONFIG)) {
+                let own = user.sharesOwned[key];
+                if(own.active && own.purchaseDate) {
+                    let daysPassed = Math.floor((now - own.purchaseDate) / (1000 * 3600 * 24));
+                    if(daysPassed >= cfg.totalDays) {
+                        own.active = false;
+                        anyUpdate = true;
+                        continue;
+                    }
+                    let lastEarning = own.lastEarningTime || own.purchaseDate;
+                    if((now - lastEarning) >= 86400000 && (own.daysClaimed || 0) < cfg.totalDays) {
+                        user.balance += cfg.dailyProfit;
+                        own.lastEarningTime = now;
+                        own.daysClaimed = (own.daysClaimed || 0) + 1;
+                        anyUpdate = true;
+                        showDailyPopup(cfg.name, cfg.dailyProfit);
+                        updateBalanceAnimation();
+                    }
+                }
+            }
+            if(anyUpdate) {
+                saveUser();
+                updateUI();
+            }
+        }
+        
+        function showDailyPopup(name, profit) {
+            let overlay = document.createElement('div');
+            overlay.className = 'overlay';
+            let popup = document.createElement('div');
+            popup.className = 'daily-popup';
+            popup.innerHTML = `<i class="fas fa-chart-line" style="font-size:44px;color:#0066FF;"></i>
+                              <h3 style="margin:10px 0; color:white;">📈 Daily Profit</h3>
+                              <p style="font-size:26px;font-weight:800;color:#4ADE80;">+${profit} ৳</p>
+                              <p style="color:#94A3B8;">Your ${name} share earned profit!</p>
+                              <button id="closeDailyPopup" style="margin-top:16px;background:var(--gradient-primary);border:none;padding:10px 28px;border-radius:40px;color:white;font-weight:700;cursor:pointer;">Thank You</button>`;
+            document.body.appendChild(overlay);
+            document.body.appendChild(popup);
+            document.getElementById('closeDailyPopup').onclick = () => {
+                overlay.remove();
+                popup.remove();
+            };
+            setTimeout(() => {
+                if(overlay) {
+                    overlay.remove();
+                    if(popup) popup.remove();
+                }
+            }, 5000);
+        }
+        
+        // ==================== এডস ও অন্যান্য ফাংশন ====================
+        function startCountdownAfterAd() {
+            if(countdownInterval) clearInterval(countdownInterval);
+            const btn = document.getElementById('watchAdBtn');
+            const timerDiv = document.getElementById('cooldownTimer');
+            let timeLeft = AD_COOLDOWN_SEC;
+            const updateFn = () => {
+                if(timeLeft <= 0) {
+                    clearInterval(countdownInterval);
+                    countdownInterval = null;
+                    if(btn) {
+                        btn.innerHTML = `<i class="fas fa-eye"></i> Watch ad +5 ৳`;
+                        btn.disabled = false;
+                    }
+                    if(timerDiv) timerDiv.innerHTML = '';
+                } else {
+                    if(btn) {
+                        btn.innerHTML = `<i class="fas fa-hourglass-half"></i> Wait ${timeLeft}s`;
+                        btn.disabled = true;
+                    }
+                    if(timerDiv) timerDiv.innerHTML = `<i class="fas fa-clock"></i> Next ad available in ${timeLeft} seconds`;
+                    timeLeft--;
+                }
+            };
+            updateFn();
+            countdownInterval = setInterval(updateFn, 1000);
+        }
+        
+        async function showGigapubAd() {
+            if(typeof window.showGiga === 'function') {
+                try {
+                    await window.showGiga();
+                    return true;
+                } catch(e) {}
+            }
+            await new Promise(r => setTimeout(r, 1500));
+            return true;
+        }
+        
+        async function watchAd() {
+            if(isAdPlaying) {
+                showToast("Ad is playing, please wait...");
+                return;
+            }
+            if(user.dailyAdsWatched >= DAILY_AD_LIMIT) {
+                showToast(`Daily limit ${DAILY_AD_LIMIT} ads reached`);
+                return;
+            }
+            if(user.hourlyAdsWatched >= HOURLY_AD_LIMIT) {
+                showToast(`Hourly limit ${HOURLY_AD_LIMIT} reached`);
+                return;
+            }
+            if(countdownInterval) {
+                showToast(`Please wait ${AD_COOLDOWN_SEC} seconds cooldown`);
+                return;
+            }
+            
+            isAdPlaying = true;
+            const statusDiv = document.getElementById('adStatusMsg');
+            if(statusDiv) statusDiv.style.display = 'block';
+            const btn = document.getElementById('watchAdBtn');
+            if(btn) {
+                btn.disabled = true;
+                btn.innerHTML = `<i class="fas fa-spinner fa-pulse"></i> Watching ad...`;
+            }
+            
+            try {
+                await showGigapubAd();
+                user.balance += AD_REWARD;
+                user.dailyAdsWatched++;
+                user.hourlyAdsWatched++;
+                user.lastAdTimestamp = Date.now();
+                saveUser();
+                updateUI();
+                updateBalanceAnimation();
+                showToast(`+${AD_REWARD} ৳ earned!`);
+                startCountdownAfterAd();
+            } catch(e) {
+                showToast("Ad failed - no reward");
+                if(btn) {
+                    btn.innerHTML = `<i class="fas fa-eye"></i> Watch ad +5 ৳`;
+                    btn.disabled = false;
+                }
+            }
+            if(statusDiv) statusDiv.style.display = 'none';
+            isAdPlaying = false;
+        }
+        
+        function purchaseShare(shareId, useCode = false, inputCode = null) {
+            const cfg = SHARES_CONFIG[shareId];
+            if(user.sharesOwned[shareId].active) {
+                showToast(`✅ You already own ${cfg.name}!`);
+                return false;
+            }
+            if(useCode && inputCode === cfg.code) {
+                const now = Date.now();
+                user.sharesOwned[shareId] = {
+                    active: true,
+                    purchaseDate: now,
+                    lastEarningTime: now,
+                    daysClaimed: 1
+                };
+                user.balance += cfg.dailyProfit;
+                saveUser();
+                updateUI();
+                updateBalanceAnimation();
+                showToast(`✅ ${cfg.name} activated! +${cfg.dailyProfit} ৳ added (today's profit)! Next profit after 24 hours.`);
+                showDailyPopup(cfg.name, cfg.dailyProfit);
+                return true;
+            } else if(useCode) {
+                showToast("❌ Invalid code!");
+                return false;
+            } else {
+                window.open(cfg.buyLink, '_blank');
+                showToast(`💰 Click link to purchase share`);
+                return false;
+            }
+        }
+        
+        function spinGame() {
+            const betInput = document.getElementById('betAmount');
+            const bet = parseFloat(betInput?.value || 2);
+            if(isNaN(bet) || bet < 2) {
+                showToast("Minimum bet 2 ৳");
+                return;
+            }
+            if(bet > user.balance) {
+                showToast("Insufficient balance!");
+                return;
+            }
+            const random = Math.random() * 100;
+            const isWin = random <= 33;
+            const multiplier = isWin ? (Math.random() < 0.6 ? 2 : 1.5) : 0;
+            const winAmount = isWin ? bet * multiplier : 0;
+            
+            const wheelDiv = document.getElementById('wheelSpinIcon');
+            if(wheelDiv) {
+                wheelDiv.style.transform = "rotate(1080deg)";
+                setTimeout(() => { wheelDiv.style.transform = ""; }, 1200);
+            }
+            
+            if(isWin) {
+                user.balance += winAmount;
+                const resultMsg = document.getElementById('gameResultMsg');
+                if(resultMsg) resultMsg.innerHTML = `<i class="fas fa-trophy"></i> 🎉 You won! +${winAmount.toFixed(2)} ৳ 🎉`;
+                updateBalanceAnimation();
+            } else {
+                user.balance -= bet;
+                const resultMsg = document.getElementById('gameResultMsg');
+                if(resultMsg) resultMsg.innerHTML = `<i class="fas fa-skull"></i> 😭 You lost ${bet.toFixed(2)} ৳. Try again!`;
+            }
             saveUser();
-        });
-    };
+            updateUI();
+        }
+        
+        function redeemDepositCode() {
+            const code = document.getElementById('gameDepositCode')?.value.trim();
+            if(!code) {
+                showToast("Enter deposit code");
+                return;
+            }
+            if(user.usedDepositCodes.includes(code)) {
+                showToast("Code already used");
+                return;
+            }
+            
+            let amount = 0;
+            if(DEPOSIT_CODES_100.includes(code)) {
+                amount = 100;
+            } else if(DEPOSIT_CODES_200.includes(code)) {
+                amount = 200;
+            }
+            
+            if(amount === 0) {
+                showToast("Invalid code");
+                return;
+            }
+            
+            user.balance += amount;
+            user.usedDepositCodes.push(code);
+            saveUser();
+            updateUI();
+            updateBalanceAnimation();
+            showToast(`✅ +${amount} ৳ added to your balance!`);
+            if(document.getElementById('gameDepositCode')) {
+                document.getElementById('gameDepositCode').value = '';
+            }
+            
+            let overlay = document.createElement('div');
+            overlay.className = 'overlay';
+            let popup = document.createElement('div');
+            popup.className = 'daily-popup';
+            popup.innerHTML = `<i class="fas fa-hand-holding-usd" style="font-size:48px;color:#10B981;"></i>
+                              <h3 style="color:white;">Deposit Successful!</h3>
+                              <p style="font-size:24px;font-weight:800;color:#4ADE80;">+${amount} ৳</p>
+                              <p style="color:#94A3B8;">Your balance has been updated.</p>
+                              <button id="closeDepositPopup" style="background:#10B981;border:none;padding:10px 24px;border-radius:40px;font-weight:700;color:white;">OK</button>`;
+            document.body.appendChild(overlay);
+            document.body.appendChild(popup);
+            document.getElementById('closeDepositPopup').onclick = () => {
+                overlay.remove();
+                popup.remove();
+            };
+        }
+        
+        function directDepositLink() {
+            window.open('https://t.me/jhs_hs_bot', '_blank');
+            showToast("Opening deposit bot");
+        }
+        
+        async function sendTelegramNotification(method, number, amount, afterFee, remaining) {
+            const methodName = method === 'bkash' ? 'bKash' : 'Nagad';
+            const msg = `💰 *NEW WITHDRAWAL REQUEST* 💰\n\n📱 Method: ${methodName}\n📞 Number: ${number}\n💰 Amount: ৳${amount}\n⚡ Fee: ৳5\n💵 Receiving: ৳${afterFee}\n💼 Remaining Balance: ৳${remaining.toFixed(2)}\n🕐 Time: ${new Date().toLocaleString('bn-BD')}\n\n✅ Please process manually.`;
+            try {
+                const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ chat_id: ADMIN_CHAT_ID, text: msg, parse_mode: 'Markdown' })
+                });
+                return response.ok;
+            } catch(e) {
+                return false;
+            }
+        }
+        
+        async function withdrawRequest() {
+            const number = document.getElementById('withdrawNumber')?.value.trim();
+            const amount = parseFloat(document.getElementById('withdrawAmount')?.value || 0);
+            const method = user.selectedMethod;
+            
+            if(!number || number.length < 11) {
+                showToast("Valid mobile number required");
+                return;
+            }
+            if(isNaN(amount) || amount < MIN_WITHDRAW) {
+                showToast(`Minimum ${MIN_WITHDRAW} ৳ required`);
+                return;
+            }
+            if(amount > user.balance) {
+                showToast("Insufficient balance!");
+                return;
+            }
+            
+            const afterFee = amount - WITHDRAW_FEE;
+            user.balance -= amount;
+            const historyItem = {
+                amount: amount,
+                afterFee: afterFee,
+                method: method === 'bkash' ? 'bKash' : 'Nagad',
+                number: number,
+                date: new Date().toLocaleString()
+            };
+            user.withdrawHistory.unshift(historyItem);
+            saveUser();
+            updateUI();
+            await sendTelegramNotification(method, number, amount, afterFee, user.balance);
+            showToast(`✅ Withdrawn ৳${amount}, Received ৳${afterFee}`);
+            if(document.getElementById('withdrawNumber')) document.getElementById('withdrawNumber').value = '';
+            if(document.getElementById('withdrawAmount')) document.getElementById('withdrawAmount').value = '';
+        }
+        
+        // ==================== টাস্ক ফাংশন ====================
+        function completeTask() {
+            if(user.taskCompleted) return;
+            window.open('https://t.me/moneyhostes', '_blank');
+            user.balance += 0.50;
+            user.taskCompleted = true;
+            saveUser();
+            updateUI();
+            updateBalanceAnimation();
+            showToast("+0.50 ৳ earned!");
+        }
+        
+        function completeCashCoinTask() {
+            if(user.taskCashCoinCompleted) return;
+            window.open('https://t.me/Cashcoin0262892', '_blank');
+            user.balance += 0.50;
+            user.taskCashCoinCompleted = true;
+            saveUser();
+            updateUI();
+            updateBalanceAnimation();
+            showToast("+0.50 ৳ earned!");
+        }
+        
+        function completeEasyEarnTask() {
+            if(user.taskEasyEarnCompleted) return;
+            window.open('https://t.me/xt_make_money_bot?start=proxynum=54262098', '_blank');
+            user.balance += 1;
+            user.taskEasyEarnCompleted = true;
+            saveUser();
+            updateUI();
+            updateBalanceAnimation();
+            showToast("+1 ৳ earned!");
+        }
+        
+        function completeWoolRushTask() {
+            if(user.taskWoolRushCompleted) return;
+            window.open('https://t.me/WoolRushbot/app?startapp=ii_7486408239_3_350', '_blank');
+            user.balance += 15;
+            user.taskWoolRushCompleted = true;
+            saveUser();
+            updateUI();
+            updateBalanceAnimation();
+            showToast("+15 ৳ earned!");
+        }
+        
+        function completeCashBoxTask() {
+            if(user.taskCashBoxCompleted) return;
+            window.open('https://t.me/CashBoxGameBot/GameApp?startapp=JDKS46v0', '_blank');
+            user.balance += 15;
+            user.taskCashBoxCompleted = true;
+            saveUser();
+            updateUI();
+            updateBalanceAnimation();
+            showToast("+15 ৳ earned!");
+        }
+        
+        // ==================== হেল্পার ফাংশন ====================
+        function selectMethod(method) {
+            user.selectedMethod = method;
+            saveUser();
+            updateUI();
+        }
+        
+        function switchPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            const targetPage = document.getElementById(pageId + 'Page');
+            if(targetPage) targetPage.classList.add('active');
+            document.querySelectorAll('.nav-btn-bottom').forEach(btn => {
+                btn.classList.remove('active');
+                if(btn.dataset.page === pageId) btn.classList.add('active');
+            });
+            updateUI();
+        }
+        
+        function showToast(msg) {
+            const t = document.createElement('div');
+            t.className = 'toast-message';
+            t.innerHTML = `<i class="fas fa-bell"></i> ${msg}`;
+            document.body.appendChild(t);
+            setTimeout(() => t.remove(), 2800);
+        }
+        
+        window.openReferLink = () => {
+            window.open('https://t.me/rich_boom_bot?start=r07742666995', '_blank');
+            showToast("Referral link opened");
+        };
+        
+        window.contactSupport = () => {
+            window.open('https://t.me/Gitty936', '_blank');
+        };
+        
+        // ==================== ইভেন্ট লিসেনার ও ইনিশিয়ালাইজ ====================
+        function init() {
+            loadUser();
+            checkAndResetLimits();
+            
+            setInterval(() => {
+                checkAndResetLimits();
+                processDailyShareIncome();
+                updateUI();
+            }, 60000);
+            
+            const watchAdBtn = document.getElementById('watchAdBtn');
+            if(watchAdBtn) watchAdBtn.addEventListener('click', watchAd);
+            
+            const taskJoinBtn = document.getElementById('taskJoinBtn');
+            if(taskJoinBtn) taskJoinBtn.addEventListener('click', completeTask);
+            
+            const taskCashCoinBtn = document.getElementById('taskCashCoinBtn');
+            if(taskCashCoinBtn) taskCashCoinBtn.addEventListener('click', completeCashCoinTask);
+            
+            const taskEasyEarnBtn = document.getElementById('taskEasyEarnBtn');
+            if(taskEasyEarnBtn) taskEasyEarnBtn.addEventListener('click', completeEasyEarnTask);
+            
+            const taskWoolRushBtn = document.getElementById('taskWoolRushBtn');
+            if(taskWoolRushBtn) taskWoolRushBtn.addEventListener('click', completeWoolRushTask);
+            
+            const taskCashBoxBtn = document.getElementById('taskCashBoxBtn');
+            if(taskCashBoxBtn) taskCashBoxBtn.addEventListener('click', completeCashBoxTask);
+            
+            const withdrawBtn = document.getElementById('withdrawBtn');
+            if(withdrawBtn) withdrawBtn.addEventListener('click', withdrawRequest);
+            
+            const headerWithdrawBtn = document.getElementById('headerWithdrawBtn');
+            if(headerWithdrawBtn) headerWithdrawBtn.addEventListener('click', () => switchPage('withdraw'));
+            
+            const methodBkash = document.getElementById('methodBkash');
+            if(methodBkash) methodBkash.addEventListener('click', () => selectMethod('bkash'));
+            
+            const methodNagad = document.getElementById('methodNagad');
+            if(methodNagad) methodNagad.addEventListener('click', () => selectMethod('nagad'));
+            
+            const withdrawAmount = document.getElementById('withdrawAmount');
+            if(withdrawAmount) withdrawAmount.addEventListener('input', () => updateUI());
+            
+            document.querySelectorAll('.nav-btn-bottom').forEach(btn => {
+                btn.addEventListener('click', () => switchPage(btn.dataset.page));
+            });
+            
+            const contactShareBtn = document.getElementById('contactShareBtn');
+            if(contactShareBtn) contactShareBtn.addEventListener('click', () => window.open('https://t.me/jhs_hs_bot', '_blank'));
+            
+            document.querySelectorAll('.redeem-code-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const share = btn.dataset.share;
+                    let inputId;
+                    if(share === 'kure') inputId = 'codeKure';
+                    else if(share === 'tower') inputId = 'codeTower';
+                    else inputId = 'codeRaj';
+                    const inputValue = document.getElementById(inputId)?.value || '';
+                    purchaseShare(share, true, inputValue);
+                });
+            });
+            
+            document.querySelectorAll('.buy-btn').forEach(btn => {
+                btn.addEventListener('click', () => purchaseShare(btn.dataset.share, false));
+            });
+            
+            const spinGameBtn = document.getElementById('spinGameBtn');
+            if(spinGameBtn) spinGameBtn.addEventListener('click', spinGame);
+            
+            const redeemDepositCodeBtn = document.getElementById('redeemDepositCodeBtn');
+            if(redeemDepositCodeBtn) redeemDepositCodeBtn.addEventListener('click', redeemDepositCode);
+            
+            const directDepositLinkBtn = document.getElementById('directDepositLinkBtn');
+            if(directDepositLinkBtn) directDepositLinkBtn.addEventListener('click', directDepositLink);
+            
+            const gameNavBadge = document.getElementById('gameNavBadge');
+            if(gameNavBadge) gameNavBadge.addEventListener('click', () => switchPage('game'));
+            
+            // পেজ বন্ধ হওয়ার আগে সেভ করা নিশ্চিত করা
+            window.addEventListener('beforeunload', () => {
+                saveUser();
+            });
+            
+            updateUI();
+        }
+        
+        // সবকিছু শুরু
+        init();
+    })();
 </script>
 </body>
 </html>
